@@ -80,7 +80,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./consumer-web
-        run: npm test
+        run: npm test -- --run
 
       - name: Build
         working-directory: ./consumer-web
@@ -121,7 +121,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./admin-web
-        run: npm test
+        run: npm test -- --run
 
       - name: Build
         working-directory: ./admin-web
