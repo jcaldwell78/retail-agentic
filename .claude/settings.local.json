@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(tree:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(mvn clean:*)",
+      "Bash(mvn test:*)",
+      "Bash(mvn -f backend/pom.xml test)",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

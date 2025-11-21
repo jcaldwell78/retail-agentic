@@ -60,6 +60,13 @@ Each agent has a distinct color for visual identification in documentation, diag
 - **Tailwind**: `bg-red-500`
 - **Semantic**: Infrastructure, deployment, production
 
+### 🟤 Product Manager Agent
+**Primary Color**: Brown
+- **Hex**: `#92400E`
+- **RGB**: `rgb(146, 64, 14)`
+- **Tailwind**: `bg-yellow-800`
+- **Semantic**: Requirements, prioritization, business value
+
 ## Usage Examples
 
 ### Markdown Badges
@@ -67,6 +74,7 @@ Each agent has a distinct color for visual identification in documentation, diag
 ```markdown
 ![Architect](https://img.shields.io/badge/Architect-3B82F6?style=flat&logo=blueprint&logoColor=white)
 ![Planner](https://img.shields.io/badge/Planner-A855F7?style=flat&logo=calendar&logoColor=white)
+![Product Manager](https://img.shields.io/badge/Product_Manager-92400E?style=flat&logo=trello&logoColor=white)
 ![Backend](https://img.shields.io/badge/Backend-10B981?style=flat&logo=spring&logoColor=white)
 ![Frontend](https://img.shields.io/badge/Frontend-06B6D4?style=flat&logo=react&logoColor=white)
 ![UI/UX](https://img.shields.io/badge/UI%2FUX-EC4899?style=flat&logo=figma&logoColor=white)
@@ -150,6 +158,7 @@ graph TD
 export const AGENT_COLORS = {
   ARCHITECT: '#3B82F6',
   PLANNER: '#A855F7',
+  PRODUCT_MANAGER: '#92400E',
   BACKEND: '#10B981',
   FRONTEND: '#06B6D4',
   DESIGNER: '#EC4899',
@@ -285,6 +294,7 @@ When color alone is not sufficient, use:
 |-------|-------|-----|---------|
 | 🔵 Architect | Blue | #3B82F6 | ![#3B82F6](https://via.placeholder.com/100x30/3B82F6/FFFFFF?text=Architect) |
 | 🟣 Planner | Purple | #A855F7 | ![#A855F7](https://via.placeholder.com/100x30/A855F7/FFFFFF?text=Planner) |
+| 🟤 Product Manager | Brown | #92400E | ![#92400E](https://via.placeholder.com/100x30/92400E/FFFFFF?text=Product+Manager) |
 | 🟢 Backend | Green | #10B981 | ![#10B981](https://via.placeholder.com/100x30/10B981/FFFFFF?text=Backend) |
 | 🔵 Frontend | Cyan | #06B6D4 | ![#06B6D4](https://via.placeholder.com/100x30/06B6D4/FFFFFF?text=Frontend) |
 | 🌸 UI/UX | Pink | #EC4899 | ![#EC4899](https://via.placeholder.com/100x30/EC4899/FFFFFF?text=UI/UX) |

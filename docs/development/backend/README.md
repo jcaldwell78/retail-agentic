@@ -6,6 +6,7 @@ Documentation for developing the Java/Spring Boot/Reactor backend service.
 
 - [Setup Guide](./setup.md) - Local development environment setup
 - [Patterns and Practices](./patterns.md) - Code patterns, best practices, and examples
+- [API-First Development](./API_FIRST.md) - OpenAPI specifications and client generation
 
 ## Architecture Overview
 
