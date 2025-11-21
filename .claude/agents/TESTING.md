@@ -493,6 +493,198 @@ void performanceTest_GetProducts() {
 }
 ```
 
+### Isolation Testing
+
+**CRITICAL REQUIREMENT**: All subprojects must be testable in isolation without external dependencies.
+
+Each component (backend, consumer-web, admin-web) must be able to:
+1. **Build independently** from its own directory
+2. **Run tests** without requiring other services
+3. **Start locally** for manual verification
+4. **Document setup** in its own README.md
+
+#### Backend Isolation Testing
+
+The backend must run and test independently:
+
+```bash
+# From backend directory
+cd backend
+
+# Install dependencies and build
+mvn clean install
+
+# Run tests (no external databases required for unit tests)
+mvn test
+
+# Run with test profile (disabled external services)
+mvn spring-boot:run -Dspring-boot.run.profiles=test
+
+# Verify independently
+curl http://localhost:8080/api/v1/health
+```
+
+**Test Configuration Requirements:**
+- `application-test.yml` must disable external database autoconfiguration
+- Unit tests should use mocks (Mockito) for repositories
+- Integration tests can use embedded databases or testcontainers
+- Health checks should work even when external services are unavailable
+
+**Example Test Profile:**
+```yaml
+spring:
+  autoconfigure:
+    exclude:
+      - MongoDataAutoConfiguration
+      - RedisAutoConfiguration
+      - ElasticsearchDataAutoConfiguration
+```
+
+#### Frontend Isolation Testing
+
+Both consumer-web and admin-web must run independently:
+
+```bash
+# From frontend directory
+cd consumer-web  # or admin-web
+
+# Install dependencies
+npm install
+
+# Run tests (no backend required)
+npm test -- --run
+
+# Run development server (mocked backend calls)
+npm run dev
+
+# Build production bundle
+npm run build
+
+# Verify build
+npm run preview
+```
+
+**Test Configuration Requirements:**
+- Tests should mock API calls using MSW or similar
+- Components should have default/loading states when API is unavailable
+- Error states should be properly handled and testable
+- UI components should be testable without backend connectivity
+
+**Example API Mocking:**
+```typescript
+// src/mocks/handlers.ts
+import { rest } from 'msw'
+
+export const handlers = [
+  rest.get('/api/v1/health', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ status: 'UP', service: 'mock-backend' })
+    )
+  }),
+
+  rest.get('/api/v1/products', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({ products: mockProducts })
+    )
+  })
+]
+```
+
+#### Integration Testing Across Services
+
+While each service must test independently, you should also verify integration:
+
+```bash
+# Start all services for integration testing
+docker-compose up -d  # External dependencies
+cd backend && mvn spring-boot:run &
+cd consumer-web && npm run dev &
+cd admin-web && npm run dev &
+
+# Run E2E tests that exercise the full stack
+npm run test:e2e
+```
+
+#### Verification Checklist
+
+For each subproject, verify:
+
+- [ ] **Independent Build**: Can build from scratch without other services
+- [ ] **Independent Tests**: All tests pass without external dependencies
+- [ ] **Local Run**: Can start and access health check/homepage
+- [ ] **README.md**: Documents build, test, and run commands
+- [ ] **Mock Configuration**: Provides mock/test configurations for isolation
+- [ ] **Error Handling**: Gracefully handles unavailable dependencies
+- [ ] **CI/CD Compatibility**: Works in isolated CI/CD pipeline jobs
+
+#### README.md Requirements
+
+Each subproject must have a README.md with:
+
+1. **Quick Start**: Install, build, and run commands
+2. **Testing**: How to run tests independently
+3. **Isolation Mode**: How to run without external dependencies
+4. **Configuration**: Environment variables and profiles
+5. **Troubleshooting**: Common issues and solutions
+6. **Project Structure**: Directory layout and organization
+
+**Example README sections:**
+```markdown
+## Running in Isolation
+
+This component can run independently for testing:
+
+### Without External Dependencies
+[Commands to run with mocks/test profile]
+
+### With Docker Compose
+[Commands to start dependencies if needed]
+
+### Verify
+[Commands to check if running correctly]
+```
+
+#### Testing Strategy Per Component
+
+**Backend Testing:**
+- Unit tests with mocked repositories (no DB)
+- Integration tests with testcontainers or embedded DB
+- API contract tests (verify OpenAPI spec)
+- Load tests for performance validation
+
+**Frontend Testing:**
+- Unit tests for components (no backend)
+- Integration tests with MSW for API mocking
+- Visual regression tests (Chromatic/Percy)
+- Accessibility tests (axe-core)
+
+**Cross-Service Testing:**
+- E2E tests with all services running
+- Contract tests between backend and frontends
+- Multi-tenant routing tests
+- Performance tests under load
+
+#### Continuous Validation
+
+Regularly verify isolation capabilities:
+
+```bash
+# Weekly validation script
+./scripts/verify-isolation.sh
+
+# What it does:
+# 1. Fresh clone of repository
+# 2. Build each subproject independently
+# 3. Run tests for each subproject
+# 4. Start each service independently
+# 5. Verify health checks
+# 6. Report any issues
+```
+
+**Remember**: If you can't test it in isolation, you can't trust it in production. Every service must be independently verifiable.
+
 ## Testing Checklist
 
 ### Unit Tests

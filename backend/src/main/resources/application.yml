@@ -1,0 +1,125 @@
+spring:
+  application:
+    name: retail-backend
+
+  # MongoDB Configuration
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/retaildb}
+      auto-index-creation: true
+
+    # Redis Configuration
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
+      timeout: 2000ms
+
+  # R2DBC PostgreSQL Configuration
+  r2dbc:
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/payments}
+    username: ${SPRING_R2DBC_USERNAME:postgres}
+    password: ${SPRING_R2DBC_PASSWORD:postgres}
+    pool:
+      initial-size: 10
+      max-size: 20
+
+  # Elasticsearch Configuration
+  elasticsearch:
+    uris: ${SPRING_ELASTICSEARCH_URIS:http://localhost:9200}
+
+# Server Configuration
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    mongo:
+      enabled: true
+    redis:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.retail: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.data.mongodb: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# OpenAPI/Swagger Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+  show-actuator: true
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+
+---
+# Development Profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+logging:
+  level:
+    root: DEBUG
+    com.retail: DEBUG
+
+---
+# Test Profile
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test_retaildb
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/test_payments
+
+logging:
+  level:
+    root: WARN
+    com.retail: DEBUG
+
+---
+# Production Profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    root: WARN
+    com.retail: INFO

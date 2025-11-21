@@ -97,8 +97,70 @@ This project leverages AI subagents for different aspects of development:
 - E2E tests for critical user flows
 - Test reactive streams with StepVerifier (backend)
 - React Testing Library for frontend components
+- **CRITICAL**: All subprojects must be independently testable in isolation
 
 ## Key Considerations
+
+### Isolation Testing & Independent Development
+
+**CRITICAL REQUIREMENT**: Each subproject must be independently buildable, testable, and runnable.
+
+#### Independent Subproject Requirements
+
+Every subproject (backend, consumer-web, admin-web) must:
+
+1. **Build in Isolation**
+   - Build from its own directory without requiring other services
+   - Have all dependencies clearly documented
+   - Complete build process in under 5 minutes
+
+2. **Test in Isolation**
+   - All tests pass without external dependencies (databases, other services)
+   - Use mocks, in-memory databases, or test containers
+   - Test coverage meets standards (80% for backend)
+
+3. **Run Locally for Development**
+   - Start independently for UI/API development
+   - Gracefully handle unavailable dependencies
+   - Provide test/mock configuration profiles
+
+4. **Comprehensive Documentation**
+   - Each subproject has its own README.md
+   - README documents: build, test, run, and troubleshoot commands
+   - Clear instructions for isolation mode vs. full integration mode
+
+#### Backend Isolation
+
+- **Test Profile**: `application-test.yml` disables external database autoconfiguration
+- **Mocking**: Use Mockito for unit tests, no real databases required
+- **Health Checks**: Work even when external services unavailable
+- **Local Run**: `mvn spring-boot:run` works independently
+
+#### Frontend Isolation
+
+- **Mock APIs**: Use MSW (Mock Service Worker) for API mocking in tests
+- **Error States**: Gracefully handle backend unavailability
+- **Independent Development**: UI development without backend running
+- **Local Run**: `npm run dev` works independently
+
+#### Integration Testing
+
+While each service runs independently:
+- E2E tests verify cross-service integration
+- Docker Compose available for full-stack local testing
+- Contract tests verify API compatibility
+- Integration tests in CI/CD pipeline
+
+#### Documentation Standards
+
+Each README.md must include:
+- **Quick Start**: Install, build, run commands
+- **Running in Isolation**: How to run without dependencies
+- **Testing**: Independent test execution
+- **Configuration**: Environment variables and profiles
+- **Troubleshooting**: Common issues and solutions
+
+**Reference**: See `backend/README.md`, `consumer-web/README.md`, and `admin-web/README.md` for examples.
 
 ### Reactive Programming
 The backend uses reactive programming patterns. Key points:
@@ -258,3 +320,8 @@ When working on this project:
 - Document architectural decisions, especially database choices
 - Consider scalability and performance implications
 - Test reactive streams properly with appropriate tools
+- **CRITICAL: Each subproject must be independently buildable, testable, and runnable**
+- Every subproject must have a comprehensive README.md with build/test/run instructions
+- Backend must have test configuration that disables external dependencies
+- Frontend tests must mock API calls and not require backend
+- All code must be verifiable in isolation before integration testing
