@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import config from '@/lib/config';
+import { apiCache, generateCacheKey, CacheTTL } from './cache';
 
 /**
  * API client configuration
@@ -145,11 +146,40 @@ export async function apiRequest<T>(
 }
 
 /**
- * Convenience methods
+ * Convenience methods with caching support
  */
 export const api = {
-  get: <T>(url: string, config?: AxiosRequestConfig) =>
-    apiRequest<T>({ ...config, method: 'GET', url }),
+  /**
+   * GET request with optional caching
+   * @param url Request URL
+   * @param config Axios config
+   * @param options Caching options
+   */
+  get: async <T>(
+    url: string,
+    config?: AxiosRequestConfig,
+    options?: { cache?: boolean; ttl?: number }
+  ): Promise<T> => {
+    const cacheEnabled = options?.cache ?? false;
+    const cacheTTL = options?.ttl ?? CacheTTL.MEDIUM;
+
+    if (cacheEnabled) {
+      const cacheKey = generateCacheKey(url, config?.params);
+      const cached = apiCache.get<T>(cacheKey);
+
+      if (cached !== null) {
+        console.debug(`Cache hit: ${cacheKey}`);
+        return cached;
+      }
+
+      // Cache miss - fetch and cache
+      const data = await apiRequest<T>({ ...config, method: 'GET', url });
+      apiCache.set(cacheKey, data, cacheTTL);
+      return data;
+    }
+
+    return apiRequest<T>({ ...config, method: 'GET', url });
+  },
 
   post: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
     apiRequest<T>({ ...config, method: 'POST', url, data }),
@@ -163,5 +193,8 @@ export const api = {
   delete: <T>(url: string, config?: AxiosRequestConfig) =>
     apiRequest<T>({ ...config, method: 'DELETE', url }),
 };
+
+// Export cache utilities for manual cache management
+export { apiCache, CacheTTL } from './cache';
 
 export default apiClient;
