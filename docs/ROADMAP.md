@@ -31,13 +31,13 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Configure hot-reload for all services
 
 ### Build & CI/CD
-- [ ] Configure GitHub Actions workflows
-- [ ] Set up automated testing pipeline
-- [ ] Configure separate jobs for each subproject
-- [ ] Set up code quality checks (linting, formatting)
-- [ ] Configure TypeScript type checking in CI
-- [ ] Set up test coverage reporting
-- [ ] Configure build artifact generation
+- [x] Configure GitHub Actions workflows
+- [x] Set up automated testing pipeline
+- [x] Configure separate jobs for each subproject
+- [x] Set up code quality checks (linting, formatting)
+- [x] Configure TypeScript type checking in CI
+- [x] Set up test coverage reporting
+- [x] Configure build artifact generation
 - [ ] Set up deployment pipelines (staging/production)
 
 ---
