@@ -165,11 +165,11 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ### Design System
 - [x] Install and configure Tailwind CSS (both apps)
 - [x] Install and configure shadcn/ui (both apps)
-- [ ] Define color palette (customizable per tenant)
-- [ ] Define typography system
-- [ ] Create spacing and layout standards
-- [ ] Design component variants and states
-- [ ] Create design tokens
+- [x] Define color palette (customizable per tenant)
+- [x] Define typography system
+- [x] Create spacing and layout standards
+- [x] Design component variants and states
+- [x] Create design tokens
 - [ ] Build Storybook for component library
 
 ### Shared Component Library
