@@ -11,7 +11,13 @@
       "Bash(npm run build:*)",
       "Bash(npm run lint)",
       "Bash(npm run type-check:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(test:*)",
+      "Bash(cat:*)",
+      "Bash(npm run test:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run dev)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []
