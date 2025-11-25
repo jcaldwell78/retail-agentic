@@ -173,15 +173,15 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Build Storybook for component library
 
 ### Shared Component Library
-- [ ] Create Button component
-- [ ] Create Input/Form components
-- [ ] Create Card component
-- [ ] Create Modal/Dialog component
+- [x] Create Button component
+- [x] Create Input/Form components
+- [x] Create Card component
+- [x] Create Modal/Dialog component
 - [ ] Create Navigation components
 - [ ] Create Table/DataGrid component
 - [x] Create Loading/Spinner components
 - [x] Create Error boundary components
-- [ ] Create Toast/Notification components
+- [x] Create Toast/Notification components
 - [ ] Implement accessibility (ARIA attributes)
 - [ ] Add keyboard navigation support
 
