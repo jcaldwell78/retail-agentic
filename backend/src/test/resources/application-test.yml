@@ -3,6 +3,7 @@ spring:
     name: retail-backend-test
 
   # Disable auto-configuration for external services during testing
+  # Tests should use mocks or embedded/in-memory alternatives
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
@@ -16,7 +17,24 @@ spring:
       - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
       - org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration
 
+# API configuration for tests
+api:
+  rate-limit:
+    enabled: false  # Disable rate limiting in tests
+
+# Test-specific settings
+test:
+  # Tenant context for tests
+  default-tenant-id: test-tenant-001
+
+  # Mock data configuration
+  data:
+    cleanup-after-test: true
+    seed-before-test: false
+
 logging:
   level:
     root: INFO
     com.retail: DEBUG
+    org.springframework.test: INFO
+    org.springframework.web: DEBUG
