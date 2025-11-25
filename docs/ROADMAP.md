@@ -51,7 +51,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build tenant-aware data access layer
 - [x] Implement automatic tenantId injection in queries
 - [ ] Create tenant isolation integration tests
-- [ ] Build tenant onboarding service
+- [x] Build tenant onboarding service
 
 ### Database Layer
 - [x] Configure Spring Data Reactive MongoDB
@@ -80,7 +80,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement product categorization
 - [x] Create product image management
 - [x] Build product search integration (Elasticsearch)
-- [ ] Implement faceted search and filtering
+- [x] Implement faceted search and filtering
 - [ ] Add product inventory tracking
 - [ ] Create product recommendation engine (basic)
 
@@ -201,8 +201,8 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement request/response interceptors
 - [x] Build authentication token management
 - [x] Create error handling utilities
-- [ ] Implement request caching strategy
-- [ ] Add retry logic for failed requests
+- [x] Implement request caching strategy
+- [x] Add retry logic for failed requests
 
 ---
 
