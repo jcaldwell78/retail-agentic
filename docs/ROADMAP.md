@@ -114,10 +114,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 
 ### Inventory Management Service
 - [x] Create reactive Inventory repository (Redis + MongoDB)
-- [ ] Implement real-time inventory tracking
-- [ ] Build inventory reservation on order
-- [ ] Create low-stock alerts
-- [ ] Implement inventory replenishment workflows
+- [x] Implement real-time inventory tracking
+- [x] Build inventory reservation on order
+- [x] Create low-stock alerts
+- [x] Implement inventory replenishment workflows
 - [ ] Build inventory reconciliation service
 
 ### Payment Service
@@ -150,7 +150,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 
 ### Security
 - [ ] Implement Spring Security configuration
-- [ ] Build JWT token generation/validation
+- [x] Build JWT token generation/validation
 - [ ] Create role-based access control (RBAC)
 - [ ] Implement tenant data isolation validation
 - [ ] Add CSRF protection
@@ -180,18 +180,18 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Create Navigation components
 - [ ] Create Table/DataGrid component
 - [ ] Create Loading/Spinner components
-- [ ] Create Error boundary components
+- [x] Create Error boundary components
 - [ ] Create Toast/Notification components
 - [ ] Implement accessibility (ARIA attributes)
 - [ ] Add keyboard navigation support
 
 ### Frontend Infrastructure
 - 🚧 Set up React Router (both apps) - consumer-web complete
-- [ ] Configure state management (Zustand/Redux)
+- [x] Configure state management (Zustand/Redux) - consumer-web complete
 - [x] Set up API client (Axios/Fetch with types) - consumer-web complete
 - [x] Implement authentication context - useAuth hook + AuthProvider complete
 - [x] Create protected route components - ProtectedRoute complete
-- [ ] Set up error handling
+- [x] Set up error handling - ErrorBoundary complete
 - [x] Configure environment variables - config.ts complete
 - [ ] Implement responsive utilities
 
