@@ -1,66 +1,91 @@
 package com.retail.infrastructure.persistence;
 
 import com.retail.domain.product.Product;
+import com.retail.security.tenant.TenantContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * Repository for Product entities with tenant filtering.
- * All queries automatically include tenantId filter via TenantContext.
+ * Repository for Product entities with automatic tenant filtering.
+ * Extends TenantAwareRepository to get automatic tenantId injection.
+ * All queries automatically include tenantId filter from TenantContext.
  */
 @Repository
-public interface ProductRepository extends ReactiveMongoRepository<Product, String> {
+public interface ProductRepository extends TenantAwareRepository<Product, String> {
 
     /**
-     * Find all products for current tenant
-     * Note: tenantId is injected automatically from context
+     * Find product by SKU for current tenant.
+     * TenantId is automatically injected from reactive context.
      */
-    Flux<Product> findByTenantId(String tenantId, Pageable pageable);
+    default Mono<Product> findBySku(String sku) {
+        return TenantContext.getTenantId()
+                .flatMap(tenantId -> findBySkuAndTenantId(sku, tenantId));
+    }
 
     /**
-     * Find product by ID and tenant
-     */
-    Mono<Product> findByIdAndTenantId(String id, String tenantId);
-
-    /**
-     * Find product by SKU and tenant
+     * Find product by SKU and tenant (internal use).
      */
     Mono<Product> findBySkuAndTenantId(String sku, String tenantId);
 
     /**
-     * Find active products for tenant
+     * Find active products for current tenant.
+     * TenantId is automatically injected from reactive context.
      */
-    @Query("{ 'tenantId': ?0, 'status': 'ACTIVE' }")
-    Flux<Product> findActiveProducts(String tenantId, Pageable pageable);
+    default Flux<Product> findActiveProducts(Pageable pageable) {
+        return TenantContext.getTenantId()
+                .flatMapMany(tenantId -> findActiveProductsByTenantId(tenantId, pageable));
+    }
 
     /**
-     * Find products by category for tenant
+     * Find active products by tenant ID (internal use).
+     */
+    @Query("{ 'tenantId': ?0, 'status': 'ACTIVE' }")
+    Flux<Product> findActiveProductsByTenantId(String tenantId, Pageable pageable);
+
+    /**
+     * Find products by category for current tenant.
+     * TenantId is automatically injected from reactive context.
+     */
+    default Flux<Product> findByCategory(String category, Pageable pageable) {
+        return TenantContext.getTenantId()
+                .flatMapMany(tenantId -> findByTenantIdAndCategoryContaining(tenantId, category, pageable));
+    }
+
+    /**
+     * Find products by category and tenant (internal use).
      */
     Flux<Product> findByTenantIdAndCategoryContaining(String tenantId, String category, Pageable pageable);
 
     /**
-     * Find low stock products for tenant
+     * Find low stock products for current tenant.
+     * TenantId is automatically injected from reactive context.
+     */
+    default Flux<Product> findLowStockProducts(int threshold) {
+        return TenantContext.getTenantId()
+                .flatMapMany(tenantId -> findLowStockProductsByTenantId(tenantId, threshold));
+    }
+
+    /**
+     * Find low stock products by tenant ID (internal use).
      */
     @Query("{ 'tenantId': ?0, 'stock': { $lte: ?1 } }")
-    Flux<Product> findLowStockProducts(String tenantId, int threshold);
+    Flux<Product> findLowStockProductsByTenantId(String tenantId, int threshold);
 
     /**
-     * Count products for tenant
+     * Count active products for current tenant.
+     * TenantId is automatically injected from reactive context.
      */
-    Mono<Long> countByTenantId(String tenantId);
+    default Mono<Long> countActiveProducts() {
+        return TenantContext.getTenantId()
+                .flatMap(this::countActiveProductsByTenantId);
+    }
 
     /**
-     * Count active products for tenant
+     * Count active products by tenant ID (internal use).
      */
     @Query(value = "{ 'tenantId': ?0, 'status': 'ACTIVE' }", count = true)
-    Mono<Long> countActiveProducts(String tenantId);
-
-    /**
-     * Delete product by ID and tenant (ensures tenant isolation)
-     */
-    Mono<Void> deleteByIdAndTenantId(String id, String tenantId);
+    Mono<Long> countActiveProductsByTenantId(String tenantId);
 }
