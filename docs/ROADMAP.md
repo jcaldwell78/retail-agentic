@@ -144,9 +144,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create error response standards
 - [ ] Build rate limiting
 - [ ] Implement request validation
-- [ ] Add API documentation (OpenAPI/Swagger)
+- [x] Add API documentation (OpenAPI/Swagger)
 - [ ] Create API client generation
-- [ ] Implement CORS configuration
+- [x] Implement CORS configuration
 
 ### Security
 - [ ] Implement Spring Security configuration
@@ -163,8 +163,8 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ## Phase 3: Frontend Foundation
 
 ### Design System
-- [ ] Install and configure Tailwind CSS (both apps)
-- [ ] Install and configure shadcn/ui (both apps)
+- 🚧 Install and configure Tailwind CSS (both apps) - consumer-web complete
+- 🚧 Install and configure shadcn/ui (both apps) - consumer-web complete
 - [ ] Define color palette (customizable per tenant)
 - [ ] Define typography system
 - [ ] Create spacing and layout standards
@@ -186,7 +186,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Add keyboard navigation support
 
 ### Frontend Infrastructure
-- [ ] Set up React Router (both apps)
+- 🚧 Set up React Router (both apps) - consumer-web complete
 - [ ] Configure state management (Zustand/Redux)
 - [ ] Set up API client (Axios/Fetch with types)
 - [ ] Implement authentication context
