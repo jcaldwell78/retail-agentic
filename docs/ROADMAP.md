@@ -28,7 +28,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Set up Elasticsearch container configuration
 - [x] Create environment variable templates (.env.example files)
 - [x] Document local development setup in root README
-- [ ] Configure hot-reload for all services
+- [x] Configure hot-reload for all services
 
 ### Build & CI/CD
 - [x] Configure GitHub Actions workflows
@@ -45,36 +45,36 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ## Phase 2: Backend Core (Reactive Spring Boot)
 
 ### Multi-Tenant Infrastructure
-- [ ] Design tenant resolution strategy (subdomain + path)
-- [ ] Implement tenant context propagation (reactive)
-- [ ] Create TenantContext reactive filter/middleware
+- [x] Design tenant resolution strategy (subdomain + path)
+- [x] Implement tenant context propagation (reactive)
+- [x] Create TenantContext reactive filter/middleware
 - [ ] Build tenant-aware data access layer
 - [ ] Implement automatic tenantId injection in queries
 - [ ] Create tenant isolation integration tests
 - [ ] Build tenant onboarding service
 
 ### Database Layer
-- [ ] Configure Spring Data Reactive MongoDB
-- [ ] Configure Spring Data Redis Reactive
-- [ ] Set up Elasticsearch client (reactive)
-- [ ] Configure PostgreSQL with R2DBC (if needed)
-- [ ] Create base repository interfaces with tenant filtering
-- [ ] Implement health checks for all databases
+- [x] Configure Spring Data Reactive MongoDB
+- [x] Configure Spring Data Redis Reactive
+- [x] Set up Elasticsearch client (reactive)
+- [x] Configure PostgreSQL with R2DBC (if needed)
+- [x] Create base repository interfaces with tenant filtering
+- [x] Implement health checks for all databases
 - [ ] Set up database migration strategy
 - [ ] Create test database configuration (in-memory/embedded)
 
 ### Core Domain Models
-- [ ] Design Product entity with flexible attributes
-- [ ] Design User/Customer entity
-- [ ] Design Order entity with line items
-- [ ] Design Shopping Cart entity
+- [x] Design Product entity with flexible attributes
+- [x] Design User/Customer entity
+- [x] Design Order entity with line items
+- [x] Design Shopping Cart entity
 - [ ] Design Inventory entity
-- [ ] Design Tenant/Store configuration entity
-- [ ] Design Branding/Whitelabel settings entity
-- [ ] Implement validation for all models
+- [x] Design Tenant/Store configuration entity
+- [x] Design Branding/Whitelabel settings entity
+- [x] Implement validation for all models
 
 ### Product Catalog Service
-- [ ] Create reactive Product repository (MongoDB)
+- [x] Create reactive Product repository (MongoDB)
 - [ ] Implement product CRUD operations (Mono/Flux)
 - [ ] Build flexible product attributes system
 - [ ] Implement product categorization
@@ -85,7 +85,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Create product recommendation engine (basic)
 
 ### User Management Service
-- [ ] Create reactive User repository (MongoDB)
+- [x] Create reactive User repository (MongoDB)
 - [ ] Implement user registration (reactive)
 - [ ] Build authentication service (JWT tokens)
 - [ ] Implement password hashing (BCrypt)
