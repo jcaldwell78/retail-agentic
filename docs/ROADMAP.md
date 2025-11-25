@@ -16,18 +16,18 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Bootstrap backend (Java/Spring Boot)
 - [x] Bootstrap consumer-web (React/TypeScript/Vite)
 - [x] Bootstrap admin-web (React/TypeScript/Vite)
-- [ ] Set up shared libraries directory
-- [ ] Configure monorepo build orchestration
-- [ ] Define shared TypeScript types/interfaces
-- [ ] Create root-level scripts for common operations
+- [x] Set up shared libraries directory
+- [x] Configure monorepo build orchestration
+- [x] Define shared TypeScript types/interfaces
+- [x] Create root-level scripts for common operations
 
 ### Development Environment
-- [ ] Create Docker Compose for local development
-- [ ] Set up MongoDB container configuration
-- [ ] Set up Redis container configuration
-- [ ] Set up Elasticsearch container configuration
-- [ ] Create environment variable templates (.env.example files)
-- [ ] Document local development setup in root README
+- [x] Create Docker Compose for local development
+- [x] Set up MongoDB container configuration
+- [x] Set up Redis container configuration
+- [x] Set up Elasticsearch container configuration
+- [x] Create environment variable templates (.env.example files)
+- [x] Document local development setup in root README
 - [ ] Configure hot-reload for all services
 
 ### Build & CI/CD

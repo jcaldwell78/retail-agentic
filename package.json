@@ -1,0 +1,50 @@
+{
+  "name": "retail-agentic",
+  "version": "0.1.0",
+  "description": "Multi-tenant retail platform with reactive backend and modern frontends",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "consumer-web",
+    "admin-web"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd backend && mvn clean install && cd ../shared && npm install && cd ../consumer-web && npm install && cd ../admin-web && npm install",
+    "dev:consumer": "cd consumer-web && npm run dev",
+    "dev:admin": "cd admin-web && npm run dev",
+    "dev:backend": "cd backend && mvn spring-boot:run",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:consumer\" \"npm run dev:admin\"",
+    "build:shared": "cd shared && npm run build",
+    "build:consumer": "cd consumer-web && npm run build",
+    "build:admin": "cd admin-web && npm run build",
+    "build:backend": "cd backend && mvn clean package",
+    "build:frontend": "npm run build:shared && npm run build:consumer && npm run build:admin",
+    "build:all": "npm run build:backend && npm run build:frontend",
+    "test:consumer": "cd consumer-web && npm test",
+    "test:admin": "cd admin-web && npm test",
+    "test:backend": "cd backend && mvn test",
+    "test:shared": "cd shared && npm run type-check",
+    "test:all": "npm run test:backend && npm run test:shared && npm run test:consumer && npm run test:admin",
+    "lint:consumer": "cd consumer-web && npm run lint",
+    "lint:admin": "cd admin-web && npm run lint",
+    "lint:shared": "cd shared && npm run lint",
+    "lint:all": "npm run lint:shared && npm run lint:consumer && npm run lint:admin",
+    "type-check:consumer": "cd consumer-web && npm run type-check",
+    "type-check:admin": "cd admin-web && npm run type-check",
+    "type-check:shared": "cd shared && npm run type-check",
+    "type-check:all": "npm run type-check:shared && npm run type-check:consumer && npm run type-check:admin",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "clean:frontend": "cd shared && rm -rf node_modules dist && cd ../consumer-web && rm -rf node_modules dist && cd ../admin-web && rm -rf node_modules dist",
+    "clean:backend": "cd backend && mvn clean",
+    "clean:all": "npm run clean:frontend && npm run clean:backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

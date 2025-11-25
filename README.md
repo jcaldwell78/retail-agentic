@@ -72,24 +72,44 @@ This platform enables multiple retail businesses (tenants) to operate their own 
 
 ### Local Development
 
+#### Option 1: Using Monorepo Scripts (Recommended)
+
 ```bash
 # Clone repository
 git clone <repository-url>
 cd retail-agentic
 
+# Install all dependencies (backend + frontends)
+npm run install:all
+
 # Start databases (MongoDB, Redis, Elasticsearch, PostgreSQL)
+npm run docker:up
+
+# Start all services in parallel (backend + both frontends)
+npm run dev:all
+
+# Or start services individually:
+npm run dev:backend    # Backend only
+npm run dev:consumer   # Consumer web only
+npm run dev:admin      # Admin web only
+```
+
+#### Option 2: Manual Setup
+
+```bash
+# Start databases
 docker-compose up -d
 
-# Start backend
+# Start backend (terminal 1)
 cd backend
 mvn spring-boot:run
 
-# Start consumer web (in new terminal)
+# Start consumer web (terminal 2)
 cd consumer-web
 npm install
 npm run dev
 
-# Start admin web (in new terminal)
+# Start admin web (terminal 3)
 cd admin-web
 npm install
 npm run dev
@@ -99,6 +119,28 @@ npm run dev
 - Consumer Web: http://localhost:3000
 - Admin Web: http://localhost:3001
 - Backend API: http://localhost:8080
+
+**Useful Commands:**
+
+```bash
+# Build everything
+npm run build:all
+
+# Run all tests
+npm run test:all
+
+# Check types across all frontends
+npm run type-check:all
+
+# Lint all frontend code
+npm run lint:all
+
+# Stop databases
+npm run docker:down
+
+# View database logs
+npm run docker:logs
+```
 
 ### Using Kubernetes Locally
 
@@ -118,8 +160,30 @@ kubectl get pods -n retail-platform
 ```
 retail-agentic/
 ├── backend/                 # Java/Spring Boot backend
+│   ├── src/                 # Source code
+│   ├── pom.xml              # Maven configuration
+│   ├── .env.example         # Environment variable template
+│   └── README.md            # Backend-specific docs
 ├── consumer-web/            # Customer-facing React app
+│   ├── src/                 # Source code
+│   ├── package.json         # Dependencies
+│   ├── .env.example         # Environment variable template
+│   └── README.md            # Consumer web docs
 ├── admin-web/               # Admin dashboard React app
+│   ├── src/                 # Source code
+│   ├── package.json         # Dependencies
+│   ├── .env.example         # Environment variable template
+│   └── README.md            # Admin web docs
+├── shared/                  # Shared TypeScript code
+│   ├── types/               # Shared type definitions
+│   ├── utils/               # Utility functions
+│   ├── config/              # Configuration constants
+│   ├── components/          # Shared React components
+│   ├── package.json         # Dependencies
+│   └── README.md            # Shared library docs
+├── docker/                  # Docker configuration
+│   ├── mongodb/             # MongoDB init scripts
+│   └── postgres/            # PostgreSQL init scripts
 ├── helm/                    # Helm charts for deployment
 │   ├── charts/              # Service-specific charts
 │   ├── environments/        # Environment configs
@@ -130,12 +194,14 @@ retail-agentic/
 │   ├── design/              # UI/UX design system
 │   ├── development/         # Development guides
 │   ├── deployment/          # Infrastructure docs
-│   └── guides/              # How-to guides
+│   ├── guides/              # How-to guides
+│   └── ROADMAP.md           # Project roadmap
 ├── .claude/                 # Claude Code AI agent configs
 │   └── agents/              # Agent descriptor files
 ├── .github/
 │   └── workflows/           # GitHub Actions CI/CD
 ├── docker-compose.yml       # Local development stack
+├── package.json             # Monorepo scripts
 ├── CLAUDE.md                # AI agent project context
 └── README.md                # This file
 ```
