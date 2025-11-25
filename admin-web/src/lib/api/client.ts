@@ -8,6 +8,18 @@ const API_BASE_URL = config.api.baseUrl;
 const API_TIMEOUT = config.api.timeout;
 
 /**
+ * Retry configuration
+ */
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // Initial delay in ms
+const RETRY_STATUS_CODES = [408, 429, 500, 502, 503, 504]; // Status codes to retry
+
+/**
+ * Sleep utility for retry delays
+ */
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
  * Create axios instance with default configuration
  */
 const apiClient: AxiosInstance = axios.create({
@@ -86,12 +98,49 @@ apiClient.interceptors.response.use(
 );
 
 /**
- * Generic API request function with type safety
+ * Retry wrapper with exponential backoff
+ */
+async function retryRequest<T>(
+  config: AxiosRequestConfig,
+  retryCount = 0
+): Promise<AxiosResponse<T>> {
+  try {
+    return await apiClient.request<T>(config);
+  } catch (error) {
+    const axiosError = error as AxiosError;
+
+    // Check if we should retry
+    const shouldRetry =
+      retryCount < MAX_RETRIES &&
+      axiosError.response &&
+      RETRY_STATUS_CODES.includes(axiosError.response.status);
+
+    if (!shouldRetry) {
+      throw error;
+    }
+
+    // Calculate exponential backoff delay
+    const delay = RETRY_DELAY * Math.pow(2, retryCount);
+
+    console.warn(
+      `Request failed (${axiosError.response?.status}), retrying in ${delay}ms... (Attempt ${retryCount + 1}/${MAX_RETRIES})`
+    );
+
+    // Wait before retrying
+    await sleep(delay);
+
+    // Retry the request
+    return retryRequest<T>(config, retryCount + 1);
+  }
+}
+
+/**
+ * Generic API request function with type safety and retry logic
  */
 export async function apiRequest<T>(
   config: AxiosRequestConfig
 ): Promise<T> {
-  const response = await apiClient.request<T>(config);
+  const response = await retryRequest<T>(config);
   return response.data;
 }
 
