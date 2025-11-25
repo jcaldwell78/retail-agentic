@@ -68,14 +68,14 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Design User/Customer entity
 - [x] Design Order entity with line items
 - [x] Design Shopping Cart entity
-- [ ] Design Inventory entity
+- [x] Design Inventory entity
 - [x] Design Tenant/Store configuration entity
 - [x] Design Branding/Whitelabel settings entity
 - [x] Implement validation for all models
 
 ### Product Catalog Service
 - [x] Create reactive Product repository (MongoDB)
-- [ ] Implement product CRUD operations (Mono/Flux)
+- [x] Implement product CRUD operations (Mono/Flux)
 - [ ] Build flexible product attributes system
 - [ ] Implement product categorization
 - [ ] Create product image management
@@ -86,16 +86,16 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 
 ### User Management Service
 - [x] Create reactive User repository (MongoDB)
-- [ ] Implement user registration (reactive)
-- [ ] Build authentication service (JWT tokens)
-- [ ] Implement password hashing (BCrypt)
-- [ ] Create user profile management
-- [ ] Build address management for users
-- [ ] Implement user roles and permissions
+- [x] Implement user registration (reactive)
+- [x] Build authentication service (JWT tokens)
+- [x] Implement password hashing (BCrypt)
+- [x] Create user profile management
+- [x] Build address management for users
+- [x] Implement user roles and permissions
 - [ ] Add OAuth2 integration (Google, Facebook)
 
 ### Shopping Cart Service
-- [ ] Create reactive Cart repository (Redis)
+- [x] Create reactive Cart repository (Redis)
 - [ ] Implement add to cart functionality
 - [ ] Build cart update operations
 - [ ] Implement cart persistence to MongoDB
@@ -104,7 +104,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Implement cart sharing/save for later
 
 ### Order Management Service
-- [ ] Create reactive Order repository (MongoDB)
+- [x] Create reactive Order repository (MongoDB)
 - [ ] Implement order creation workflow
 - [ ] Build order status tracking
 - [ ] Create order history retrieval
@@ -113,7 +113,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Add order notifications (email/SMS)
 
 ### Inventory Management Service
-- [ ] Create reactive Inventory repository (Redis + MongoDB)
+- [x] Create reactive Inventory repository (Redis + MongoDB)
 - [ ] Implement real-time inventory tracking
 - [ ] Build inventory reservation on order
 - [ ] Create low-stock alerts
@@ -139,9 +139,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Create admin analytics dashboard data
 
 ### API Layer
-- [ ] Design RESTful API structure
-- [ ] Implement API versioning strategy
-- [ ] Create error response standards
+- [x] Design RESTful API structure
+- [x] Implement API versioning strategy
+- [x] Create error response standards
 - [ ] Build rate limiting
 - [ ] Implement request validation
 - [ ] Add API documentation (OpenAPI/Swagger)
