@@ -48,8 +48,8 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Design tenant resolution strategy (subdomain + path)
 - [x] Implement tenant context propagation (reactive)
 - [x] Create TenantContext reactive filter/middleware
-- [ ] Build tenant-aware data access layer
-- [ ] Implement automatic tenantId injection in queries
+- [x] Build tenant-aware data access layer
+- [x] Implement automatic tenantId injection in queries
 - [ ] Create tenant isolation integration tests
 - [ ] Build tenant onboarding service
 
@@ -76,8 +76,8 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ### Product Catalog Service
 - [x] Create reactive Product repository (MongoDB)
 - [x] Implement product CRUD operations (Mono/Flux)
-- [ ] Build flexible product attributes system
-- [ ] Implement product categorization
+- [x] Build flexible product attributes system
+- [x] Implement product categorization
 - [ ] Create product image management
 - [ ] Build product search integration (Elasticsearch)
 - [ ] Implement faceted search and filtering
