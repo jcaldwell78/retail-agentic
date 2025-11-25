@@ -96,20 +96,20 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 
 ### Shopping Cart Service
 - [x] Create reactive Cart repository (Redis)
-- [ ] Implement add to cart functionality
-- [ ] Build cart update operations
+- [x] Implement add to cart functionality
+- [x] Build cart update operations
 - [ ] Implement cart persistence to MongoDB
-- [ ] Create cart expiration logic
-- [ ] Build cart to order conversion
+- [x] Create cart expiration logic
+- [x] Build cart to order conversion
 - [ ] Implement cart sharing/save for later
 
 ### Order Management Service
 - [x] Create reactive Order repository (MongoDB)
-- [ ] Implement order creation workflow
-- [ ] Build order status tracking
-- [ ] Create order history retrieval
-- [ ] Implement order cancellation logic
-- [ ] Build order fulfillment tracking
+- [x] Implement order creation workflow
+- [x] Build order status tracking
+- [x] Create order history retrieval
+- [x] Implement order cancellation logic
+- [x] Build order fulfillment tracking
 - [ ] Add order notifications (email/SMS)
 
 ### Inventory Management Service
@@ -189,10 +189,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - 🚧 Set up React Router (both apps) - consumer-web complete
 - [ ] Configure state management (Zustand/Redux)
 - [x] Set up API client (Axios/Fetch with types) - consumer-web complete
-- 🚧 Implement authentication context - useAuth hook created
-- [ ] Create protected route components
+- [x] Implement authentication context - useAuth hook + AuthProvider complete
+- [x] Create protected route components - ProtectedRoute complete
 - [ ] Set up error handling
-- [ ] Configure environment variables
+- [x] Configure environment variables - config.ts complete
 - [ ] Implement responsive utilities
 
 ### API Integration
