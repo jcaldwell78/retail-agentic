@@ -323,7 +323,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Add product import/export (CSV)
 
 ### Order Management
-- [ ] Build order list/table with filtering
+- [x] Build order list/table with filtering
 - [ ] Create order detail view
 - [ ] Implement order status updates
 - [ ] Build fulfillment workflow
