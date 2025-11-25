@@ -105,7 +105,7 @@ export default function OrdersPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" aria-label={`View order ${order.id}`}>
                         <Eye className="h-4 w-4" />
                       </Button>
                     </TableCell>
