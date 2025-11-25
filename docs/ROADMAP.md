@@ -188,19 +188,19 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ### Frontend Infrastructure
 - 🚧 Set up React Router (both apps) - consumer-web complete
 - [ ] Configure state management (Zustand/Redux)
-- [ ] Set up API client (Axios/Fetch with types)
-- [ ] Implement authentication context
+- [x] Set up API client (Axios/Fetch with types) - consumer-web complete
+- 🚧 Implement authentication context - useAuth hook created
 - [ ] Create protected route components
 - [ ] Set up error handling
 - [ ] Configure environment variables
 - [ ] Implement responsive utilities
 
 ### API Integration
-- [ ] Generate TypeScript types from OpenAPI
-- [ ] Create API client hooks
-- [ ] Implement request/response interceptors
-- [ ] Build authentication token management
-- [ ] Create error handling utilities
+- 🚧 Generate TypeScript types from OpenAPI - manual types created
+- [x] Create API client hooks
+- [x] Implement request/response interceptors
+- [x] Build authentication token management
+- [x] Create error handling utilities
 - [ ] Implement request caching strategy
 - [ ] Add retry logic for failed requests
 
