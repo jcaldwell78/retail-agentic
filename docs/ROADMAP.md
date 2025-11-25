@@ -78,8 +78,8 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement product CRUD operations (Mono/Flux)
 - [x] Build flexible product attributes system
 - [x] Implement product categorization
-- [ ] Create product image management
-- [ ] Build product search integration (Elasticsearch)
+- [x] Create product image management
+- [x] Build product search integration (Elasticsearch)
 - [ ] Implement faceted search and filtering
 - [ ] Add product inventory tracking
 - [ ] Create product recommendation engine (basic)
@@ -98,7 +98,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create reactive Cart repository (Redis)
 - [x] Implement add to cart functionality
 - [x] Build cart update operations
-- [ ] Implement cart persistence to MongoDB
+- [x] Implement cart persistence to MongoDB
 - [x] Create cart expiration logic
 - [x] Build cart to order conversion
 - [ ] Implement cart sharing/save for later
@@ -118,7 +118,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build inventory reservation on order
 - [x] Create low-stock alerts
 - [x] Implement inventory replenishment workflows
-- [ ] Build inventory reconciliation service
+- [x] Build inventory reconciliation service
 
 ### Payment Service
 - [ ] Design payment transaction model (PostgreSQL)
