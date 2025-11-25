@@ -23,20 +23,30 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final CartPersistenceService persistenceService;
 
-    public CartService(CartRepository cartRepository, ProductRepository productRepository) {
+    public CartService(
+            CartRepository cartRepository,
+            ProductRepository productRepository,
+            CartPersistenceService persistenceService) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
+        this.persistenceService = persistenceService;
     }
 
     /**
-     * Get or create cart for session
+     * Get or create cart for session.
+     * Attempts to load from Redis, then MongoDB if not found.
      */
     public Mono<Cart> getOrCreateCart(String sessionId) {
         return TenantContext.getTenantId()
             .flatMap(tenantId ->
                 cartRepository.findBySessionIdAndTenantId(sessionId, tenantId)
-                    .switchIfEmpty(createNewCart(sessionId, tenantId))
+                    .switchIfEmpty(
+                        // Try to recover from MongoDB
+                        persistenceService.recoverCartFromMongoDB(sessionId, tenantId)
+                            .switchIfEmpty(createNewCart(sessionId, tenantId))
+                    )
             );
     }
 
@@ -62,7 +72,7 @@ public class CartService {
         cart.setUpdatedAt(now);
         cart.setExpiresAt(now.plus(7, ChronoUnit.DAYS));
 
-        return cartRepository.save(cart);
+        return persistenceService.persistCart(cart);
     }
 
     /**
@@ -111,7 +121,7 @@ public class CartService {
                         // Recalculate summary
                         recalculateSummary(cart);
 
-                        return cartRepository.save(cart);
+                        return persistenceService.persistCart(cart);
                     }
                 })
             );
@@ -168,7 +178,7 @@ public class CartService {
                 // Recalculate summary
                 recalculateSummary(cart);
 
-                return cartRepository.save(cart);
+                return persistenceService.persistCart(cart);
             });
     }
 
@@ -194,7 +204,7 @@ public class CartService {
                 // Recalculate summary
                 recalculateSummary(cart);
 
-                return cartRepository.save(cart);
+                return persistenceService.persistCart(cart);
             });
     }
 
@@ -214,7 +224,7 @@ public class CartService {
                     BigDecimal.ZERO
                 ));
 
-                return cartRepository.save(cart);
+                return persistenceService.persistCart(cart);
             });
     }
 
@@ -247,7 +257,7 @@ public class CartService {
                     .flatMap(cart -> {
                         cart.setExpiresAt(Instant.now().plus(7, ChronoUnit.DAYS));
                         cart.setUpdatedAt(Instant.now());
-                        return cartRepository.save(cart);
+                        return persistenceService.persistCart(cart);
                     })
             );
     }
