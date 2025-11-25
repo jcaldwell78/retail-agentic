@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import config from '@/lib/config';
 
 /**
  * API client configuration
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-const API_TIMEOUT = 30000; // 30 seconds
+const API_BASE_URL = config.api.baseUrl;
+const API_TIMEOUT = config.api.timeout;
 
 /**
  * Create axios instance with default configuration
