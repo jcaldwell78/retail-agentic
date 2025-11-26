@@ -3,7 +3,10 @@ import { AuthProvider } from '@/components/auth/AuthProvider';
 import { AdminSidebar } from '@/components/AdminSidebar';
 import DashboardPage from '@/pages/DashboardPage';
 import ProductsPage from '@/pages/ProductsPage';
+import ProductCreatePage from '@/pages/ProductCreatePage';
+import ProductEditPage from '@/pages/ProductEditPage';
 import OrdersPage from '@/pages/OrdersPage';
+import OrderDetailPage from '@/pages/OrderDetailPage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
@@ -30,7 +33,10 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/new" element={<ProductCreatePage />} />
+          <Route path="/products/:id/edit" element={<ProductEditPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders/:id" element={<OrderDetailPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
