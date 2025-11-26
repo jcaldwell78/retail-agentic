@@ -48,6 +48,69 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Promotional Banners */}
+      <section className="py-8 bg-gray-50" data-testid="promotional-banners">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Banner 1 - Summer Sale */}
+            <Link to="/products?category=sale" className="group">
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div className="relative bg-gradient-to-r from-orange-400 to-red-500 p-8 md:p-12 text-white">
+                  <div className="relative z-10">
+                    <span className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium mb-4">
+                      Limited Time Offer
+                    </span>
+                    <h3 className="text-3xl md:text-4xl font-bold mb-3">
+                      Summer Sale
+                    </h3>
+                    <p className="text-lg mb-6 text-orange-50">
+                      Up to 50% off on selected items
+                    </p>
+                    <span className="inline-flex items-center gap-2 font-semibold group-hover:gap-3 transition-all">
+                      Shop Now
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="absolute right-0 bottom-0 opacity-20 text-8xl">
+                    🎉
+                  </div>
+                </div>
+              </Card>
+            </Link>
+
+            {/* Banner 2 - New Arrivals */}
+            <Link to="/products?filter=new" className="group">
+              <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 p-8 md:p-12 text-white">
+                  <div className="relative z-10">
+                    <span className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium mb-4">
+                      Just Arrived
+                    </span>
+                    <h3 className="text-3xl md:text-4xl font-bold mb-3">
+                      New Collection
+                    </h3>
+                    <p className="text-lg mb-6 text-blue-50">
+                      Discover the latest trends
+                    </p>
+                    <span className="inline-flex items-center gap-2 font-semibold group-hover:gap-3 transition-all">
+                      Explore Now
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div className="absolute right-0 bottom-0 opacity-20 text-8xl">
+                    ✨
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Categories */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">

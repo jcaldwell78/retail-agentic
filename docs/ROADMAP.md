@@ -223,7 +223,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement hero section
 - [x] Build featured products carousel
 - [x] Create category navigation
-- [ ] Add promotional banners
+- [x] Add promotional banners
 - [x] Implement responsive layout
 - [x] Add animations and transitions
 - [ ] Optimize images and performance
@@ -267,7 +267,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement promo code input
 - [ ] Build save for later
 - [ ] Add cart persistence
-- [ ] Create mini-cart component
+- [x] Create mini-cart component
 - [ ] **E2E**: Test add to cart workflow
 - [ ] **E2E**: Verify quantity update functionality
 - [ ] **E2E**: Test remove item from cart
@@ -276,15 +276,15 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] **E2E**: Verify empty cart state
 
 ### Checkout
-- [ ] Design multi-step checkout flow
-- [ ] Build shipping address form
+- [x] Design multi-step checkout flow
+- [x] Build shipping address form
 - [ ] Create billing address form
 - [ ] Implement shipping method selection
 - [ ] Build payment information form
 - [ ] Create order review step
 - [ ] Implement order confirmation page
 - [ ] Add guest checkout option
-- [ ] Build checkout progress indicator
+- [x] Build checkout progress indicator
 - [ ] **E2E**: Test complete checkout flow (happy path)
 - [ ] **E2E**: Test guest checkout workflow
 - [ ] **E2E**: Verify multi-step navigation

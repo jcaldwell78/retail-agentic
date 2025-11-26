@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { MiniCart } from '@/components/MiniCart';
 
 export function Navigation() {
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMiniCartOpen, setIsMiniCartOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -42,14 +44,19 @@ export function Navigation() {
 
         {/* User Menu */}
         <div className="hidden items-center space-x-4 md:flex">
-          <Link to="/cart">
-            <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart, 0 items">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground" aria-hidden="true">
-                0
-              </span>
-            </Button>
-          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={() => setIsMiniCartOpen(true)}
+            aria-label="Shopping cart, 2 items"
+            data-testid="cart-button"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground" aria-hidden="true">
+              2
+            </span>
+          </Button>
 
           {user ? (
             <div className="flex items-center space-x-2">
@@ -78,14 +85,18 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         <div className="ml-auto flex items-center gap-2 md:hidden">
-          <Link to="/cart">
-            <Button variant="ghost" size="icon" className="relative" aria-label="Shopping cart, 0 items">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground" aria-hidden="true">
-                0
-              </span>
-            </Button>
-          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={() => setIsMiniCartOpen(true)}
+            aria-label="Shopping cart, 2 items"
+          >
+            <ShoppingCart className="h-5 w-5" />
+            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground" aria-hidden="true">
+              2
+            </span>
+          </Button>
           <Button
             variant="ghost"
             size="icon"
@@ -156,6 +167,9 @@ export function Navigation() {
           </div>
         </div>
       )}
+
+      {/* Mini Cart */}
+      <MiniCart isOpen={isMiniCartOpen} onClose={() => setIsMiniCartOpen(false)} />
     </nav>
   );
 }
