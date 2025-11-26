@@ -333,13 +333,186 @@ Different admin roles have different permissions:
 
 ## Testing
 
+This application supports multiple types of testing to ensure quality and reliability.
+
 ### Unit Tests
 
-Test individual components and functions:
+Test individual components and functions using Vitest:
 
 ```bash
+# Run tests in watch mode
 npm test
+
+# Run tests once
+npm test -- --run
+
+# Run with coverage
+npm run test:coverage
+
+# Run specific test file
+npm test -- TenantList.test.tsx
+
+# Open interactive UI
+npm run test:ui
 ```
+
+**Writing Unit Tests:**
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import ProductForm from './ProductForm'
+
+describe('ProductForm', () => {
+  it('should validate required fields', async () => {
+    const user = userEvent.setup()
+    const handleSubmit = vi.fn()
+    render(<ProductForm onSubmit={handleSubmit} />)
+
+    await user.click(screen.getByTestId('save-product-button'))
+    expect(screen.getByText('Name is required')).toBeInTheDocument()
+    expect(handleSubmit).not.toHaveBeenCalled()
+  })
+})
+```
+
+### End-to-End (E2E) Tests
+
+E2E tests use Playwright to test the entire admin dashboard from a user's perspective.
+
+#### Prerequisites
+
+Install Playwright browsers (one-time setup):
+
+```bash
+npm run playwright:install
+```
+
+#### Running E2E Tests
+
+```bash
+# Run all E2E tests (against real backend if available)
+npm run test:e2e
+
+# Run with mock server (no backend needed) - RECOMMENDED
+npm run test:e2e:mock
+
+# Interactive mode with time-travel debugging
+npm run test:e2e:ui
+
+# See browser while tests run
+npm run test:e2e:headed
+
+# Debug mode with step-through execution
+npm run test:e2e:debug
+```
+
+#### Test Modes
+
+**Mock Server Mode (Recommended for Development)**
+
+Uses MSW (Mock Service Worker) to simulate backend API responses:
+
+```bash
+# Use mock server (recommended)
+npm run test:e2e:mock
+```
+
+**Note**: The scripts use `cross-env` for cross-platform compatibility (works on Windows, macOS, and Linux).
+
+Benefits:
+- No backend required
+- Fast execution
+- Predictable test data
+- Perfect for CI/CD
+- Isolated frontend testing
+
+**Real Backend Mode**
+
+Tests against actual running backend:
+
+```bash
+# Start backend first
+cd ../backend
+mvn spring-boot:run
+
+# Then run E2E tests
+cd ../admin-web
+npm run test:e2e
+```
+
+Benefits:
+- Full integration testing
+- Validates real API contracts
+- Tests with actual data
+
+#### E2E Test Structure
+
+Tests are located in `e2e/` directory:
+
+```
+e2e/
+├── admin.spec.ts          # Main admin E2E test suite
+└── setup.ts               # Test setup and configuration
+```
+
+**Test Coverage:**
+- Authentication (login/logout)
+- Dashboard overview and metrics
+- Product management (CRUD operations)
+- Order management
+- Filtering and search
+- Responsive design
+
+**Writing E2E Tests:**
+
+```typescript
+import { test, expect } from '@playwright/test'
+
+test.describe('Product Management', () => {
+  test.beforeEach(async ({ page }) => {
+    // Login before each test
+    await page.goto('/login')
+    await page.fill('[data-testid="email-input"]', 'admin@example.com')
+    await page.fill('[data-testid="password-input"]', 'admin123')
+    await page.click('[data-testid="login-button"]')
+    await page.click('[data-testid="nav-products"]')
+  })
+
+  test('should create new product', async ({ page }) => {
+    await page.click('[data-testid="create-product-button"]')
+    await page.fill('[data-testid="product-name"]', 'New Product')
+    await page.fill('[data-testid="product-price"]', '99.99')
+    await page.click('[data-testid="save-product-button"]')
+
+    await expect(page.locator('[data-testid="success-message"]')).toBeVisible()
+  })
+})
+```
+
+#### Best Practices
+
+1. **Use data-testid attributes** for stable selectors:
+   ```tsx
+   <button data-testid="delete-product">Delete</button>
+   ```
+
+2. **Mock API responses** in `src/mocks/handlers.ts`:
+   ```typescript
+   http.get('/api/v1/admin/products', () => {
+     return HttpResponse.json({
+       content: [
+         { id: '1', name: 'Product 1', status: 'ACTIVE' }
+       ],
+       totalElements: 1
+     })
+   })
+   ```
+
+3. **Test admin workflows**, not implementation details
+
+4. **Setup authentication** in beforeEach for protected routes
 
 ### Component Tests
 
@@ -348,15 +521,21 @@ Test React components with admin workflows:
 ```typescript
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import TenantCreationForm from './TenantCreationForm'
 
 it('should create new tenant', async () => {
   const user = userEvent.setup()
-  render(<TenantCreationForm />)
+  const handleCreate = vi.fn()
+  render(<TenantCreationForm onCreate={handleCreate} />)
 
   await user.type(screen.getByLabelText('Tenant Name'), 'New Store')
+  await user.type(screen.getByLabelText('Domain'), 'newstore.com')
   await user.click(screen.getByText('Create Tenant'))
 
-  expect(screen.getByText('Tenant created successfully')).toBeInTheDocument()
+  expect(handleCreate).toHaveBeenCalledWith({
+    name: 'New Store',
+    domain: 'newstore.com'
+  })
 })
 ```
 
@@ -367,13 +546,63 @@ Test admin workflows end-to-end:
 ```typescript
 it('should complete product import', async () => {
   render(<App />)
+
   // Navigate to products
+  await user.click(screen.getByTestId('nav-products'))
+
   // Upload CSV file
-  // Confirm import
+  const file = new File(['name,price\nTest,99.99'], 'products.csv')
+  await user.upload(screen.getByTestId('file-upload'), file)
+  await user.click(screen.getByTestId('import-button'))
+
   // Verify products added
   expect(screen.getByText('100 products imported')).toBeInTheDocument()
 })
 ```
+
+### Test Coverage
+
+Generate and view coverage reports:
+
+```bash
+# Generate coverage report
+npm run test:coverage
+
+# View in browser (creates coverage/index.html)
+open coverage/index.html
+```
+
+Target coverage: **80%** for all files
+
+### Continuous Integration
+
+All tests run automatically in CI/CD:
+
+```yaml
+- Unit tests (npm test -- --run)
+- E2E tests with mock server (npm run test:e2e:mock)
+- Type checking (npm run type-check)
+- Linting (npm run lint)
+```
+
+### Troubleshooting Tests
+
+**E2E Tests Fail with Authentication**
+- Verify mock auth handlers in `src/mocks/handlers.ts`
+- Check that login credentials match mock data
+- Ensure session/token handling is correct
+
+**Tests Timeout**
+- Increase timeout in `playwright.config.ts`
+- Check if data tables are loading correctly
+- Verify mock server pagination responses
+
+**Mock Server Not Working**
+- Ensure `USE_MOCK_SERVER=true` is set
+- Check that `e2e/setup.ts` is being executed
+- Verify handlers are properly configured
+
+For more details, see [E2E_TESTING.md](../E2E_TESTING.md)
 
 ## Building for Production
 

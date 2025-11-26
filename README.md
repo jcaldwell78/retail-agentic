@@ -245,22 +245,138 @@ See [CLAUDE.md](./CLAUDE.md) for AI agent usage and project context.
 
 ### Testing
 
+The project supports multiple levels of testing to ensure quality and reliability.
+
+#### Unit Tests
+
+**Backend (Java/Spring)**
+
 ```bash
-# Backend unit tests
+cd backend
+
+# Run all unit tests
+mvn test
+
+# Run specific test class
+mvn test -Dtest=ProductServiceTest
+
+# Run with coverage report
+mvn test jacoco:report
+
+# View coverage report
+open target/site/jacoco/index.html
+```
+
+Target coverage: **80%** (enforced by JaCoCo)
+
+**Frontend (React/TypeScript)**
+
+```bash
+# Consumer Web
+cd consumer-web
+npm test                  # Watch mode
+npm test -- --run         # Single run
+npm run test:coverage     # With coverage
+npm run test:ui           # Interactive UI
+
+# Admin Web
+cd admin-web
+npm test                  # Watch mode
+npm test -- --run         # Single run
+npm run test:coverage     # With coverage
+npm run test:ui           # Interactive UI
+```
+
+Target coverage: **80%** for all files
+
+#### End-to-End (E2E) Tests
+
+E2E tests use Playwright to test complete user workflows in both frontends.
+
+**Prerequisites**
+
+```bash
+# Install Playwright browsers (one-time setup)
+cd consumer-web && npm run playwright:install
+cd admin-web && npm run playwright:install
+```
+
+**Running E2E Tests**
+
+**Option 1: Mock Server Mode (Recommended)**
+
+Tests run against MSW (Mock Service Worker) - no backend needed:
+
+```bash
+# Consumer Web E2E tests
+cd consumer-web
+npm run test:e2e:mock          # Headless mode
+npm run test:e2e:ui            # Interactive UI mode
+npm run test:e2e:headed        # Watch browser
+npm run test:e2e:debug         # Step-through debugging
+
+# Admin Web E2E tests
+cd admin-web
+npm run test:e2e:mock          # Headless mode
+npm run test:e2e:ui            # Interactive UI mode
+npm run test:e2e:headed        # Watch browser
+npm run test:e2e:debug         # Step-through debugging
+```
+
+Benefits:
+- No backend required
+- Fast execution
+- Predictable test data
+- Perfect for CI/CD
+- Cross-platform (Windows, macOS, Linux)
+
+**Option 2: Real Backend Mode**
+
+Tests run against actual running backend:
+
+```bash
+# Start backend first
+cd backend
+mvn spring-boot:run
+
+# Run E2E tests
+cd consumer-web && npm run test:e2e
+cd admin-web && npm run test:e2e
+```
+
+Benefits:
+- Full integration testing
+- Validates real API contracts
+- Tests with actual data
+
+#### Integration Tests
+
+Test backend with databases:
+
+```bash
+cd backend
+mvn verify -P integration-tests
+```
+
+#### Running All Tests
+
+```bash
+# Backend tests
 cd backend && mvn test
 
-# Frontend unit tests
-cd consumer-web && npm test
+# Consumer web tests (unit + E2E with mock)
+cd consumer-web && npm test -- --run && npm run test:e2e:mock
 
-# Integration tests
-cd backend && mvn verify -P integration-tests
+# Admin web tests (unit + E2E with mock)
+cd admin-web && npm test -- --run && npm run test:e2e:mock
 
-# E2E tests
-npm run test:e2e
-
-# All tests
+# Or use automation script (if available)
 ./scripts/run-tests.sh
 ```
+
+#### Test Documentation
+
+For detailed E2E testing information, see [E2E_TESTING.md](./E2E_TESTING.md)
 
 ### Pull Request Validation
 
