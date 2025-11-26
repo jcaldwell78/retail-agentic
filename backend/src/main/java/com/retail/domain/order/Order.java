@@ -56,7 +56,7 @@ public class Order {
     private Payment payment;
 
     @NotNull(message = "Status is required")
-    private OrderStatus status = OrderStatus.PENDING;
+    private OrderStatus status = Order.OrderStatus.PENDING;
 
     private List<StatusHistoryEntry> statusHistory = new ArrayList<>();
 

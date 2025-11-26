@@ -50,8 +50,7 @@ public class ProductService {
      * Find active products for current tenant
      */
     public Flux<Product> findActiveProducts(Pageable pageable) {
-        return TenantContext.getTenantId()
-            .flatMapMany(tenantId -> productRepository.findActiveProducts(tenantId, pageable));
+        return productRepository.findActiveProducts(pageable);
     }
 
     /**
@@ -68,8 +67,7 @@ public class ProductService {
      * Find low stock products for current tenant
      */
     public Flux<Product> findLowStockProducts(int threshold) {
-        return TenantContext.getTenantId()
-            .flatMapMany(tenantId -> productRepository.findLowStockProducts(tenantId, threshold));
+        return productRepository.findLowStockProducts(threshold);
     }
 
     /**
@@ -125,7 +123,6 @@ public class ProductService {
      * Count active products for current tenant
      */
     public Mono<Long> countActive() {
-        return TenantContext.getTenantId()
-            .flatMap(productRepository::countActiveProducts);
+        return productRepository.countActiveProducts();
     }
 }

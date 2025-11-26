@@ -1,6 +1,7 @@
 package com.retail.domain.user;
 
 import com.retail.infrastructure.persistence.UserRepository;
+import com.retail.security.JwtService;
 import com.retail.security.tenant.TenantContext;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;

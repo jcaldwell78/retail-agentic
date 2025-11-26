@@ -3,7 +3,8 @@ package com.retail.domain.order;
 import com.retail.domain.cart.Cart;
 import com.retail.domain.cart.CartService;
 import com.retail.infrastructure.persistence.OrderRepository;
-import com.retail.infrastructure.tenant.TenantContext;
+import com.retail.security.tenant.TenantContext;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -76,25 +77,24 @@ public class OrderService {
                         Cart.CartSummary summary = cart.getSummary();
                         order.setPricing(new Order.Pricing(
                             summary.subtotal(),
-                            summary.tax(),
                             summary.shipping(),
-                            BigDecimal.ZERO, // discount
+                            summary.tax(),
                             summary.total()
                         ));
 
                         // Set payment info
                         order.setPayment(new Order.Payment(
                             paymentMethodId,
-                            PaymentStatus.PENDING,
-                            PaymentMethod.CREDIT_CARD // Default, should be from request
+                            Order.PaymentStatus.PENDING,
+                            null // Transaction ID will be set after payment processing
                         ));
 
                         // Set initial status
-                        order.setStatus(OrderStatus.PENDING);
+                        order.setStatus(Order.OrderStatus.PENDING);
                         order.getStatusHistory().add(new Order.StatusHistoryEntry(
-                            OrderStatus.PENDING,
-                            "Order created",
-                            Instant.now()
+                            Order.OrderStatus.PENDING,
+                            Instant.now(),
+                            "Order created"
                         ));
 
                         Instant now = Instant.now();
@@ -114,7 +114,7 @@ public class OrderService {
     /**
      * Update order status
      */
-    public Mono<Order> updateStatus(String orderId, OrderStatus newStatus, String note) {
+    public Mono<Order> updateStatus(String orderId, Order.OrderStatus newStatus, String note) {
         return TenantContext.getTenantId()
             .flatMap(tenantId ->
                 orderRepository.findById(orderId)
@@ -133,8 +133,8 @@ public class OrderService {
                         order.setStatus(newStatus);
                         order.getStatusHistory().add(new Order.StatusHistoryEntry(
                             newStatus,
-                            note != null ? note : "Status updated to " + newStatus,
-                            Instant.now()
+                            Instant.now(),
+                            note != null ? note : "Status updated to " + newStatus
                         ));
                         order.setUpdatedAt(Instant.now());
 
@@ -146,7 +146,7 @@ public class OrderService {
     /**
      * Update payment status
      */
-    public Mono<Order> updatePaymentStatus(String orderId, PaymentStatus paymentStatus) {
+    public Mono<Order> updatePaymentStatus(String orderId, Order.PaymentStatus paymentStatus) {
         return TenantContext.getTenantId()
             .flatMap(tenantId ->
                 orderRepository.findById(orderId)
@@ -157,19 +157,19 @@ public class OrderService {
 
                         Order.Payment currentPayment = order.getPayment();
                         order.setPayment(new Order.Payment(
-                            currentPayment.paymentMethodId(),
+                            currentPayment.method(),
                             paymentStatus,
-                            currentPayment.paymentMethod()
+                            currentPayment.transactionId()
                         ));
                         order.setUpdatedAt(Instant.now());
 
                         // Auto-update order status based on payment
-                        if (paymentStatus == PaymentStatus.CAPTURED && order.getStatus() == OrderStatus.PENDING) {
-                            order.setStatus(OrderStatus.CONFIRMED);
+                        if (paymentStatus == Order.PaymentStatus.PAID && order.getStatus() == Order.OrderStatus.PENDING) {
+                            order.setStatus(Order.OrderStatus.PROCESSING);
                             order.getStatusHistory().add(new Order.StatusHistoryEntry(
-                                OrderStatus.CONFIRMED,
-                                "Payment captured, order confirmed",
-                                Instant.now()
+                                Order.OrderStatus.PROCESSING,
+                                Instant.now(),
+                                "Payment confirmed, order processing"
                             ));
                         }
 
@@ -194,12 +194,12 @@ public class OrderService {
                         order.setUpdatedAt(Instant.now());
 
                         // Auto-update to shipped if not already
-                        if (order.getStatus() != OrderStatus.SHIPPED && order.getStatus() != OrderStatus.DELIVERED) {
-                            order.setStatus(OrderStatus.SHIPPED);
+                        if (order.getStatus() != Order.OrderStatus.SHIPPED && order.getStatus() != Order.OrderStatus.DELIVERED) {
+                            order.setStatus(Order.OrderStatus.SHIPPED);
                             order.getStatusHistory().add(new Order.StatusHistoryEntry(
-                                OrderStatus.SHIPPED,
-                                "Order shipped with tracking: " + trackingNumber,
-                                Instant.now()
+                                Order.OrderStatus.SHIPPED,
+                                Instant.now(),
+                                "Order shipped with tracking: " + trackingNumber
                             ));
                         }
 
@@ -242,7 +242,7 @@ public class OrderService {
     /**
      * Get orders by status
      */
-    public Flux<Order> findByStatus(OrderStatus status) {
+    public Flux<Order> findByStatus(Order.OrderStatus status) {
         return TenantContext.getTenantId()
             .flatMapMany(tenantId ->
                 orderRepository.findByStatusAndTenantId(status, tenantId)
@@ -254,14 +254,14 @@ public class OrderService {
      */
     public Flux<Order> findAll() {
         return TenantContext.getTenantId()
-            .flatMapMany(orderRepository::findByTenantId);
+            .flatMapMany(tenantId -> orderRepository.findByTenantId(tenantId, Pageable.unpaged()));
     }
 
     /**
      * Cancel order
      */
     public Mono<Order> cancelOrder(String orderId, String reason) {
-        return updateStatus(orderId, OrderStatus.CANCELLED, "Order cancelled: " + reason);
+        return updateStatus(orderId, Order.OrderStatus.CANCELLED, "Order cancelled: " + reason);
     }
 
     /**
@@ -276,21 +276,19 @@ public class OrderService {
     /**
      * Validate status transitions
      */
-    private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+    private boolean isValidStatusTransition(Order.OrderStatus currentStatus, Order.OrderStatus newStatus) {
         // Allow any transition to CANCELLED
-        if (newStatus == OrderStatus.CANCELLED) {
+        if (newStatus == Order.OrderStatus.CANCELLED) {
             return true;
         }
 
         // Define valid transitions
         return switch (currentStatus) {
-            case PENDING -> newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.PAYMENT_FAILED;
-            case CONFIRMED -> newStatus == OrderStatus.PROCESSING;
-            case PROCESSING -> newStatus == OrderStatus.SHIPPED;
-            case SHIPPED -> newStatus == OrderStatus.DELIVERED;
+            case PENDING -> newStatus == Order.OrderStatus.PROCESSING;
+            case PROCESSING -> newStatus == Order.OrderStatus.SHIPPED;
+            case SHIPPED -> newStatus == Order.OrderStatus.DELIVERED;
             case DELIVERED -> false; // Cannot transition from DELIVERED
             case CANCELLED -> false; // Cannot transition from CANCELLED
-            case PAYMENT_FAILED -> newStatus == OrderStatus.CONFIRMED; // Allow retry
         };
     }
 }

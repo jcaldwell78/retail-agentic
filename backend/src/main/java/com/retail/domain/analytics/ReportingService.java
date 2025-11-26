@@ -58,7 +58,7 @@ public class ReportingService {
                 .map(orders -> {
                     long orderCount = orders.size();
                     BigDecimal totalRevenue = orders.stream()
-                        .map(Order::getTotalAmount)
+                        .map(order -> order.getPricing().total())
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
                     BigDecimal avgOrderValue = orderCount > 0
                         ? totalRevenue.divide(BigDecimal.valueOf(orderCount), 2, BigDecimal.ROUND_HALF_UP)
@@ -157,7 +157,7 @@ public class ReportingService {
                                 item.productId(),
                                 id -> new TopProductBuilder(
                                     item.productId(),
-                                    item.productName()
+                                    item.name()
                                 )
                             );
 
@@ -199,7 +199,7 @@ public class ReportingService {
                     Map<String, Long> statusCounts = new HashMap<>();
 
                     orders.forEach(order -> {
-                        String status = order.getStatus();
+                        String status = order.getStatus().toString();
                         statusCounts.put(status, statusCounts.getOrDefault(status, 0L) + 1);
                     });
 
@@ -273,7 +273,7 @@ public class ReportingService {
 
         void addOrder(Order order) {
             orderCount++;
-            revenue = revenue.add(order.getTotalAmount());
+            revenue = revenue.add(order.getPricing().total());
         }
 
         DailySales build() {

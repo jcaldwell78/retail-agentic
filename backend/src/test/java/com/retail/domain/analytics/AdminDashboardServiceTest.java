@@ -257,22 +257,26 @@ class AdminDashboardServiceTest {
         Order order1 = new Order();
         order1.setId("order-1");
         order1.setTenantId(TEST_TENANT_ID);
-        order1.setUserId("user-1");
         order1.setOrderNumber("ORD-001");
-        order1.setStatus("CONFIRMED");
-        order1.setTotalAmount(new BigDecimal("100.00"));
+        order1.setStatus(Order.OrderStatus.PROCESSING);
+        order1.setCustomer(new Order.Customer("user1@test.com", "User One"));
+        order1.setShippingAddress(new Order.Address("123 Main St", null, "City", "ST", "12345", "US"));
+        order1.setPricing(new Order.Pricing(
+            new BigDecimal("100.00"),
+            new BigDecimal("10.00"),
+            new BigDecimal("8.00"),
+            new BigDecimal("118.00")
+        ));
         order1.setCreatedAt(Instant.now().minus(1, ChronoUnit.DAYS));
 
         List<Order.OrderItem> items1 = new ArrayList<>();
         items1.add(new Order.OrderItem(
-            "item-1",
             "product-1",
             "Product 1",
             "SKU-001",
             new BigDecimal("50.00"),
             2,
             java.util.Map.of(),
-            "image1.jpg",
             new BigDecimal("100.00")
         ));
         order1.setItems(items1);
@@ -281,22 +285,26 @@ class AdminDashboardServiceTest {
         Order order2 = new Order();
         order2.setId("order-2");
         order2.setTenantId(TEST_TENANT_ID);
-        order2.setUserId("user-2");
         order2.setOrderNumber("ORD-002");
-        order2.setStatus("CONFIRMED");
-        order2.setTotalAmount(new BigDecimal("150.00"));
+        order2.setStatus(Order.OrderStatus.PROCESSING);
+        order2.setCustomer(new Order.Customer("user2@test.com", "User Two"));
+        order2.setShippingAddress(new Order.Address("456 Oak Ave", null, "Town", "ST", "67890", "US"));
+        order2.setPricing(new Order.Pricing(
+            new BigDecimal("150.00"),
+            new BigDecimal("15.00"),
+            new BigDecimal("12.00"),
+            new BigDecimal("177.00")
+        ));
         order2.setCreatedAt(Instant.now().minus(2, ChronoUnit.DAYS));
 
         List<Order.OrderItem> items2 = new ArrayList<>();
         items2.add(new Order.OrderItem(
-            "item-2",
             "product-2",
             "Product 2",
             "SKU-002",
             new BigDecimal("75.00"),
             2,
             java.util.Map.of(),
-            "image2.jpg",
             new BigDecimal("150.00")
         ));
         order2.setItems(items2);
@@ -305,22 +313,26 @@ class AdminDashboardServiceTest {
         Order order3 = new Order();
         order3.setId("order-3");
         order3.setTenantId(TEST_TENANT_ID);
-        order3.setUserId("user-1");
         order3.setOrderNumber("ORD-003");
-        order3.setStatus("CONFIRMED");
-        order3.setTotalAmount(new BigDecimal("200.00"));
+        order3.setStatus(Order.OrderStatus.PROCESSING);
+        order3.setCustomer(new Order.Customer("user1@test.com", "User One"));
+        order3.setShippingAddress(new Order.Address("123 Main St", null, "City", "ST", "12345", "US"));
+        order3.setPricing(new Order.Pricing(
+            new BigDecimal("200.00"),
+            new BigDecimal("20.00"),
+            new BigDecimal("16.00"),
+            new BigDecimal("236.00")
+        ));
         order3.setCreatedAt(Instant.now().minus(3, ChronoUnit.DAYS));
 
         List<Order.OrderItem> items3 = new ArrayList<>();
         items3.add(new Order.OrderItem(
-            "item-3",
             "product-1",
             "Product 1",
             "SKU-001",
             new BigDecimal("100.00"),
             2,
             java.util.Map.of(),
-            "image1.jpg",
             new BigDecimal("200.00")
         ));
         order3.setItems(items3);

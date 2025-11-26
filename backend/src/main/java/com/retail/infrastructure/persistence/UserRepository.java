@@ -79,4 +79,16 @@ public interface UserRepository extends ReactiveMongoRepository<User, String> {
      * Delete user by ID and tenant (ensures tenant isolation)
      */
     Mono<Void> deleteByIdAndTenantId(String id, String tenantId);
+
+    /**
+     * Find users created after a specific date for tenant
+     */
+    @Query("{ 'tenantId': ?0, 'createdAt': { $gte: ?1 } }")
+    Flux<User> findByTenantIdAndCreatedAtAfter(String tenantId, java.time.Instant after);
+
+    /**
+     * Count users created after a specific date for tenant
+     */
+    @Query(value = "{ 'tenantId': ?0, 'createdAt': { $gte: ?1 } }", count = true)
+    Mono<Long> countByTenantIdAndCreatedAtAfter(String tenantId, java.time.Instant after);
 }

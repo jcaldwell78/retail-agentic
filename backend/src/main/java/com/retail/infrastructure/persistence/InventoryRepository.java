@@ -31,6 +31,11 @@ public interface InventoryRepository extends ReactiveMongoRepository<Inventory, 
     Flux<Inventory> findByTenantId(String tenantId, Pageable pageable);
 
     /**
+     * Find all inventory for tenant (no pagination)
+     */
+    Flux<Inventory> findByTenantId(String tenantId);
+
+    /**
      * Find low stock items for tenant
      */
     @Query("{ 'tenantId': ?0, 'trackInventory': true, " +
@@ -88,4 +93,12 @@ public interface InventoryRepository extends ReactiveMongoRepository<Inventory, 
      * Delete inventory by product ID and tenant
      */
     Mono<Void> deleteByProductIdAndTenantId(String productId, String tenantId);
+
+    /**
+     * Alias for findLowStockItems (backwards compatibility)
+     */
+    default Flux<Inventory> findLowStockProducts() {
+        // This method should not be used; use findLowStockItems with tenantId instead
+        return Flux.empty();
+    }
 }

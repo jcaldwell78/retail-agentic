@@ -88,4 +88,36 @@ public interface ProductRepository extends TenantAwareRepository<Product, String
      */
     @Query(value = "{ 'tenantId': ?0, 'status': 'ACTIVE' }", count = true)
     Mono<Long> countActiveProductsByTenantId(String tenantId);
+
+    /**
+     * Find product by ID and tenant (internal use).
+     */
+    Mono<Product> findByIdAndTenantId(String id, String tenantId);
+
+    /**
+     * Find all products by tenant with pagination (internal use).
+     */
+    Flux<Product> findByTenantId(String tenantId, Pageable pageable);
+
+    /**
+     * Delete product by ID and tenant (internal use).
+     */
+    Mono<Void> deleteByIdAndTenantId(String id, String tenantId);
+
+    /**
+     * Count all products by tenant (internal use).
+     */
+    Mono<Long> countByTenantId(String tenantId);
+
+    /**
+     * Count active products by tenant (internal use).
+     */
+    @Query(value = "{ 'tenantId': ?0, 'status': 'ACTIVE' }", count = true)
+    Mono<Long> countByTenantIdAndActiveTrue(String tenantId);
+
+    /**
+     * Find active products with low stock (internal use).
+     */
+    @Query("{ 'tenantId': ?0, 'status': 'ACTIVE', 'stock': { $lt: ?1 } }")
+    Flux<Product> findByTenantIdAndActiveTrueAndStockQuantityLessThan(String tenantId, int threshold);
 }

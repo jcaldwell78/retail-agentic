@@ -25,4 +25,9 @@ public interface SavedCartRepository extends ReactiveMongoRepository<SavedCart, 
      * Delete saved cart by user ID and tenant ID.
      */
     Mono<Void> deleteByTenantIdAndUserId(String tenantId, String userId);
+
+    /**
+     * Delete saved cart by session ID and tenant ID.
+     */
+    Mono<Void> deleteByTenantIdAndSessionId(String tenantId, String sessionId);
 }

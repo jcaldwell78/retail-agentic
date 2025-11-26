@@ -89,4 +89,22 @@ public interface OrderRepository extends ReactiveMongoRepository<Order, String> 
      * Delete order by ID and tenant (ensures tenant isolation)
      */
     Mono<Void> deleteByIdAndTenantId(String id, String tenantId);
+
+    /**
+     * Find orders by customer email and tenant (2 params)
+     */
+    @Query("{ 'tenantId': ?1, 'customer.email': ?0 }")
+    Flux<Order> findByCustomerEmail(String email, String tenantId);
+
+    /**
+     * Find orders by status and tenant (accepts String status)
+     */
+    @Query("{ 'status': ?0, 'tenantId': ?1 }")
+    Flux<Order> findByStatusAndTenantId(Order.OrderStatus status, String tenantId);
+
+    /**
+     * Count orders created after a specific date for tenant
+     */
+    @Query(value = "{ 'tenantId': ?0, 'createdAt': { $gte: ?1 } }", count = true)
+    Mono<Long> countByTenantIdAndCreatedAtAfter(String tenantId, Instant after);
 }

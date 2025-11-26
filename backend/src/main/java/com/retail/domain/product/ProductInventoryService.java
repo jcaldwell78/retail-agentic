@@ -62,7 +62,7 @@ public class ProductInventoryService {
     public Flux<ProductWithInventory> getAllProductsWithInventory() {
         return TenantContext.getTenantId()
             .flatMapMany(tenantId ->
-                productRepository.findByTenantId(tenantId)
+                productRepository.findByTenantId(tenantId, org.springframework.data.domain.Pageable.unpaged())
                     .flatMap(product ->
                         inventoryService.getInventory(product.getId())
                             .defaultIfEmpty(createDefaultInventory(product.getId()))
@@ -133,8 +133,8 @@ public class ProductInventoryService {
 
                     // Auto-deactivate if out of stock and not allowing backorders
                     if (inventory.isOutOfStock() && !inventory.isAllowBackorder()) {
-                        if (product.isActive()) {
-                            product.setActive(false);
+                        if (product.getStatus() == Product.ProductStatus.ACTIVE) {
+                            product.setStatus(Product.ProductStatus.INACTIVE);
                             product.setUpdatedAt(java.time.Instant.now());
                             logger.info("Auto-deactivated product {} due to out of stock", productId);
                             return productRepository.save(product);

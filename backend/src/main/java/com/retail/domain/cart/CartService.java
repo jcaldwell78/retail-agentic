@@ -3,7 +3,7 @@ package com.retail.domain.cart;
 import com.retail.domain.product.Product;
 import com.retail.infrastructure.persistence.CartRepository;
 import com.retail.infrastructure.persistence.ProductRepository;
-import com.retail.infrastructure.tenant.TenantContext;
+import com.retail.security.tenant.TenantContext;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -87,7 +87,7 @@ public class CartService {
             .flatMap(cart -> productRepository.findById(productId)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Product not found: " + productId)))
                 .flatMap(product -> {
-                    if (!product.isActive()) {
+                    if (product.getStatus() != com.retail.domain.product.Product.ProductStatus.ACTIVE) {
                         return Mono.error(new IllegalArgumentException("Product is not available"));
                     }
 
@@ -110,7 +110,7 @@ public class CartService {
                             product.getPrice(),
                             quantity,
                             attributes,
-                            product.getImages().isEmpty() ? null : product.getImages().get(0),
+                            product.getImages().isEmpty() ? null : product.getImages().get(0).url(),
                             subtotal
                         );
 

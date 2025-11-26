@@ -19,7 +19,7 @@ import java.lang.reflect.Field;
  * @param <T> The entity type
  * @param <ID> The ID type
  */
-public class TenantAwareRepositoryImpl<T, ID> extends SimpleReactiveMongoRepository<T, ID>
+public class TenantAwareRepositoryImpl<T, ID extends java.io.Serializable> extends SimpleReactiveMongoRepository<T, ID>
         implements TenantAwareRepository<T, ID> {
 
     private static final String TENANT_ID_FIELD = "tenantId";

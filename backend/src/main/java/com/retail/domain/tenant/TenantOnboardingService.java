@@ -124,22 +124,24 @@ public class TenantOnboardingService {
      */
     private Mono<Tenant> initializeDefaults(Tenant tenant) {
         return Mono.fromCallable(() -> {
-            // Set default branding
-            Tenant.Branding branding = new Tenant.Branding();
-            branding.setLogoUrl(null); // No logo initially
-            branding.setPrimaryColor("#3B82F6"); // Blue
-            branding.setSecondaryColor("#10B981"); // Green
-            branding.setFontFamily("Inter, system-ui, sans-serif");
+            // Set default branding using constructor
+            Tenant.Branding branding = new Tenant.Branding(
+                null,  // logoUrl - No logo initially
+                "#3B82F6",  // primaryColor - Blue
+                "#10B981",  // secondaryColor - Green
+                null,  // accentColor - use default
+                "Inter, system-ui, sans-serif"  // fontFamily
+            );
             tenant.setBranding(branding);
 
-            // Set default settings
-            Tenant.TenantSettings settings = new Tenant.TenantSettings();
-            settings.setCurrency("USD");
-            settings.setTimezone("America/New_York");
-            settings.setLanguage("en");
-            settings.setActive(true);
-            settings.setMaxProducts(10000);
-            settings.setMaxUsers(50);
+            // Set default settings using constructor
+            // Note: TenantSettings only supports currency, taxRate, freeShippingThreshold, lowStockThreshold
+            Tenant.TenantSettings settings = new Tenant.TenantSettings(
+                "USD",  // currency
+                0.09,   // taxRate - 9%
+                50.0,   // freeShippingThreshold
+                10      // lowStockThreshold
+            );
             tenant.setSettings(settings);
 
             tenant.setUpdatedAt(Instant.now());

@@ -77,18 +77,18 @@ public class AdminDashboardService {
                     totalUsers,
                     activeProducts,
                     topProducts.collectList(),
-                    orderStatusBreakdown.collectList(),
-                    last7DaysSales.collectList()
-                ).map(tuple -> new DashboardOverview(
-                    tuple.getT1(),  // today metrics
-                    tuple.getT2(),  // last 30 days metrics
-                    tuple.getT3(),  // last 7 days metrics
-                    tuple.getT4(),  // total products
-                    tuple.getT5(),  // total users
-                    tuple.getT6(),  // active products
-                    tuple.getT7(),  // top products
-                    tuple.getT8(),  // order status breakdown
-                    tuple.getT9()   // last 7 days sales
+                    orderStatusBreakdown.collectList()
+                ).zipWith(last7DaysSales.collectList())
+                .map(tuple -> new DashboardOverview(
+                    tuple.getT1().getT1(),  // today metrics
+                    tuple.getT1().getT2(),  // last 30 days metrics
+                    tuple.getT1().getT3(),  // last 7 days metrics
+                    tuple.getT1().getT4(),  // total products
+                    tuple.getT1().getT5(),  // total users
+                    tuple.getT1().getT6(),  // active products
+                    tuple.getT1().getT7(),  // top products
+                    tuple.getT1().getT8(),  // order status breakdown
+                    tuple.getT2()   // last 7 days sales
                 ));
             });
     }
@@ -115,7 +115,7 @@ public class AdminDashboardService {
                 .map(orders -> {
                     long orderCount = orders.size();
                     BigDecimal totalRevenue = orders.stream()
-                        .map(Order::getTotalAmount)
+                        .map(order -> order.getPricing().total())
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                     BigDecimal avgOrderValue = orderCount > 0
@@ -128,8 +128,8 @@ public class AdminDashboardService {
 
                     // Count unique customers
                     long uniqueCustomers = orders.stream()
-                        .map(Order::getUserId)
-                        .filter(userId -> userId != null && !userId.isEmpty())
+                        .map(order -> order.getCustomer().email())
+                        .filter(email -> email != null && !email.isEmpty())
                         .distinct()
                         .count();
 
@@ -202,7 +202,7 @@ public class AdminDashboardService {
                     product.getId(),
                     product.getName(),
                     product.getSku(),
-                    product.getStockQuantity(),
+                    product.getStock(),
                     threshold
                 ))
             );
@@ -227,9 +227,9 @@ public class AdminDashboardService {
                 .map(order -> new RecentOrder(
                     order.getId(),
                     order.getOrderNumber(),
-                    order.getUserId(),
-                    order.getTotalAmount(),
-                    order.getStatus(),
+                    order.getCustomer().email(),
+                    order.getPricing().total(),
+                    order.getStatus().name(),
                     order.getCreatedAt()
                 ))
             );

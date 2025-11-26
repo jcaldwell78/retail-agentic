@@ -1,7 +1,7 @@
 package com.retail.domain.inventory;
 
 import com.retail.infrastructure.persistence.InventoryRepository;
-import com.retail.infrastructure.tenant.TenantContext;
+import com.retail.security.tenant.TenantContext;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -218,7 +218,7 @@ public class InventoryService {
      */
     public Flux<Inventory> getLowStockProducts() {
         return TenantContext.getTenantId()
-            .flatMapMany(inventoryRepository::findLowStockProducts);
+            .flatMapMany(inventoryRepository::findLowStockItems);
     }
 
     /**

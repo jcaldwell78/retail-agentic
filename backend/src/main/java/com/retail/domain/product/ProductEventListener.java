@@ -52,7 +52,7 @@ public class ProductEventListener extends AbstractMongoEventListener<Product> {
             // Remove from index asynchronously
             indexingService.removeProductFromIndex(productId)
                     .subscribe(
-                            () -> logger.trace("Product removed from index: {}", productId),
+                            unused -> logger.trace("Product removed from index: {}", productId),
                             error -> logger.error("Failed to remove product from index: {}", productId, error)
                     );
         }

@@ -1,7 +1,7 @@
 package com.retail.domain.inventory;
 
 import com.retail.infrastructure.persistence.InventoryRepository;
-import com.retail.infrastructure.tenant.TenantContext;
+import com.retail.security.tenant.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;

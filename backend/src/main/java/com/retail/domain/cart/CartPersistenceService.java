@@ -2,7 +2,7 @@ package com.retail.domain.cart;
 
 import com.retail.infrastructure.persistence.CartRepository;
 import com.retail.infrastructure.persistence.PersistedCartRepository;
-import com.retail.infrastructure.tenant.TenantContext;
+import com.retail.security.tenant.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

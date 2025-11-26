@@ -30,13 +30,13 @@ public class OrderNotificationHandler {
     public Mono<Notification> sendOrderConfirmation(Order order, String userEmail) {
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("orderNumber", order.getOrderNumber());
-        templateData.put("orderTotal", order.getTotalAmount().toString());
+        templateData.put("orderTotal", order.getPricing().total().toString());
         templateData.put("orderItems", order.getItems());
-        templateData.put("customerName", order.getCustomerInfo().name());
+        templateData.put("customerName", order.getCustomer().name());
         templateData.put("shippingAddress", order.getShippingAddress());
 
         return notificationService.createNotificationFromTemplate(
-            order.getUserId(),
+            order.getCustomer().email(),
             userEmail,
             NotificationType.ORDER_CONFIRMATION,
             NotificationChannel.EMAIL,
@@ -64,10 +64,10 @@ public class OrderNotificationHandler {
         templateData.put("orderNumber", order.getOrderNumber());
         templateData.put("trackingNumber", trackingNumber);
         templateData.put("carrier", carrier);
-        templateData.put("customerName", order.getCustomerInfo().name());
+        templateData.put("customerName", order.getCustomer().name());
 
         return notificationService.createNotificationFromTemplate(
-            order.getUserId(),
+            order.getCustomer().email(),
             userEmail,
             NotificationType.ORDER_SHIPPED,
             NotificationChannel.EMAIL,
@@ -86,10 +86,10 @@ public class OrderNotificationHandler {
     public Mono<Notification> sendOrderDelivered(Order order, String userEmail) {
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("orderNumber", order.getOrderNumber());
-        templateData.put("customerName", order.getCustomerInfo().name());
+        templateData.put("customerName", order.getCustomer().name());
 
         return notificationService.createNotificationFromTemplate(
-            order.getUserId(),
+            order.getCustomer().email(),
             userEmail,
             NotificationType.ORDER_DELIVERED,
             NotificationChannel.EMAIL,
@@ -113,12 +113,12 @@ public class OrderNotificationHandler {
 
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("orderNumber", order.getOrderNumber());
-        templateData.put("orderTotal", order.getTotalAmount().toString());
-        templateData.put("customerName", order.getCustomerInfo().name());
+        templateData.put("orderTotal", order.getPricing().total().toString());
+        templateData.put("customerName", order.getCustomer().name());
         templateData.put("reason", reason);
 
         return notificationService.createNotificationFromTemplate(
-            order.getUserId(),
+            order.getCustomer().email(),
             userEmail,
             NotificationType.ORDER_CANCELLED,
             NotificationChannel.EMAIL,
@@ -143,10 +143,10 @@ public class OrderNotificationHandler {
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("orderNumber", order.getOrderNumber());
         templateData.put("refundAmount", refundAmount);
-        templateData.put("customerName", order.getCustomerInfo().name());
+        templateData.put("customerName", order.getCustomer().name());
 
         return notificationService.createNotificationFromTemplate(
-            order.getUserId(),
+            order.getCustomer().email(),
             userEmail,
             NotificationType.ORDER_REFUNDED,
             NotificationChannel.EMAIL,
