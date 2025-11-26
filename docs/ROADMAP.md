@@ -50,7 +50,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create TenantContext reactive filter/middleware
 - [x] Build tenant-aware data access layer
 - [x] Implement automatic tenantId injection in queries
-- [ ] Create tenant isolation integration tests
+- [x] Create tenant isolation integration tests
 - [x] Build tenant onboarding service
 
 ### Database Layer
@@ -82,7 +82,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build product search integration (Elasticsearch)
 - [x] Implement faceted search and filtering
 - [x] Add product inventory tracking
-- [ ] Create product recommendation engine (basic)
+- [x] Create product recommendation engine (basic)
 
 ### User Management Service
 - [x] Create reactive User repository (MongoDB)
@@ -121,11 +121,11 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build inventory reconciliation service
 
 ### Payment Service
-- [ ] Design payment transaction model (PostgreSQL)
-- [ ] Integrate payment gateway (Stripe/PayPal)
+- [x] Design payment transaction model (PostgreSQL)
+- [ ] Integrate PayPal payment gateway (MVP)
 - [ ] Implement payment processing (reactive)
 - [ ] Build refund functionality
-- [ ] Create payment webhook handlers
+- [ ] Create PayPal webhook handlers
 - [ ] Implement payment retry logic
 - [ ] Add PCI compliance measures
 
@@ -145,18 +145,18 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build rate limiting
 - [x] Implement request validation
 - [x] Add API documentation (OpenAPI/Swagger)
-- [ ] Create API client generation
+- [x] Create API client generation
 - [x] Implement CORS configuration
 
 ### Security
-- [ ] Implement Spring Security configuration
+- [x] Implement Spring Security configuration
 - [x] Build JWT token generation/validation
-- [ ] Create role-based access control (RBAC)
-- [ ] Implement tenant data isolation validation
-- [ ] Add CSRF protection
+- [x] Create role-based access control (RBAC)
+- [x] Implement tenant data isolation validation
+- [x] Add CSRF protection
 - [x] Configure security headers
 - [x] Implement audit logging
-- [ ] Create security integration tests
+- [x] Create security integration tests
 
 ---
 
@@ -170,7 +170,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create spacing and layout standards
 - [x] Design component variants and states
 - [x] Create design tokens
-- [ ] Build Storybook for component library
+- [x] Build Storybook for component library
 
 ### Shared Component Library
 - [x] Create Button component
@@ -227,6 +227,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Implement responsive layout
 - [ ] Add animations and transitions
 - [ ] Optimize images and performance
+- [ ] **E2E**: Write tests for home page load and product display
+- [ ] **E2E**: Test responsive layout on mobile/tablet
+- [ ] **E2E**: Verify hero section and navigation work
 
 ### Product Discovery
 - [ ] Build product listing page (PLP)
@@ -237,6 +240,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Add product quick view
 - [ ] Create search results page
 - [ ] Implement search autocomplete
+- [ ] **E2E**: Test product listing and filtering
+- [ ] **E2E**: Verify search functionality and autocomplete
+- [ ] **E2E**: Test pagination and sorting
+- [ ] **E2E**: Verify "no results" state
 
 ### Product Detail
 - [ ] Build product detail page (PDP)
@@ -247,6 +254,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Add related products
 - [ ] Implement product share
 - [ ] Add structured data (SEO)
+- [ ] **E2E**: Test navigation to product detail page
+- [ ] **E2E**: Verify image gallery and zoom functionality
+- [ ] **E2E**: Test variant selection and add to cart
+- [ ] **E2E**: Verify product information display
 
 ### Shopping Cart
 - [ ] Build cart page
@@ -257,6 +268,12 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Build save for later
 - [ ] Add cart persistence
 - [ ] Create mini-cart component
+- [ ] **E2E**: Test add to cart workflow
+- [ ] **E2E**: Verify quantity update functionality
+- [ ] **E2E**: Test remove item from cart
+- [ ] **E2E**: Verify cart total calculations
+- [ ] **E2E**: Test promo code application
+- [ ] **E2E**: Verify empty cart state
 
 ### Checkout
 - [ ] Design multi-step checkout flow
@@ -268,6 +285,13 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Implement order confirmation page
 - [ ] Add guest checkout option
 - [ ] Build checkout progress indicator
+- [ ] **E2E**: Test complete checkout flow (happy path)
+- [ ] **E2E**: Test guest checkout workflow
+- [ ] **E2E**: Verify multi-step navigation
+- [ ] **E2E**: Test form validation at each step
+- [ ] **E2E**: Verify payment information handling
+- [ ] **E2E**: Test order confirmation display
+- [ ] **E2E**: Verify error handling in checkout
 
 ### User Account
 - [x] Build login/register pages
@@ -278,6 +302,12 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Implement password reset flow
 - [ ] Add account preferences
 - [ ] Build wishlist functionality
+- [ ] **E2E**: Test login and registration flows
+- [ ] **E2E**: Verify profile management
+- [ ] **E2E**: Test address book CRUD operations
+- [ ] **E2E**: Verify order history display
+- [ ] **E2E**: Test password reset workflow
+- [ ] **E2E**: Verify wishlist functionality
 
 ### Responsive & Accessibility
 - [ ] Implement mobile-first responsive design
@@ -311,6 +341,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Create customer insights
 - [ ] Add real-time notifications
 - [ ] Implement date range filtering
+- [ ] **E2E**: Test dashboard load and authentication
+- [ ] **E2E**: Verify metrics display correctly
+- [ ] **E2E**: Test chart rendering and interactions
+- [ ] **E2E**: Verify date range filtering
 
 ### Product Management
 - [x] Build product list/table
@@ -321,6 +355,13 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Create category management
 - [ ] Implement product attributes editor
 - [ ] Add product import/export (CSV)
+- [ ] **E2E**: Test product list display and filtering
+- [ ] **E2E**: Test product creation workflow
+- [ ] **E2E**: Verify product editing functionality
+- [ ] **E2E**: Test product deletion with confirmation
+- [ ] **E2E**: Verify search and filtering
+- [ ] **E2E**: Test bulk operations
+- [ ] **E2E**: Verify image upload functionality
 
 ### Order Management
 - [x] Build order list/table with filtering
@@ -331,6 +372,12 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Create refund interface
 - [ ] Implement order notes/comments
 - [ ] Add bulk order operations
+- [ ] **E2E**: Test order list display and filtering
+- [ ] **E2E**: Verify order detail navigation
+- [ ] **E2E**: Test order status update workflow
+- [ ] **E2E**: Verify search and filtering
+- [ ] **E2E**: Test bulk order operations
+- [ ] **E2E**: Verify pagination
 
 ### Customer Management
 - [ ] Build customer list/table
@@ -340,6 +387,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Build customer segmentation
 - [ ] Create customer communication tools
 - [ ] Implement customer export
+- [ ] **E2E**: Test customer list and search
+- [ ] **E2E**: Verify customer detail view
+- [ ] **E2E**: Test customer filtering
 
 ### Inventory Management
 - [ ] Build inventory dashboard
@@ -349,6 +399,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Add inventory history tracking
 - [ ] Create reorder point settings
 - [ ] Implement bulk inventory updates
+- [ ] **E2E**: Test inventory dashboard display
+- [ ] **E2E**: Verify stock level updates
+- [ ] **E2E**: Test low-stock alert notifications
 
 ### Store Settings
 - [ ] Build general settings page
@@ -359,6 +412,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Build tax settings
 - [ ] Implement payment gateway configuration
 - [ ] Add user/staff management
+- [ ] **E2E**: Test settings page navigation and authentication
+- [ ] **E2E**: Verify branding customization workflow
+- [ ] **E2E**: Test user/staff management operations
+- [ ] **E2E**: Verify settings save and validation
 
 ### Reports & Analytics
 - [ ] Build sales reports
@@ -393,13 +450,21 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Build mobile responsive tests
 
 ### E2E Testing
-- [ ] Set up E2E testing framework (Playwright/Cypress)
-- [ ] Create customer user journey tests
-- [ ] Build admin workflow tests
-- [ ] Implement checkout flow tests
+- [x] Set up E2E testing framework (Playwright)
+- [x] Install Playwright for consumer-web and admin-web
+- [x] Configure mock server mode (MSW)
+- [x] Set up cross-platform test scripts
+- [x] Configure Chrome as default browser
+- [x] Create initial test suites (consumer & admin)
+- [x] Document E2E testing setup and usage
+- [ ] Create customer user journey tests (see Phase 4)
+- [ ] Build admin workflow tests (see Phase 5)
+- [ ] Implement checkout flow tests (see Phase 4)
 - [ ] Add multi-tenant tests
 - [ ] Create smoke tests for deployments
 - [ ] Build regression test suite
+
+**Note**: E2E tests should be written alongside feature implementation in Phases 4 and 5, not after.
 
 ---
 
@@ -607,3 +672,41 @@ Tasks are organized sequentially within phases, but some can be parallelized:
 - Zero critical security vulnerabilities
 - WCAG 2.1 AA compliance score 100%
 - Lighthouse score > 90
+- E2E test coverage for all critical user journeys
+
+### E2E Testing Guidelines
+
+**Test-Driven Feature Development**
+- Write E2E tests alongside feature implementation (not after)
+- Tests define acceptance criteria for features
+- Use `data-testid` attributes for stable element selection
+- Run tests in mock server mode during development for fast feedback
+
+**When to Write E2E Tests**
+- **Always**: For critical user journeys (checkout, login, product purchase)
+- **Always**: For major feature additions (new pages, workflows)
+- **Always**: For bug fixes (regression tests)
+- **Consider**: For edge cases and error scenarios
+
+**E2E Test Locations**
+- Consumer Web: `consumer-web/e2e/`
+- Admin Web: `admin-web/e2e/`
+- Documentation: `E2E_TESTING.md`
+
+**Running E2E Tests**
+```bash
+# During development (fast)
+npm run test:e2e:mock
+
+# Before committing (comprehensive)
+npm run test:e2e
+
+# Debugging
+npm run test:e2e:ui
+```
+
+**E2E Test Maintenance**
+- Update tests when UI changes
+- Keep mock data in sync with backend API
+- Review and update tests quarterly
+- Remove obsolete tests for deprecated features

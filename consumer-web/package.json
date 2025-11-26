@@ -18,7 +18,10 @@
     "test:e2e:debug": "playwright test --debug",
     "playwright:install": "playwright install --with-deps",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "generate:api": "openapi --input http://localhost:8080/v3/api-docs --output ./src/api/generated --client axios --useOptions"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",
@@ -35,7 +38,12 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.3",
     "@playwright/test": "^1.57.0",
+    "@storybook/addon-a11y": "^10.1.0",
+    "@storybook/addon-docs": "^10.1.0",
+    "@storybook/addon-onboarding": "^10.1.0",
+    "@storybook/react-vite": "^10.1.0",
     "@tailwindcss/forms": "^0.5.10",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -53,9 +61,12 @@
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-storybook": "^10.1.0",
     "jsdom": "^27.2.0",
     "msw": "^2.12.3",
+    "openapi-typescript-codegen": "^0.29.0",
     "postcss": "^8.5.6",
+    "storybook": "^10.1.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^3.4.18",
     "tailwindcss-animate": "^1.0.7",

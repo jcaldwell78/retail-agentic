@@ -30,3 +30,9 @@ coverage
 
 playwright-report/
 test-results/
+
+*storybook.log
+storybook-static
+
+# Generated API clients
+src/api/generated
