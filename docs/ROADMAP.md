@@ -232,13 +232,13 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] **E2E**: Verify hero section and navigation work
 
 ### Product Discovery
-- [ ] Build product listing page (PLP)
-- [ ] Implement product grid/list views
-- [ ] Create faceted search filters
-- [ ] Build sort functionality
-- [ ] Implement pagination/infinite scroll
+- [x] Build product listing page (PLP)
+- [x] Implement product grid/list views
+- [x] Create faceted search filters
+- [x] Build sort functionality
+- [x] Implement pagination/infinite scroll
 - [ ] Add product quick view
-- [ ] Create search results page
+- [x] Create search results page
 - [ ] Implement search autocomplete
 - [ ] **E2E**: Test product listing and filtering
 - [ ] **E2E**: Verify search functionality and autocomplete
@@ -246,12 +246,12 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] **E2E**: Verify "no results" state
 
 ### Product Detail
-- [ ] Build product detail page (PDP)
-- [ ] Create image gallery with zoom
+- [x] Build product detail page (PDP)
+- [x] Create image gallery with zoom
 - [ ] Implement variant selection (size, color)
-- [ ] Build add to cart functionality
+- [x] Build add to cart functionality
 - [ ] Create product reviews section
-- [ ] Add related products
+- [x] Add related products
 - [ ] Implement product share
 - [ ] Add structured data (SEO)
 - [ ] **E2E**: Test navigation to product detail page
@@ -260,11 +260,11 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] **E2E**: Verify product information display
 
 ### Shopping Cart
-- [ ] Build cart page
-- [ ] Implement quantity updates
-- [ ] Create remove item functionality
-- [ ] Add cart total calculations
-- [ ] Implement promo code input
+- [x] Build cart page
+- [x] Implement quantity updates
+- [x] Create remove item functionality
+- [x] Add cart total calculations
+- [x] Implement promo code input
 - [ ] Build save for later
 - [ ] Add cart persistence
 - [ ] Create mini-cart component
@@ -296,9 +296,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ### User Account
 - [x] Build login/register pages
 - [x] Create user profile page
-- [ ] Implement address book management
-- [ ] Build order history page
-- [ ] Create order tracking/details
+- [x] Implement address book management
+- [x] Build order history page
+- [x] Create order tracking/details
 - [ ] Implement password reset flow
 - [ ] Add account preferences
 - [ ] Build wishlist functionality
