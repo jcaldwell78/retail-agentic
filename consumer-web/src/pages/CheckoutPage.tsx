@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-type CheckoutStep = 'shipping' | 'billing' | 'payment' | 'review';
+type CheckoutStep = 'shipping' | 'billing' | 'shipping-method' | 'payment' | 'review';
 
 interface ShippingAddress {
   fullName: string;
@@ -48,6 +48,7 @@ export default function CheckoutPage() {
     country: 'United States',
   });
   const [sameAsShipping, setSameAsShipping] = useState(true);
+  const [shippingMethod, setShippingMethod] = useState('standard');
 
   // Mock cart data
   const cartItems = [
@@ -87,12 +88,17 @@ export default function CheckoutPage() {
         country: shippingAddress.country,
       });
     }
+    setCurrentStep('shipping-method');
+  };
+
+  const handleShippingMethodContinue = () => {
     setCurrentStep('payment');
   };
 
   const steps = [
     { id: 'shipping', name: 'Shipping', completed: false },
     { id: 'billing', name: 'Billing', completed: false },
+    { id: 'shipping-method', name: 'Delivery', completed: false },
     { id: 'payment', name: 'Payment', completed: false },
     { id: 'review', name: 'Review', completed: false },
   ];
@@ -457,6 +463,119 @@ export default function CheckoutPage() {
               </Card>
             )}
 
+            {/* Shipping Method Selection */}
+            {currentStep === 'shipping-method' && (
+              <Card className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Delivery Method</h2>
+
+                <div className="space-y-4" data-testid="shipping-method-form">
+                  {/* Standard Shipping */}
+                  <div
+                    className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
+                      shippingMethod === 'standard'
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setShippingMethod('standard')}
+                    data-testid="shipping-standard"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="shippingMethod"
+                          value="standard"
+                          checked={shippingMethod === 'standard'}
+                          onChange={(e) => setShippingMethod(e.target.value)}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <div>
+                          <p className="font-semibold">Standard Shipping</p>
+                          <p className="text-sm text-gray-600">5-7 business days</p>
+                        </div>
+                      </div>
+                      <p className="font-semibold">$9.99</p>
+                    </div>
+                  </div>
+
+                  {/* Express Shipping */}
+                  <div
+                    className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
+                      shippingMethod === 'express'
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setShippingMethod('express')}
+                    data-testid="shipping-express"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="shippingMethod"
+                          value="express"
+                          checked={shippingMethod === 'express'}
+                          onChange={(e) => setShippingMethod(e.target.value)}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <div>
+                          <p className="font-semibold">Express Shipping</p>
+                          <p className="text-sm text-gray-600">2-3 business days</p>
+                        </div>
+                      </div>
+                      <p className="font-semibold">$19.99</p>
+                    </div>
+                  </div>
+
+                  {/* Overnight Shipping */}
+                  <div
+                    className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
+                      shippingMethod === 'overnight'
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setShippingMethod('overnight')}
+                    data-testid="shipping-overnight"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="shippingMethod"
+                          value="overnight"
+                          checked={shippingMethod === 'overnight'}
+                          onChange={(e) => setShippingMethod(e.target.value)}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <div>
+                          <p className="font-semibold">Overnight Shipping</p>
+                          <p className="text-sm text-gray-600">Next business day</p>
+                        </div>
+                      </div>
+                      <p className="font-semibold">$29.99</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 flex gap-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentStep('billing')}
+                    data-testid="back-to-billing"
+                  >
+                    Back to Billing
+                  </Button>
+                  <Button
+                    className="flex-1"
+                    onClick={handleShippingMethodContinue}
+                    data-testid="continue-to-payment"
+                  >
+                    Continue to Payment
+                  </Button>
+                </div>
+              </Card>
+            )}
+
             {/* Payment Step (Placeholder) */}
             {currentStep === 'payment' && (
               <Card className="p-6">
@@ -467,7 +586,7 @@ export default function CheckoutPage() {
                 <div className="flex gap-4">
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentStep('billing')}
+                    onClick={() => setCurrentStep('shipping-method')}
                   >
                     Back
                   </Button>
@@ -481,21 +600,166 @@ export default function CheckoutPage() {
               </Card>
             )}
 
-            {/* Review Step (Placeholder) */}
+            {/* Review Step */}
             {currentStep === 'review' && (
               <Card className="p-6">
                 <h2 className="text-xl font-semibold mb-6">Review Order</h2>
-                <p className="text-gray-600 mb-6">
-                  Order review and confirmation will be implemented here.
-                </p>
-                <div className="flex gap-4">
+
+                <div className="space-y-6" data-testid="order-review">
+                  {/* Shipping Address */}
+                  <div>
+                    <h3 className="font-semibold mb-2">Shipping Address</h3>
+                    <div className="text-sm text-gray-600">
+                      <p>{shippingAddress.fullName}</p>
+                      <p>{shippingAddress.address}</p>
+                      <p>
+                        {shippingAddress.city}, {shippingAddress.state} {shippingAddress.zipCode}
+                      </p>
+                      <p>{shippingAddress.country}</p>
+                      <p className="mt-1">Email: {shippingAddress.email}</p>
+                      <p>Phone: {shippingAddress.phone}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mt-2"
+                      onClick={() => setCurrentStep('shipping')}
+                    >
+                      Edit
+                    </Button>
+                  </div>
+
+                  {/* Billing Address */}
+                  <div className="border-t pt-4">
+                    <h3 className="font-semibold mb-2">Billing Address</h3>
+                    <div className="text-sm text-gray-600">
+                      {sameAsShipping ? (
+                        <p className="italic">Same as shipping address</p>
+                      ) : (
+                        <>
+                          <p>{billingAddress.fullName}</p>
+                          <p>{billingAddress.address}</p>
+                          <p>
+                            {billingAddress.city}, {billingAddress.state} {billingAddress.zipCode}
+                          </p>
+                          <p>{billingAddress.country}</p>
+                        </>
+                      )}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mt-2"
+                      onClick={() => setCurrentStep('billing')}
+                    >
+                      Edit
+                    </Button>
+                  </div>
+
+                  {/* Shipping Method */}
+                  <div className="border-t pt-4">
+                    <h3 className="font-semibold mb-2">Delivery Method</h3>
+                    <div className="text-sm text-gray-600">
+                      {shippingMethod === 'standard' && (
+                        <>
+                          <p className="font-medium">Standard Shipping</p>
+                          <p>5-7 business days - $9.99</p>
+                        </>
+                      )}
+                      {shippingMethod === 'express' && (
+                        <>
+                          <p className="font-medium">Express Shipping</p>
+                          <p>2-3 business days - $19.99</p>
+                        </>
+                      )}
+                      {shippingMethod === 'overnight' && (
+                        <>
+                          <p className="font-medium">Overnight Shipping</p>
+                          <p>Next business day - $29.99</p>
+                        </>
+                      )}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mt-2"
+                      onClick={() => setCurrentStep('shipping-method')}
+                    >
+                      Edit
+                    </Button>
+                  </div>
+
+                  {/* Order Items */}
+                  <div className="border-t pt-4">
+                    <h3 className="font-semibold mb-3">Order Items</h3>
+                    <div className="space-y-3">
+                      {cartItems.map((item) => (
+                        <div key={item.id} className="flex gap-3">
+                          <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <span className="text-2xl">📦</span>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="text-sm font-medium">{item.name}</h4>
+                            <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                            <p className="text-sm font-semibold">${item.price.toFixed(2)}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Order Total */}
+                  <div className="border-t pt-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Subtotal</span>
+                        <span className="font-medium">${subtotal.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Shipping</span>
+                        <span className="font-medium">
+                          $
+                          {shippingMethod === 'express'
+                            ? '19.99'
+                            : shippingMethod === 'overnight'
+                            ? '29.99'
+                            : '9.99'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Tax</span>
+                        <span className="font-medium">${tax.toFixed(2)}</span>
+                      </div>
+                      <div className="border-t pt-2 flex justify-between">
+                        <span className="font-bold">Total</span>
+                        <span className="font-bold text-lg">
+                          $
+                          {(
+                            subtotal +
+                            (shippingMethod === 'express'
+                              ? 19.99
+                              : shippingMethod === 'overnight'
+                              ? 29.99
+                              : 9.99) +
+                            tax
+                          ).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex gap-4">
                   <Button
                     variant="outline"
                     onClick={() => setCurrentStep('payment')}
+                    data-testid="back-to-payment"
                   >
                     Back
                   </Button>
-                  <Button className="flex-1">Place Order</Button>
+                  <Button className="flex-1" data-testid="place-order">
+                    Place Order
+                  </Button>
                 </div>
               </Card>
             )}

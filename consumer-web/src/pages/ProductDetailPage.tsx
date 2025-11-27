@@ -8,6 +8,8 @@ export default function ProductDetailPage() {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedColor, setSelectedColor] = useState('Black');
+  const [selectedSize, setSelectedSize] = useState('Medium');
 
   // Mock product data
   const product = {
@@ -39,6 +41,8 @@ export default function ProductDetailPage() {
     inStock: true,
     stockCount: 45,
     category: ['Electronics', 'Audio', 'Headphones'],
+    colors: ['Black', 'Silver', 'Blue', 'Red'],
+    sizes: ['Small', 'Medium', 'Large'],
   };
 
   const handleAddToCart = () => {
@@ -167,6 +171,48 @@ export default function ProductDetailPage() {
                   <span className="font-medium">Out of Stock</span>
                 </div>
               )}
+            </div>
+
+            {/* Color Selection */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">Color</label>
+              <div className="flex gap-2" data-testid="color-selector">
+                {product.colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`px-4 py-2 border-2 rounded-md transition-colors ${
+                      selectedColor === color
+                        ? 'border-blue-600 bg-blue-50 text-blue-600'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                    data-testid={`color-${color.toLowerCase()}`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Size Selection */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">Size</label>
+              <div className="flex gap-2" data-testid="size-selector">
+                {product.sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 border-2 rounded-md transition-colors ${
+                      selectedSize === size
+                        ? 'border-blue-600 bg-blue-50 text-blue-600'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                    data-testid={`size-${size.toLowerCase()}`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Quantity Selector */}

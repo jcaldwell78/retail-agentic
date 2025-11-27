@@ -248,7 +248,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ### Product Detail
 - [x] Build product detail page (PDP)
 - [x] Create image gallery with zoom
-- [ ] Implement variant selection (size, color)
+- [x] Implement variant selection (size, color)
 - [x] Build add to cart functionality
 - [ ] Create product reviews section
 - [x] Add related products
@@ -279,9 +279,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Design multi-step checkout flow
 - [x] Build shipping address form
 - [x] Create billing address form
-- [ ] Implement shipping method selection
+- [x] Implement shipping method selection
 - [ ] Build payment information form
-- [ ] Create order review step
+- [x] Create order review step
 - [ ] Implement order confirmation page
 - [ ] Add guest checkout option
 - [x] Build checkout progress indicator
