@@ -237,7 +237,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create faceted search filters
 - [x] Build sort functionality
 - [x] Implement pagination/infinite scroll
-- [ ] Add product quick view
+- [x] Add product quick view
 - [x] Create search results page
 - [x] Implement search autocomplete
 - [ ] **E2E**: Test product listing and filtering

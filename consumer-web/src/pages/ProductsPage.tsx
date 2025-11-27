@@ -3,14 +3,24 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { ProductQuickView } from '@/components/ProductQuickView';
+import { Eye } from 'lucide-react';
 
 interface Product {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
+  rating: number;
+  reviewCount: number;
   category: string[];
   imageUrl?: string;
   description: string;
+  images: string[];
+  inStock: boolean;
+  stockCount: number;
+  colors?: string[];
+  sizes?: string[];
 }
 
 export default function ProductsPage() {
@@ -18,6 +28,8 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('featured');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
 
   // Mock product data
   const [products] = useState<Product[]>([
@@ -25,47 +37,103 @@ export default function ProductsPage() {
       id: '1',
       name: 'Wireless Headphones',
       price: 99.99,
+      originalPrice: 129.99,
+      rating: 4.5,
+      reviewCount: 128,
       category: ['Electronics', 'Audio'],
       description: 'Premium wireless headphones with noise cancellation',
+      images: ['🎧', '📦', '🔊', '🎵'],
+      inStock: true,
+      stockCount: 45,
+      colors: ['Black', 'Silver', 'Blue'],
+      sizes: ['Standard'],
     },
     {
       id: '2',
       name: 'Smart Watch',
       price: 249.99,
+      rating: 4.8,
+      reviewCount: 234,
       category: ['Electronics', 'Wearables'],
       description: 'Fitness tracking and notifications on your wrist',
+      images: ['⌚', '📱', '💪', '🏃'],
+      inStock: true,
+      stockCount: 32,
+      colors: ['Black', 'Silver', 'Rose Gold'],
+      sizes: ['40mm', '44mm'],
     },
     {
       id: '3',
       name: 'Cotton T-Shirt',
       price: 29.99,
+      rating: 4.2,
+      reviewCount: 89,
       category: ['Fashion', 'Apparel'],
       description: 'Comfortable 100% cotton t-shirt',
+      images: ['👕', '🎨', '✨', '🌟'],
+      inStock: true,
+      stockCount: 156,
+      colors: ['White', 'Black', 'Gray', 'Navy'],
+      sizes: ['S', 'M', 'L', 'XL'],
     },
     {
       id: '4',
       name: 'Running Shoes',
       price: 89.99,
+      originalPrice: 119.99,
+      rating: 4.6,
+      reviewCount: 167,
       category: ['Sports', 'Footwear'],
       description: 'Lightweight running shoes for athletes',
+      images: ['👟', '🏃', '⚡', '🎯'],
+      inStock: true,
+      stockCount: 78,
+      colors: ['Black', 'White', 'Red', 'Blue'],
+      sizes: ['8', '9', '10', '11', '12'],
     },
     {
       id: '5',
       name: 'Laptop Stand',
       price: 49.99,
+      rating: 4.4,
+      reviewCount: 92,
       category: ['Electronics', 'Accessories'],
       description: 'Ergonomic aluminum laptop stand',
+      images: ['💻', '📐', '⚙️', '🖥️'],
+      inStock: true,
+      stockCount: 64,
+      colors: ['Silver', 'Space Gray'],
+      sizes: ['Standard'],
     },
     {
       id: '6',
       name: 'Water Bottle',
       price: 19.99,
+      rating: 4.7,
+      reviewCount: 203,
       category: ['Sports', 'Accessories'],
       description: 'Insulated stainless steel water bottle',
+      images: ['🧴', '💧', '♻️', '🌊'],
+      inStock: true,
+      stockCount: 124,
+      colors: ['Silver', 'Black', 'Blue', 'Pink'],
+      sizes: ['500ml', '750ml', '1L'],
     },
   ]);
 
   const categories = ['all', 'Electronics', 'Fashion', 'Sports', 'Home'];
+
+  const handleQuickView = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setQuickViewProduct(product);
+    setIsQuickViewOpen(true);
+  };
+
+  const handleCloseQuickView = () => {
+    setIsQuickViewOpen(false);
+    setQuickViewProduct(null);
+  };
 
   // Filter and sort products
   const filteredProducts = products
@@ -254,39 +322,57 @@ export default function ProductsPage() {
                 data-testid="products-grid"
               >
                 {filteredProducts.map((product) => (
-                  <Link key={product.id} to={`/products/${product.id}`}>
-                    <Card
-                      className={`overflow-hidden hover:shadow-lg transition-shadow ${
-                        viewMode === 'list' ? 'flex' : ''
-                      }`}
-                    >
-                      <div
-                        className={`bg-gray-200 flex items-center justify-center ${
-                          viewMode === 'list'
-                            ? 'w-32 h-32 flex-shrink-0'
-                            : 'aspect-square'
+                  <div key={product.id} className="relative group">
+                    <Link to={`/products/${product.id}`}>
+                      <Card
+                        className={`overflow-hidden hover:shadow-lg transition-shadow ${
+                          viewMode === 'list' ? 'flex' : ''
                         }`}
                       >
-                        <span className="text-4xl">📦</span>
-                      </div>
-                      <CardContent
-                        className={`p-4 ${viewMode === 'list' ? 'flex-1' : ''}`}
-                      >
-                        <h3 className="font-semibold mb-2 line-clamp-1">
-                          {product.name}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                          {product.description}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <span className="text-xl font-bold">
-                            ${product.price.toFixed(2)}
-                          </span>
-                          <Button size="sm">Add to Cart</Button>
+                        <div
+                          className={`bg-gray-200 flex items-center justify-center relative ${
+                            viewMode === 'list'
+                              ? 'w-32 h-32 flex-shrink-0'
+                              : 'aspect-square'
+                          }`}
+                        >
+                          <span className="text-4xl">{product.images[0]}</span>
+                          {/* Quick View Button - shows on hover */}
+                          <button
+                            onClick={(e) => handleQuickView(product, e)}
+                            className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                            data-testid={`quick-view-${product.id}`}
+                          >
+                            <Eye className="w-6 h-6 text-white mr-2" />
+                            <span className="text-white font-medium">Quick View</span>
+                          </button>
                         </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                        <CardContent
+                          className={`p-4 ${viewMode === 'list' ? 'flex-1' : ''}`}
+                        >
+                          <h3 className="font-semibold mb-2 line-clamp-1">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                            {product.description}
+                          </p>
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <span className="text-xl font-bold">
+                                ${product.price.toFixed(2)}
+                              </span>
+                              {product.originalPrice && (
+                                <span className="text-sm text-gray-500 line-through ml-2">
+                                  ${product.originalPrice.toFixed(2)}
+                                </span>
+                              )}
+                            </div>
+                            <Button size="sm">Add to Cart</Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </div>
                 ))}
               </div>
             )}
@@ -306,6 +392,13 @@ export default function ProductsPage() {
           </div>
         </div>
       </div>
+
+      {/* Product Quick View Modal */}
+      <ProductQuickView
+        product={quickViewProduct}
+        isOpen={isQuickViewOpen}
+        onClose={handleCloseQuickView}
+      />
     </div>
   );
 }
