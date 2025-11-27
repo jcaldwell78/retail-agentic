@@ -265,7 +265,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create remove item functionality
 - [x] Add cart total calculations
 - [x] Implement promo code input
-- [ ] Build save for later
+- [x] Build save for later
 - [ ] Add cart persistence
 - [x] Create mini-cart component
 - [ ] **E2E**: Test add to cart workflow

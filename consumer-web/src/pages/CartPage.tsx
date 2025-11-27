@@ -42,6 +42,7 @@ export default function CartPage() {
       inStock: false,
     },
   ]);
+  const [savedItems, setSavedItems] = useState<CartItem[]>([]);
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
 
@@ -56,6 +57,26 @@ export default function CartPage() {
 
   const removeItem = (id: string) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
+  };
+
+  const saveForLater = (id: string) => {
+    const item = cartItems.find((item) => item.id === id);
+    if (item) {
+      setSavedItems([...savedItems, item]);
+      setCartItems(cartItems.filter((item) => item.id !== id));
+    }
+  };
+
+  const moveToCart = (id: string) => {
+    const item = savedItems.find((item) => item.id === id);
+    if (item) {
+      setCartItems([...cartItems, item]);
+      setSavedItems(savedItems.filter((item) => item.id !== id));
+    }
+  };
+
+  const removeSavedItem = (id: string) => {
+    setSavedItems(savedItems.filter((item) => item.id !== id));
   };
 
   const applyPromoCode = () => {
@@ -201,13 +222,22 @@ export default function CartPage() {
                               </button>
                             </div>
 
-                            <button
-                              onClick={() => removeItem(item.id)}
-                              className="text-sm text-red-600 hover:text-red-800"
-                              data-testid={`remove-item-${item.id}`}
-                            >
-                              Remove
-                            </button>
+                            <div className="flex gap-3">
+                              <button
+                                onClick={() => saveForLater(item.id)}
+                                className="text-sm text-blue-600 hover:text-blue-800"
+                                data-testid={`save-for-later-${item.id}`}
+                              >
+                                Save for Later
+                              </button>
+                              <button
+                                onClick={() => removeItem(item.id)}
+                                className="text-sm text-red-600 hover:text-red-800"
+                                data-testid={`remove-item-${item.id}`}
+                              >
+                                Remove
+                              </button>
+                            </div>
                           </div>
                         </div>
 
@@ -248,6 +278,87 @@ export default function CartPage() {
                     </div>
                   </div>
                 </Card>
+              )}
+
+              {/* Saved for Later Section */}
+              {savedItems.length > 0 && (
+                <div className="mt-8" data-testid="saved-for-later-section">
+                  <h2 className="text-2xl font-bold mb-4">
+                    Saved for Later ({savedItems.length})
+                  </h2>
+                  <Card>
+                    <div className="divide-y">
+                      {savedItems.map((item) => (
+                        <div key={item.id} className="p-6">
+                          <div className="flex gap-4">
+                            {/* Product Image */}
+                            <Link
+                              to={`/products/${item.productId}`}
+                              className="flex-shrink-0"
+                            >
+                              <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <span className="text-3xl">📦</span>
+                              </div>
+                            </Link>
+
+                            {/* Product Info */}
+                            <div className="flex-1 min-w-0">
+                              <Link
+                                to={`/products/${item.productId}`}
+                                className="block"
+                              >
+                                <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
+                                  {item.name}
+                                </h3>
+                              </Link>
+
+                              {!item.inStock && (
+                                <div className="mt-1 flex items-center text-red-600 text-sm">
+                                  <svg
+                                    className="w-4 h-4 mr-1"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                  Out of Stock
+                                </div>
+                              )}
+
+                              <div className="mt-2 text-xl font-bold text-gray-900">
+                                ${item.price.toFixed(2)}
+                              </div>
+
+                              {/* Action Buttons */}
+                              <div className="mt-4 flex gap-3">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => moveToCart(item.id)}
+                                  disabled={!item.inStock}
+                                  data-testid={`move-to-cart-${item.id}`}
+                                >
+                                  Move to Cart
+                                </Button>
+                                <button
+                                  onClick={() => removeSavedItem(item.id)}
+                                  className="text-sm text-red-600 hover:text-red-800"
+                                  data-testid={`remove-saved-${item.id}`}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                </div>
               )}
             </div>
 
