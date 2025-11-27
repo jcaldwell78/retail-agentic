@@ -2,6 +2,8 @@ package com.retail.domain.order;
 
 import com.retail.domain.cart.Cart;
 import com.retail.domain.cart.CartService;
+import com.retail.domain.order.OrderStatus;
+import com.retail.domain.order.PaymentStatus;
 import com.retail.infrastructure.persistence.OrderRepository;
 import com.retail.security.tenant.TenantContext;
 import org.springframework.data.domain.Pageable;
@@ -85,14 +87,14 @@ public class OrderService {
                         // Set payment info
                         order.setPayment(new Order.Payment(
                             paymentMethodId,
-                            Order.PaymentStatus.PENDING,
+                            PaymentStatus.PENDING,
                             null // Transaction ID will be set after payment processing
                         ));
 
                         // Set initial status
-                        order.setStatus(Order.OrderStatus.PENDING);
+                        order.setStatus(OrderStatus.PENDING);
                         order.getStatusHistory().add(new Order.StatusHistoryEntry(
-                            Order.OrderStatus.PENDING,
+                            OrderStatus.PENDING,
                             Instant.now(),
                             "Order created"
                         ));
@@ -114,7 +116,7 @@ public class OrderService {
     /**
      * Update order status
      */
-    public Mono<Order> updateStatus(String orderId, Order.OrderStatus newStatus, String note) {
+    public Mono<Order> updateStatus(String orderId, OrderStatus newStatus, String note) {
         return TenantContext.getTenantId()
             .flatMap(tenantId ->
                 orderRepository.findById(orderId)
@@ -146,7 +148,7 @@ public class OrderService {
     /**
      * Update payment status
      */
-    public Mono<Order> updatePaymentStatus(String orderId, Order.PaymentStatus paymentStatus) {
+    public Mono<Order> updatePaymentStatus(String orderId, PaymentStatus paymentStatus) {
         return TenantContext.getTenantId()
             .flatMap(tenantId ->
                 orderRepository.findById(orderId)
@@ -164,10 +166,10 @@ public class OrderService {
                         order.setUpdatedAt(Instant.now());
 
                         // Auto-update order status based on payment
-                        if (paymentStatus == Order.PaymentStatus.PAID && order.getStatus() == Order.OrderStatus.PENDING) {
-                            order.setStatus(Order.OrderStatus.PROCESSING);
+                        if (paymentStatus == PaymentStatus.PAID && order.getStatus() == OrderStatus.PENDING) {
+                            order.setStatus(OrderStatus.PROCESSING);
                             order.getStatusHistory().add(new Order.StatusHistoryEntry(
-                                Order.OrderStatus.PROCESSING,
+                                OrderStatus.PROCESSING,
                                 Instant.now(),
                                 "Payment confirmed, order processing"
                             ));
@@ -194,10 +196,10 @@ public class OrderService {
                         order.setUpdatedAt(Instant.now());
 
                         // Auto-update to shipped if not already
-                        if (order.getStatus() != Order.OrderStatus.SHIPPED && order.getStatus() != Order.OrderStatus.DELIVERED) {
-                            order.setStatus(Order.OrderStatus.SHIPPED);
+                        if (order.getStatus() != OrderStatus.SHIPPED && order.getStatus() != OrderStatus.DELIVERED) {
+                            order.setStatus(OrderStatus.SHIPPED);
                             order.getStatusHistory().add(new Order.StatusHistoryEntry(
-                                Order.OrderStatus.SHIPPED,
+                                OrderStatus.SHIPPED,
                                 Instant.now(),
                                 "Order shipped with tracking: " + trackingNumber
                             ));
@@ -242,7 +244,7 @@ public class OrderService {
     /**
      * Get orders by status
      */
-    public Flux<Order> findByStatus(Order.OrderStatus status) {
+    public Flux<Order> findByStatus(OrderStatus status) {
         return TenantContext.getTenantId()
             .flatMapMany(tenantId ->
                 orderRepository.findByStatusAndTenantId(status, tenantId)
@@ -261,7 +263,7 @@ public class OrderService {
      * Cancel order
      */
     public Mono<Order> cancelOrder(String orderId, String reason) {
-        return updateStatus(orderId, Order.OrderStatus.CANCELLED, "Order cancelled: " + reason);
+        return updateStatus(orderId, OrderStatus.CANCELLED, "Order cancelled: " + reason);
     }
 
     /**
@@ -276,17 +278,17 @@ public class OrderService {
     /**
      * Validate status transitions
      */
-    private boolean isValidStatusTransition(Order.OrderStatus currentStatus, Order.OrderStatus newStatus) {
+    private boolean isValidStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
         // Allow any transition to CANCELLED
-        if (newStatus == Order.OrderStatus.CANCELLED) {
+        if (newStatus == OrderStatus.CANCELLED) {
             return true;
         }
 
         // Define valid transitions
         return switch (currentStatus) {
-            case PENDING -> newStatus == Order.OrderStatus.PROCESSING;
-            case PROCESSING -> newStatus == Order.OrderStatus.SHIPPED;
-            case SHIPPED -> newStatus == Order.OrderStatus.DELIVERED;
+            case PENDING -> newStatus == OrderStatus.PROCESSING;
+            case PROCESSING -> newStatus == OrderStatus.SHIPPED;
+            case SHIPPED -> newStatus == OrderStatus.DELIVERED;
             case DELIVERED -> false; // Cannot transition from DELIVERED
             case CANCELLED -> false; // Cannot transition from CANCELLED
         };

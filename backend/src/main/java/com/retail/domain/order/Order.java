@@ -1,5 +1,7 @@
 package com.retail.domain.order;
 
+import com.retail.domain.order.OrderStatus;
+import com.retail.domain.order.PaymentStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -56,7 +58,7 @@ public class Order {
     private Payment payment;
 
     @NotNull(message = "Status is required")
-    private OrderStatus status = Order.OrderStatus.PENDING;
+    private OrderStatus status = OrderStatus.PENDING;
 
     private List<StatusHistoryEntry> statusHistory = new ArrayList<>();
 
@@ -269,19 +271,4 @@ public class Order {
         @NotNull Instant timestamp,
         String note
     ) {}
-
-    public enum OrderStatus {
-        PENDING,
-        PROCESSING,
-        SHIPPED,
-        DELIVERED,
-        CANCELLED
-    }
-
-    public enum PaymentStatus {
-        PENDING,
-        PAID,
-        FAILED,
-        REFUNDED
-    }
 }

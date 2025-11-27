@@ -2,8 +2,8 @@ package com.retail.controller;
 
 import com.retail.domain.order.Order;
 import com.retail.domain.order.OrderService;
-import com.retail.domain.order.Order.OrderStatus;
-import com.retail.domain.order.Order.PaymentStatus;
+import com.retail.domain.order.OrderStatus;
+import com.retail.domain.order.PaymentStatus;
 import com.retail.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
