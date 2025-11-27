@@ -187,7 +187,6 @@ describe('Navigation - Search Autocomplete', () => {
     const searchButton = screen.getByRole('button', { name: 'Search products' });
     await user.click(searchButton);
 
-    const searchInput = screen.getByTestId('search-input');
     await user.keyboard('{Enter}');
 
     expect(mockNavigate).not.toHaveBeenCalled();

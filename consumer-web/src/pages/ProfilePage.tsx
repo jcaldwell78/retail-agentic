@@ -25,22 +25,17 @@ export function ProfilePage() {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
-    name: user?.name || '',
+    name: user ? `${user.firstName} ${user.lastName}` : '',
     email: user?.email || '',
-    phone: '',
+    phone: user?.phone || '',
   });
 
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [addresses] = useState<Address[]>([]);
 
   const handleProfileSave = () => {
     // TODO: Call API to update profile
     console.log('Saving profile:', profile);
     setIsEditing(false);
-  };
-
-  const handleAddAddress = () => {
-    setShowAddressForm(true);
   };
 
   return (
@@ -127,7 +122,7 @@ export function ProfilePage() {
           <h2 className="text-xl font-semibold">Address Book</h2>
           <Button
             variant="outline"
-            onClick={handleAddAddress}
+            onClick={() => console.log('Add address clicked')}
             data-testid="add-address-button"
           >
             Add Address

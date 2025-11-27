@@ -6,6 +6,19 @@ import { http, HttpResponse } from 'msw';
 
 const API_BASE = 'http://localhost:8080/api/v1';
 
+// Type definitions for mock data
+interface CartItem {
+  id: string;
+  productId: string;
+  name: string;
+  sku: string;
+  price: number;
+  quantity: number;
+  attributes: Record<string, any>;
+  imageUrl?: string;
+  subtotal: number;
+}
+
 // Mock data
 const mockProducts = [
   {
@@ -56,7 +69,22 @@ const mockProducts = [
   },
 ];
 
-const mockCart = {
+const mockCart: {
+  id: string;
+  sessionId: string;
+  tenantId: string;
+  items: CartItem[];
+  itemCount: number;
+  summary: {
+    subtotal: number;
+    tax: number;
+    shipping: number;
+    total: number;
+  };
+  createdAt: string;
+  updatedAt: string;
+  expiresAt: string;
+} = {
   id: 'cart-123',
   sessionId: 'session-456',
   tenantId: 'tenant-1',
@@ -233,7 +261,7 @@ export const handlers = [
 
   // Create order
   http.post(`${API_BASE}/orders`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
 
     return HttpResponse.json({
       id: `order-${Date.now()}`,
@@ -241,7 +269,7 @@ export const handlers = [
       ...body,
       status: 'PENDING',
       payment: {
-        ...body.payment,
+        ...(body.payment || {}),
         status: 'PENDING',
       },
       statusHistory: [
@@ -258,12 +286,12 @@ export const handlers = [
 
   // User registration
   http.post(`${API_BASE}/auth/register`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as { email?: string; name?: string };
 
     return HttpResponse.json({
       id: `user-${Date.now()}`,
-      email: body.email,
-      name: body.name,
+      email: body.email || '',
+      name: body.name || '',
       role: 'CUSTOMER',
       status: 'ACTIVE',
       createdAt: new Date().toISOString(),
@@ -272,13 +300,13 @@ export const handlers = [
 
   // User login
   http.post(`${API_BASE}/auth/login`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as { email?: string };
 
     return HttpResponse.json({
       token: 'mock-jwt-token',
       user: {
         id: 'user-1',
-        email: body.email,
+        email: body.email || '',
         name: 'Test User',
         role: 'CUSTOMER',
         status: 'ACTIVE',
