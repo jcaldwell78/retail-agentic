@@ -301,7 +301,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create order tracking/details
 - [x] Implement password reset flow
 - [ ] Add account preferences
-- [ ] Build wishlist functionality
+- [x] Build wishlist functionality - Zustand store + WishlistPage with add/remove/clear
 - [ ] **E2E**: Test login and registration flows
 - [ ] **E2E**: Verify profile management
 - [ ] **E2E**: Test address book CRUD operations
@@ -335,10 +335,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ### Dashboard
 - [x] Build analytics dashboard
 - [x] Create sales metrics widgets
-- [ ] Implement revenue charts
+- [x] Implement revenue charts - Bar chart with tooltips and growth indicators
 - [x] Add order statistics
-- [ ] Build top products widget
-- [ ] Create customer insights
+- [x] Build top products widget - Top 5 products by revenue with rankings
+- [x] Create customer insights - Customer metrics, distribution, and retention stats
 - [ ] Add real-time notifications
 - [ ] Implement date range filtering
 - [ ] **E2E**: Test dashboard load and authentication
