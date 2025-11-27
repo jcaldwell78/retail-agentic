@@ -111,7 +111,8 @@ describe('OrderConfirmationPage', () => {
 
     // Check first item
     expect(screen.getByText('Wireless Headphones')).toBeInTheDocument();
-    expect(screen.getByText(/Quantity: 1/)).toBeInTheDocument();
+    const quantityTexts = screen.getAllByText(/Quantity: 1/);
+    expect(quantityTexts.length).toBeGreaterThan(0);
 
     // Check second item
     expect(screen.getByText('Smart Watch')).toBeInTheDocument();

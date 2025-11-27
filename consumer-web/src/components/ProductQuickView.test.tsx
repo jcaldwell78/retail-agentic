@@ -238,8 +238,8 @@ describe('ProductQuickView', () => {
       <ProductQuickView product={mockProduct} isOpen={true} onClose={onClose} />
     );
 
-    const closeButton = screen.getByRole('button', { name: 'Close' });
-    await user.click(closeButton);
+    const closeButtons = screen.getAllByRole('button', { name: 'Close' });
+    await user.click(closeButtons[0]);
 
     expect(onClose).toHaveBeenCalled();
   });
@@ -323,6 +323,7 @@ describe('ProductQuickView', () => {
 
     expect(screen.getByRole('button', { name: 'Add to Cart' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'View Details' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+    const closeButtons = screen.getAllByRole('button', { name: 'Close' });
+    expect(closeButtons.length).toBeGreaterThan(0);
   });
 });

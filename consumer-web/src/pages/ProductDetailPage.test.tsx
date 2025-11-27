@@ -19,24 +19,31 @@ const renderWithRouter = (component: React.ReactElement) => {
 };
 
 describe('ProductDetailPage - Share Functionality', () => {
+  let writeTextSpy: ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
     // Reset navigate mock
     mockNavigate.mockClear();
 
     // Reset window.open mock
     window.open = vi.fn();
+
+    // Create clipboard writeText spy
+    writeTextSpy = vi.fn(() => Promise.resolve());
+
     // Reset navigator.share
     Object.defineProperty(navigator, 'share', {
       writable: true,
       configurable: true,
       value: undefined,
     });
+
     // Reset clipboard
     Object.defineProperty(navigator, 'clipboard', {
       writable: true,
       configurable: true,
       value: {
-        writeText: vi.fn(() => Promise.resolve()),
+        writeText: writeTextSpy,
       },
     });
   });
@@ -90,11 +97,15 @@ describe('ProductDetailPage - Share Functionality', () => {
     const shareButton = screen.getByTestId('share-button');
     await user.click(shareButton);
 
+    await waitFor(() => {
+      expect(screen.getByTestId('share-menu')).toBeInTheDocument();
+    });
+
     // Click copy link
     const copyButton = screen.getByTestId('copy-link-button');
     await user.click(copyButton);
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+    expect(writeTextSpy).toHaveBeenCalledWith(
       expect.stringContaining('/products/1')
     );
 
@@ -105,16 +116,22 @@ describe('ProductDetailPage - Share Functionality', () => {
 
   it('should revert copy success message after timeout', async () => {
     vi.useFakeTimers();
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     renderWithRouter(<ProductDetailPage />);
 
     const shareButton = screen.getByTestId('share-button');
     await user.click(shareButton);
 
+    await waitFor(() => {
+      expect(screen.getByTestId('share-menu')).toBeInTheDocument();
+    });
+
     const copyButton = screen.getByTestId('copy-link-button');
     await user.click(copyButton);
 
-    expect(screen.getByText('Link Copied!')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Link Copied!')).toBeInTheDocument();
+    });
 
     vi.advanceTimersByTime(2000);
 
@@ -131,6 +148,10 @@ describe('ProductDetailPage - Share Functionality', () => {
 
     const shareButton = screen.getByTestId('share-button');
     await user.click(shareButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('share-menu')).toBeInTheDocument();
+    });
 
     const facebookButton = screen.getByTestId('facebook-share-button');
     await user.click(facebookButton);
@@ -149,6 +170,10 @@ describe('ProductDetailPage - Share Functionality', () => {
     const shareButton = screen.getByTestId('share-button');
     await user.click(shareButton);
 
+    await waitFor(() => {
+      expect(screen.getByTestId('share-menu')).toBeInTheDocument();
+    });
+
     const twitterButton = screen.getByTestId('twitter-share-button');
     await user.click(twitterButton);
 
@@ -165,6 +190,10 @@ describe('ProductDetailPage - Share Functionality', () => {
 
     const shareButton = screen.getByTestId('share-button');
     await user.click(shareButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('share-menu')).toBeInTheDocument();
+    });
 
     const emailButton = screen.getByTestId('email-share-button');
 
@@ -189,11 +218,15 @@ describe('ProductDetailPage - Share Functionality', () => {
 
     // Open menu
     await user.click(shareButton);
-    expect(screen.getByTestId('share-menu')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('share-menu')).toBeInTheDocument();
+    });
 
     // Close menu
     await user.click(shareButton);
-    expect(screen.queryByTestId('share-menu')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByTestId('share-menu')).not.toBeInTheDocument();
+    });
   });
 });
 
@@ -215,7 +248,9 @@ describe('ProductDetailPage - Reviews Functionality', () => {
     const writeReviewButton = screen.getByTestId('write-review-button');
     await user.click(writeReviewButton);
 
-    expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    });
   });
 
   it('should hide review form when cancelled', async () => {
@@ -225,10 +260,16 @@ describe('ProductDetailPage - Reviews Functionality', () => {
     const writeReviewButton = screen.getByTestId('write-review-button');
     await user.click(writeReviewButton);
 
+    await waitFor(() => {
+      expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    });
+
     const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     await user.click(cancelButton);
 
-    expect(screen.queryByTestId('review-form')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByTestId('review-form')).not.toBeInTheDocument();
+    });
   });
 
   it('should display all existing reviews', () => {
@@ -262,6 +303,10 @@ describe('ProductDetailPage - Reviews Functionality', () => {
     const writeReviewButton = screen.getByTestId('write-review-button');
     await user.click(writeReviewButton);
 
+    await waitFor(() => {
+      expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    });
+
     const star3 = screen.getByTestId('star-rating-3');
     await user.click(star3);
 
@@ -279,6 +324,10 @@ describe('ProductDetailPage - Reviews Functionality', () => {
 
     const writeReviewButton = screen.getByTestId('write-review-button');
     await user.click(writeReviewButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    });
 
     const titleInput = screen.getByTestId('review-title-input');
     const commentInput = screen.getByTestId('review-comment-input');
@@ -298,6 +347,10 @@ describe('ProductDetailPage - Reviews Functionality', () => {
     const writeReviewButton = screen.getByTestId('write-review-button');
     await user.click(writeReviewButton);
 
+    await waitFor(() => {
+      expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    });
+
     await user.type(screen.getByTestId('review-title-input'), 'Great product!');
     await user.type(screen.getByTestId('review-comment-input'), 'I really love this!');
 
@@ -305,7 +358,10 @@ describe('ProductDetailPage - Reviews Functionality', () => {
     await user.click(submitButton);
 
     expect(alertSpy).toHaveBeenCalledWith('Thank you for your review!');
-    expect(screen.queryByTestId('review-form')).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('review-form')).not.toBeInTheDocument();
+    });
 
     alertSpy.mockRestore();
   });
@@ -318,14 +374,26 @@ describe('ProductDetailPage - Reviews Functionality', () => {
     const writeReviewButton = screen.getByTestId('write-review-button');
     await user.click(writeReviewButton);
 
+    await waitFor(() => {
+      expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    });
+
     await user.click(screen.getByTestId('star-rating-3'));
     await user.type(screen.getByTestId('review-title-input'), 'Great product!');
     await user.type(screen.getByTestId('review-comment-input'), 'I really love this!');
 
     await user.click(screen.getByTestId('submit-review-button'));
 
+    await waitFor(() => {
+      expect(screen.queryByTestId('review-form')).not.toBeInTheDocument();
+    });
+
     // Open form again
     await user.click(writeReviewButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('review-form')).toBeInTheDocument();
+    });
 
     // Form should be reset
     expect(screen.getByTestId('review-title-input')).toHaveValue('');
