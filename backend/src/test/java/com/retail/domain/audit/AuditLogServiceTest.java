@@ -37,7 +37,6 @@ class AuditLogServiceTest {
     @BeforeEach
     void setUp() {
         auditLogService = new AuditLogService(auditEventRepository);
-        TenantContext.setTenantId(TEST_TENANT_ID);
     }
 
     @Test
@@ -51,7 +50,8 @@ class AuditLogServiceTest {
             .thenReturn(Mono.just(event));
 
         // Act & Assert
-        StepVerifier.create(auditLogService.logEvent(event))
+        StepVerifier.create(auditLogService.logEvent(event)
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .assertNext(savedEvent -> {
                 assertThat(savedEvent.getTenantId()).isEqualTo(TEST_TENANT_ID);
                 assertThat(savedEvent.getUserId()).isEqualTo(TEST_USER_ID);
@@ -74,6 +74,7 @@ class AuditLogServiceTest {
         // Act & Assert
         StepVerifier.create(
             auditLogService.log(AuditEventType.PRODUCT_CREATED, "Test description")
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .assertNext(event -> {
             assertThat(event.getTenantId()).isEqualTo(TEST_TENANT_ID);
@@ -104,6 +105,7 @@ class AuditLogServiceTest {
                 "product-123",
                 "Updated product details"
             )
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -147,6 +149,7 @@ class AuditLogServiceTest {
                 "Price changed",
                 metadata
             )
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -177,6 +180,7 @@ class AuditLogServiceTest {
                 "Login attempt failed",
                 "Invalid credentials"
             )
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -208,6 +212,7 @@ class AuditLogServiceTest {
                 "192.168.1.1",
                 "Mozilla/5.0"
             )
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -236,7 +241,8 @@ class AuditLogServiceTest {
         .thenReturn(Flux.just(event1, event2));
 
         // Act & Assert
-        StepVerifier.create(auditLogService.getAuditEvents(startDate, endDate))
+        StepVerifier.create(auditLogService.getAuditEvents(startDate, endDate)
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .expectNext(event1)
             .expectNext(event2)
             .verifyComplete();
@@ -254,7 +260,8 @@ class AuditLogServiceTest {
         .thenReturn(Flux.just(event1));
 
         // Act & Assert
-        StepVerifier.create(auditLogService.getAuditEventsByUser(TEST_USER_ID))
+        StepVerifier.create(auditLogService.getAuditEventsByUser(TEST_USER_ID)
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .expectNext(event1)
             .verifyComplete();
     }
@@ -269,7 +276,8 @@ class AuditLogServiceTest {
             .thenReturn(Flux.just(failedEvent));
 
         // Act & Assert
-        StepVerifier.create(auditLogService.getFailedEvents())
+        StepVerifier.create(auditLogService.getFailedEvents()
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .expectNext(failedEvent)
             .verifyComplete();
     }
@@ -285,7 +293,8 @@ class AuditLogServiceTest {
         .thenReturn(Mono.empty());
 
         // Act & Assert
-        StepVerifier.create(auditLogService.cleanupOldEvents(retentionDays))
+        StepVerifier.create(auditLogService.cleanupOldEvents(retentionDays)
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .verifyComplete();
 
         verify(auditEventRepository).deleteByTenantIdAndTimestampBefore(
@@ -300,7 +309,8 @@ class AuditLogServiceTest {
             .thenReturn(Mono.just(42L));
 
         // Act & Assert
-        StepVerifier.create(auditLogService.getEventCount())
+        StepVerifier.create(auditLogService.getEventCount()
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .expectNext(42L)
             .verifyComplete();
     }

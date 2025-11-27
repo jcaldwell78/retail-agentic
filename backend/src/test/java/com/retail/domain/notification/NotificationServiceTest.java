@@ -38,7 +38,6 @@ class NotificationServiceTest {
     @BeforeEach
     void setUp() {
         notificationService = new NotificationService(notificationRepository);
-        TenantContext.setTenantId(TEST_TENANT_ID);
     }
 
     @Test

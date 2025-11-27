@@ -1,5 +1,7 @@
 package com.retail.domain.order;
 
+import com.retail.domain.order.OrderStatus;
+import com.retail.domain.order.PaymentStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,7 @@ class OrderTest {
         Order order = new Order();
 
         assertNotNull(order);
-        assertEquals(Order.OrderStatus.PENDING, order.getStatus());
+        assertEquals(OrderStatus.PENDING, order.getStatus());
         assertNotNull(order.getItems());
         assertNotNull(order.getStatusHistory());
     }
@@ -50,7 +52,7 @@ class OrderTest {
         order.setOrderNumber("ORD-2024-001");
         order.setCustomer(customer);
         order.setShippingAddress(address);
-        order.setStatus(Order.OrderStatus.PROCESSING);
+        order.setStatus(OrderStatus.PROCESSING);
         order.setTrackingNumber("TRACK-123");
         order.setCreatedAt(now);
         order.setUpdatedAt(now);
@@ -60,7 +62,7 @@ class OrderTest {
         assertEquals("ORD-2024-001", order.getOrderNumber());
         assertEquals(customer, order.getCustomer());
         assertEquals(address, order.getShippingAddress());
-        assertEquals(Order.OrderStatus.PROCESSING, order.getStatus());
+        assertEquals(OrderStatus.PROCESSING, order.getStatus());
         assertEquals("TRACK-123", order.getTrackingNumber());
         assertEquals(now, order.getCreatedAt());
         assertEquals(now, order.getUpdatedAt());
@@ -178,12 +180,12 @@ class OrderTest {
     void paymentRecordShouldWork() {
         Order.Payment payment = new Order.Payment(
             "credit_card",
-            Order.PaymentStatus.PAID,
+            PaymentStatus.PAID,
             "txn_123456"
         );
 
         assertEquals("credit_card", payment.method());
-        assertEquals(Order.PaymentStatus.PAID, payment.status());
+        assertEquals(PaymentStatus.PAID, payment.status());
         assertEquals("txn_123456", payment.transactionId());
     }
 
@@ -193,12 +195,12 @@ class OrderTest {
         Instant now = Instant.now();
 
         Order.StatusHistoryEntry entry = new Order.StatusHistoryEntry(
-            Order.OrderStatus.SHIPPED,
+            OrderStatus.SHIPPED,
             now,
             "Order shipped via UPS"
         );
 
-        assertEquals(Order.OrderStatus.SHIPPED, entry.status());
+        assertEquals(OrderStatus.SHIPPED, entry.status());
         assertEquals(now, entry.timestamp());
         assertEquals("Order shipped via UPS", entry.note());
     }
@@ -242,19 +244,19 @@ class OrderTest {
         Instant now = Instant.now();
 
         Order.StatusHistoryEntry entry1 = new Order.StatusHistoryEntry(
-            Order.OrderStatus.PENDING,
+            OrderStatus.PENDING,
             now.minusSeconds(3600),
             "Order placed"
         );
 
         Order.StatusHistoryEntry entry2 = new Order.StatusHistoryEntry(
-            Order.OrderStatus.PROCESSING,
+            OrderStatus.PROCESSING,
             now.minusSeconds(1800),
             "Payment confirmed"
         );
 
         Order.StatusHistoryEntry entry3 = new Order.StatusHistoryEntry(
-            Order.OrderStatus.SHIPPED,
+            OrderStatus.SHIPPED,
             now,
             "Order shipped"
         );
@@ -262,9 +264,9 @@ class OrderTest {
         order.setStatusHistory(Arrays.asList(entry1, entry2, entry3));
 
         assertEquals(3, order.getStatusHistory().size());
-        assertEquals(Order.OrderStatus.PENDING, order.getStatusHistory().get(0).status());
-        assertEquals(Order.OrderStatus.PROCESSING, order.getStatusHistory().get(1).status());
-        assertEquals(Order.OrderStatus.SHIPPED, order.getStatusHistory().get(2).status());
+        assertEquals(OrderStatus.PENDING, order.getStatusHistory().get(0).status());
+        assertEquals(OrderStatus.PROCESSING, order.getStatusHistory().get(1).status());
+        assertEquals(OrderStatus.SHIPPED, order.getStatusHistory().get(2).status());
     }
 
     @Test
@@ -314,7 +316,7 @@ class OrderTest {
         order.setId("order-1");
         order.setTenantId("tenant-1");
         order.setOrderNumber("ORD-001");
-        order.setStatus(Order.OrderStatus.PROCESSING);
+        order.setStatus(OrderStatus.PROCESSING);
 
         String toString = order.toString();
 
@@ -329,35 +331,35 @@ class OrderTest {
     void shouldHandleAllOrderStatuses() {
         Order order = new Order();
 
-        order.setStatus(Order.OrderStatus.PENDING);
-        assertEquals(Order.OrderStatus.PENDING, order.getStatus());
+        order.setStatus(OrderStatus.PENDING);
+        assertEquals(OrderStatus.PENDING, order.getStatus());
 
-        order.setStatus(Order.OrderStatus.PROCESSING);
-        assertEquals(Order.OrderStatus.PROCESSING, order.getStatus());
+        order.setStatus(OrderStatus.PROCESSING);
+        assertEquals(OrderStatus.PROCESSING, order.getStatus());
 
-        order.setStatus(Order.OrderStatus.SHIPPED);
-        assertEquals(Order.OrderStatus.SHIPPED, order.getStatus());
+        order.setStatus(OrderStatus.SHIPPED);
+        assertEquals(OrderStatus.SHIPPED, order.getStatus());
 
-        order.setStatus(Order.OrderStatus.DELIVERED);
-        assertEquals(Order.OrderStatus.DELIVERED, order.getStatus());
+        order.setStatus(OrderStatus.DELIVERED);
+        assertEquals(OrderStatus.DELIVERED, order.getStatus());
 
-        order.setStatus(Order.OrderStatus.CANCELLED);
-        assertEquals(Order.OrderStatus.CANCELLED, order.getStatus());
+        order.setStatus(OrderStatus.CANCELLED);
+        assertEquals(OrderStatus.CANCELLED, order.getStatus());
     }
 
     @Test
     @DisplayName("Should handle all payment statuses")
     void shouldHandleAllPaymentStatuses() {
-        Order.Payment payment1 = new Order.Payment("card", Order.PaymentStatus.PENDING, null);
-        assertEquals(Order.PaymentStatus.PENDING, payment1.status());
+        Order.Payment payment1 = new Order.Payment("card", PaymentStatus.PENDING, null);
+        assertEquals(PaymentStatus.PENDING, payment1.status());
 
-        Order.Payment payment2 = new Order.Payment("card", Order.PaymentStatus.PAID, "txn-1");
-        assertEquals(Order.PaymentStatus.PAID, payment2.status());
+        Order.Payment payment2 = new Order.Payment("card", PaymentStatus.PAID, "txn-1");
+        assertEquals(PaymentStatus.PAID, payment2.status());
 
-        Order.Payment payment3 = new Order.Payment("card", Order.PaymentStatus.FAILED, null);
-        assertEquals(Order.PaymentStatus.FAILED, payment3.status());
+        Order.Payment payment3 = new Order.Payment("card", PaymentStatus.FAILED, null);
+        assertEquals(PaymentStatus.FAILED, payment3.status());
 
-        Order.Payment payment4 = new Order.Payment("card", Order.PaymentStatus.REFUNDED, "txn-2");
-        assertEquals(Order.PaymentStatus.REFUNDED, payment4.status());
+        Order.Payment payment4 = new Order.Payment("card", PaymentStatus.REFUNDED, "txn-2");
+        assertEquals(PaymentStatus.REFUNDED, payment4.status());
     }
 }

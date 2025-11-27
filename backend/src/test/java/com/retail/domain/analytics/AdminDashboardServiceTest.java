@@ -1,6 +1,7 @@
 package com.retail.domain.analytics;
 
 import com.retail.domain.order.Order;
+import com.retail.domain.order.OrderStatus;
 import com.retail.domain.product.Product;
 import com.retail.domain.user.User;
 import com.retail.infrastructure.persistence.OrderRepository;
@@ -60,7 +61,6 @@ class AdminDashboardServiceTest {
             userRepository,
             reportingService
         );
-        TenantContext.setTenantId(TEST_TENANT_ID);
     }
 
     @Test
@@ -147,7 +147,7 @@ class AdminDashboardServiceTest {
         lowStockProduct.setId("product-1");
         lowStockProduct.setName("Low Stock Product");
         lowStockProduct.setSku("SKU-001");
-        lowStockProduct.setStockQuantity(5);
+        lowStockProduct.setStock(5);
         lowStockProduct.setActive(true);
 
         when(productRepository.findByTenantIdAndActiveTrueAndStockQuantityLessThan(
@@ -258,7 +258,7 @@ class AdminDashboardServiceTest {
         order1.setId("order-1");
         order1.setTenantId(TEST_TENANT_ID);
         order1.setOrderNumber("ORD-001");
-        order1.setStatus(Order.OrderStatus.PROCESSING);
+        order1.setStatus(OrderStatus.PROCESSING);
         order1.setCustomer(new Order.Customer("user1@test.com", "User One"));
         order1.setShippingAddress(new Order.Address("123 Main St", null, "City", "ST", "12345", "US"));
         order1.setPricing(new Order.Pricing(
@@ -286,7 +286,7 @@ class AdminDashboardServiceTest {
         order2.setId("order-2");
         order2.setTenantId(TEST_TENANT_ID);
         order2.setOrderNumber("ORD-002");
-        order2.setStatus(Order.OrderStatus.PROCESSING);
+        order2.setStatus(OrderStatus.PROCESSING);
         order2.setCustomer(new Order.Customer("user2@test.com", "User Two"));
         order2.setShippingAddress(new Order.Address("456 Oak Ave", null, "Town", "ST", "67890", "US"));
         order2.setPricing(new Order.Pricing(
@@ -314,7 +314,7 @@ class AdminDashboardServiceTest {
         order3.setId("order-3");
         order3.setTenantId(TEST_TENANT_ID);
         order3.setOrderNumber("ORD-003");
-        order3.setStatus(Order.OrderStatus.PROCESSING);
+        order3.setStatus(OrderStatus.PROCESSING);
         order3.setCustomer(new Order.Customer("user1@test.com", "User One"));
         order3.setShippingAddress(new Order.Address("123 Main St", null, "City", "ST", "12345", "US"));
         order3.setPricing(new Order.Pricing(

@@ -1,6 +1,7 @@
 package com.retail.infrastructure.persistence;
 
 import com.retail.domain.cart.Cart;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -14,6 +15,7 @@ import java.util.Objects;
  * Provides high-speed access with automatic TTL management.
  */
 @Repository
+@ConditionalOnBean(ReactiveRedisTemplate.class)
 public class CartRepository {
 
     private static final String CART_KEY_PREFIX = "cart:";

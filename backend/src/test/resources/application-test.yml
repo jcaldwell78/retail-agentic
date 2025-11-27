@@ -2,14 +2,26 @@ spring:
   application:
     name: retail-backend-test
 
+  # MongoDB configuration for tests
+  # Uses embedded MongoDB provided by de.flapdoodle.embed.mongo
+  data:
+    mongodb:
+      # Embedded MongoDB will auto-configure on a random port
+      # No manual configuration needed - flapdoodle handles it automatically
+      database: test-retail-db
+
+# Embedded MongoDB configuration
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.14
+
   # Disable auto-configuration for external services during testing
+  # MongoDB is enabled (using embedded) but others are disabled
   # Tests should use mocks or embedded/in-memory alternatives
   autoconfigure:
     exclude:
-      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration

@@ -38,7 +38,6 @@ class SavedCartServiceTest {
     @BeforeEach
     void setUp() {
         savedCartService = new SavedCartService(savedCartRepository, cartService);
-        TenantContext.setTenantId(TEST_TENANT_ID);
     }
 
     @Test
@@ -49,7 +48,8 @@ class SavedCartServiceTest {
             .thenReturn(Mono.just(existingCart));
 
         // Act & Assert
-        StepVerifier.create(savedCartService.getSavedCart(TEST_USER_ID))
+        StepVerifier.create(savedCartService.getSavedCart(TEST_USER_ID)
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .assertNext(savedCart -> {
                 assertThat(savedCart.getUserId()).isEqualTo(TEST_USER_ID);
                 assertThat(savedCart.getTenantId()).isEqualTo(TEST_TENANT_ID);
@@ -70,7 +70,8 @@ class SavedCartServiceTest {
             .thenReturn(Mono.just(newCart));
 
         // Act & Assert
-        StepVerifier.create(savedCartService.getSavedCart(TEST_USER_ID))
+        StepVerifier.create(savedCartService.getSavedCart(TEST_USER_ID)
+            .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID)))
             .assertNext(savedCart -> {
                 assertThat(savedCart.getUserId()).isEqualTo(TEST_USER_ID);
             })
@@ -97,6 +98,7 @@ class SavedCartServiceTest {
         // Act & Assert
         StepVerifier.create(
             savedCartService.saveForLater(TEST_SESSION_ID, "item-1", TEST_USER_ID)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .assertNext(result -> {
             assertThat(result.getItems()).isNotEmpty();
@@ -129,6 +131,7 @@ class SavedCartServiceTest {
         // Act & Assert
         StepVerifier.create(
             savedCartService.moveToCart(TEST_SESSION_ID, "saved-item-1", TEST_USER_ID)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -150,6 +153,7 @@ class SavedCartServiceTest {
         // Act & Assert
         StepVerifier.create(
             savedCartService.removeFromSaved("saved-item-1", TEST_USER_ID, null)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .assertNext(result -> {
             assertThat(result.getItems()).isEmpty();
@@ -181,6 +185,7 @@ class SavedCartServiceTest {
         // Act & Assert
         StepVerifier.create(
             savedCartService.moveAllToCart(TEST_SESSION_ID, TEST_USER_ID)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -207,6 +212,7 @@ class SavedCartServiceTest {
         // Act & Assert
         StepVerifier.create(
             savedCartService.clearSavedCart(TEST_USER_ID, null)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .assertNext(result -> {
             assertThat(result.getItems()).isEmpty();
@@ -248,6 +254,7 @@ class SavedCartServiceTest {
         // Act & Assert
         StepVerifier.create(
             savedCartService.mergeSessionSavedCart(TEST_SESSION_ID, TEST_USER_ID)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .assertNext(result -> {
             assertThat(result.getUserId()).isEqualTo(TEST_USER_ID);

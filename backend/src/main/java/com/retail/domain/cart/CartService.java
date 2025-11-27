@@ -5,6 +5,8 @@ import com.retail.domain.product.Product.ProductStatus;
 import com.retail.infrastructure.persistence.CartRepository;
 import com.retail.infrastructure.persistence.ProductRepository;
 import com.retail.security.tenant.TenantContext;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +22,7 @@ import java.util.UUID;
  * Handles cart lifecycle, item management, and pricing calculations.
  */
 @Service
+@ConditionalOnBean(ReactiveRedisTemplate.class)
 public class CartService {
 
     private final CartRepository cartRepository;

@@ -1,5 +1,6 @@
 package com.retail.api.ratelimit;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.time.Duration;
  * Implements token bucket algorithm with sliding window.
  */
 @Component
+@ConditionalOnBean(ReactiveStringRedisTemplate.class)
 @Order(1) // Execute early in filter chain
 public class RateLimitFilter implements WebFilter {
 

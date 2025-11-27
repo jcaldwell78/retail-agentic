@@ -2,7 +2,6 @@ package com.retail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 /**
  * Main Spring Boot application for the retail platform.
@@ -15,7 +14,6 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
  * - PostgreSQL for financial transactions
  */
 @SpringBootApplication
-@EnableReactiveMongoRepositories
 public class RetailApplication {
 
     public static void main(String[] args) {
