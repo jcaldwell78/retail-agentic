@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -149,6 +149,81 @@ export default function ProductDetailPage() {
     setShowReviewForm(false);
     setNewReview({ rating: 5, title: '', comment: '' });
   };
+
+  // Generate structured data for SEO (Schema.org Product markup)
+  const structuredData = {
+    '@context': 'https://schema.org/',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images.map((_, i) => `${productUrl}/images/${i}`),
+    description: product.description,
+    brand: {
+      '@type': 'Brand',
+      name: product.specifications.Brand,
+    },
+    sku: product.id,
+    mpn: product.specifications.Model,
+    offers: {
+      '@type': 'Offer',
+      url: productUrl,
+      priceCurrency: 'USD',
+      price: product.price,
+      priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      availability: product.inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Retail Store',
+      },
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: product.rating,
+      reviewCount: product.reviewCount,
+    },
+    review: product.reviews.map(review => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: review.author,
+      },
+      datePublished: review.date,
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: review.rating,
+        bestRating: 5,
+      },
+      reviewBody: review.comment,
+    })),
+  };
+
+  // Update document title and meta tags for SEO
+  useEffect(() => {
+    document.title = `${product.name} - Retail Store`;
+
+    // Update or create meta description
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.setAttribute('content', product.description);
+
+    // Add structured data script
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    script.id = 'product-structured-data';
+    document.head.appendChild(script);
+
+    // Cleanup function
+    return () => {
+      const existingScript = document.getElementById('product-structured-data');
+      if (existingScript) {
+        document.head.removeChild(existingScript);
+      }
+    };
+  }, [product, structuredData]);
 
   return (
     <div className="min-h-screen bg-gray-50" data-testid="product-detail-page">
