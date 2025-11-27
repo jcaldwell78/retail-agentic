@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Share2, Facebook, Twitter, Mail, Link as LinkIcon } from 'lucide-react';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -10,6 +11,10 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState('Black');
   const [selectedSize, setSelectedSize] = useState('Medium');
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [newReview, setNewReview] = useState({ rating: 5, title: '', comment: '' });
 
   // Mock product data
   const product = {
@@ -43,6 +48,35 @@ export default function ProductDetailPage() {
     category: ['Electronics', 'Audio', 'Headphones'],
     colors: ['Black', 'Silver', 'Blue', 'Red'],
     sizes: ['Small', 'Medium', 'Large'],
+    reviews: [
+      {
+        id: '1',
+        author: 'John D.',
+        rating: 5,
+        title: 'Excellent sound quality!',
+        comment: 'These headphones exceeded my expectations. The noise cancellation is fantastic and the battery life is amazing.',
+        date: '2024-01-15',
+        verified: true,
+      },
+      {
+        id: '2',
+        author: 'Sarah M.',
+        rating: 4,
+        title: 'Great but a bit pricey',
+        comment: 'Really good headphones with excellent build quality. The only downside is the price, but you get what you pay for.',
+        date: '2024-01-10',
+        verified: true,
+      },
+      {
+        id: '3',
+        author: 'Mike R.',
+        rating: 5,
+        title: 'Best headphones I\'ve owned',
+        comment: 'Comfortable for long listening sessions. Sound quality is top-notch and the ANC works wonderfully.',
+        date: '2024-01-05',
+        verified: false,
+      },
+    ],
   };
 
   const handleAddToCart = () => {
@@ -55,6 +89,65 @@ export default function ProductDetailPage() {
     console.log('Buy now');
     // TODO: Navigate to checkout
     navigate('/checkout');
+  };
+
+  const productUrl = `${window.location.origin}/products/${id}`;
+  const shareTitle = product.name;
+  const shareText = `Check out ${product.name} - $${product.price}`;
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: productUrl,
+        });
+      } catch (error) {
+        console.log('Share cancelled or failed', error);
+      }
+    } else {
+      setShowShareMenu(!showShareMenu);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(productUrl);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy link', error);
+    }
+  };
+
+  const handleFacebookShare = () => {
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productUrl)}`,
+      '_blank',
+      'width=600,height=400'
+    );
+  };
+
+  const handleTwitterShare = () => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(productUrl)}`,
+      '_blank',
+      'width=600,height=400'
+    );
+  };
+
+  const handleEmailShare = () => {
+    window.location.href = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(shareText + ' ' + productUrl)}`;
+  };
+
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Submitting review:', newReview);
+    // TODO: Submit review to backend
+    alert('Thank you for your review!');
+    setShowReviewForm(false);
+    setNewReview({ rating: 5, title: '', comment: '' });
   };
 
   return (
@@ -240,7 +333,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 mb-8">
+            <div className="flex gap-4 mb-6">
               <Button
                 size="lg"
                 className="flex-1"
@@ -260,6 +353,59 @@ export default function ProductDetailPage() {
               >
                 Buy Now
               </Button>
+            </div>
+
+            {/* Share Button */}
+            <div className="mb-8 relative">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleNativeShare}
+                data-testid="share-button"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Share Product
+              </Button>
+
+              {/* Share Menu Dropdown */}
+              {showShareMenu && (
+                <Card className="absolute top-full mt-2 w-full p-4 z-10" data-testid="share-menu">
+                  <div className="space-y-2">
+                    <button
+                      onClick={handleCopyLink}
+                      className="w-full flex items-center px-3 py-2 hover:bg-gray-100 rounded-md transition-colors"
+                      data-testid="copy-link-button"
+                    >
+                      <LinkIcon className="w-4 h-4 mr-3" />
+                      {copySuccess ? 'Link Copied!' : 'Copy Link'}
+                    </button>
+                    <button
+                      onClick={handleFacebookShare}
+                      className="w-full flex items-center px-3 py-2 hover:bg-gray-100 rounded-md transition-colors"
+                      data-testid="facebook-share-button"
+                    >
+                      <Facebook className="w-4 h-4 mr-3" />
+                      Share on Facebook
+                    </button>
+                    <button
+                      onClick={handleTwitterShare}
+                      className="w-full flex items-center px-3 py-2 hover:bg-gray-100 rounded-md transition-colors"
+                      data-testid="twitter-share-button"
+                    >
+                      <Twitter className="w-4 h-4 mr-3" />
+                      Share on Twitter
+                    </button>
+                    <button
+                      onClick={handleEmailShare}
+                      className="w-full flex items-center px-3 py-2 hover:bg-gray-100 rounded-md transition-colors"
+                      data-testid="email-share-button"
+                    >
+                      <Mail className="w-4 h-4 mr-3" />
+                      Share via Email
+                    </button>
+                  </div>
+                </Card>
+              )}
             </div>
 
             {/* Description */}
@@ -292,7 +438,7 @@ export default function ProductDetailPage() {
             </Card>
 
             {/* Specifications */}
-            <Card className="p-6">
+            <Card className="p-6 mb-6">
               <h2 className="text-lg font-semibold mb-3">Specifications</h2>
               <dl className="space-y-2">
                 {Object.entries(product.specifications).map(([key, value]) => (
@@ -302,6 +448,109 @@ export default function ProductDetailPage() {
                   </div>
                 ))}
               </dl>
+            </Card>
+
+            {/* Customer Reviews */}
+            <Card className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">
+                  Customer Reviews ({product.reviews.length})
+                </h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowReviewForm(!showReviewForm)}
+                  data-testid="write-review-button"
+                >
+                  Write a Review
+                </Button>
+              </div>
+
+              {/* Review Form */}
+              {showReviewForm && (
+                <form onSubmit={handleSubmitReview} className="mb-6 p-4 bg-gray-50 rounded-lg" data-testid="review-form">
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">Rating</label>
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setNewReview({ ...newReview, rating: star })}
+                          className="text-2xl"
+                          data-testid={`star-rating-${star}`}
+                        >
+                          {star <= newReview.rating ? '⭐' : '☆'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">Title</label>
+                    <input
+                      type="text"
+                      value={newReview.title}
+                      onChange={(e) => setNewReview({ ...newReview, title: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Summarize your experience"
+                      required
+                      data-testid="review-title-input"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">Review</label>
+                    <textarea
+                      value={newReview.comment}
+                      onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      placeholder="Share your thoughts about this product"
+                      required
+                      data-testid="review-comment-input"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button type="submit" data-testid="submit-review-button">Submit Review</Button>
+                    <Button type="button" variant="outline" onClick={() => setShowReviewForm(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              )}
+
+              {/* Reviews List */}
+              <div className="space-y-4" data-testid="reviews-list">
+                {product.reviews.map((review) => (
+                  <div key={review.id} className="border-b pb-4 last:border-b-0">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">{review.author}</span>
+                          {review.verified && (
+                            <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                              Verified Purchase
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="flex text-yellow-400">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i}>
+                                {i < review.rating ? '⭐' : '☆'}
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-sm text-gray-500">
+                            {new Date(review.date).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 className="font-semibold mb-1">{review.title}</h3>
+                    <p className="text-gray-700">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
             </Card>
           </div>
         </div>

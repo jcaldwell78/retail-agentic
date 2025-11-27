@@ -250,9 +250,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create image gallery with zoom
 - [x] Implement variant selection (size, color)
 - [x] Build add to cart functionality
-- [ ] Create product reviews section
+- [x] Create product reviews section
 - [x] Add related products
-- [ ] Implement product share
+- [x] Implement product share
 - [ ] Add structured data (SEO)
 - [ ] **E2E**: Test navigation to product detail page
 - [ ] **E2E**: Verify image gallery and zoom functionality
