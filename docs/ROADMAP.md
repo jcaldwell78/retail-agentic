@@ -299,7 +299,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement address book management
 - [x] Build order history page
 - [x] Create order tracking/details
-- [ ] Implement password reset flow
+- [x] Implement password reset flow
 - [ ] Add account preferences
 - [ ] Build wishlist functionality
 - [ ] **E2E**: Test login and registration flows
@@ -334,9 +334,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 
 ### Dashboard
 - [x] Build analytics dashboard
-- [ ] Create sales metrics widgets
+- [x] Create sales metrics widgets
 - [ ] Implement revenue charts
-- [ ] Add order statistics
+- [x] Add order statistics
 - [ ] Build top products widget
 - [ ] Create customer insights
 - [ ] Add real-time notifications
