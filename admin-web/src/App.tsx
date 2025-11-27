@@ -7,6 +7,9 @@ import ProductCreatePage from '@/pages/ProductCreatePage';
 import ProductEditPage from '@/pages/ProductEditPage';
 import OrdersPage from '@/pages/OrdersPage';
 import OrderDetailPage from '@/pages/OrderDetailPage';
+import CustomersPage from '@/pages/CustomersPage';
+import CustomerDetailPage from '@/pages/CustomerDetailPage';
+import InventoryPage from '@/pages/InventoryPage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
@@ -37,6 +40,9 @@ function AppContent() {
           <Route path="/products/:id/edit" element={<ProductEditPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/orders/:id" element={<OrderDetailPage />} />
+          <Route path="/customers" element={<CustomersPage />} />
+          <Route path="/customers/:id" element={<CustomerDetailPage />} />
+          <Route path="/inventory" element={<InventoryPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

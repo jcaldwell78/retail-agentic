@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card } from '../components/ui/card';
@@ -14,6 +15,7 @@ interface Customer {
 }
 
 export default function CustomersPage() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [customers] = useState<Customer[]>([
     {
@@ -136,7 +138,7 @@ export default function CustomersPage() {
                 <tr
                   key={customer.id}
                   className="hover:bg-gray-50 cursor-pointer"
-                  onClick={() => console.log('View customer:', customer.id)}
+                  onClick={() => navigate(`/customers/${customer.id}`)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -166,10 +168,25 @@ export default function CustomersPage() {
                     {new Date(customer.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Button variant="ghost" size="sm" className="mr-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mr-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/customers/${customer.id}`);
+                      }}
+                    >
                       View
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/orders');
+                      }}
+                    >
                       Orders
                     </Button>
                   </td>

@@ -4,12 +4,21 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
-type CheckoutStep = 'shipping' | 'payment' | 'review';
+type CheckoutStep = 'shipping' | 'billing' | 'payment' | 'review';
 
 interface ShippingAddress {
   fullName: string;
   email: string;
   phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+interface BillingAddress {
+  fullName: string;
   address: string;
   city: string;
   state: string;
@@ -30,6 +39,15 @@ export default function CheckoutPage() {
     zipCode: '',
     country: 'United States',
   });
+  const [billingAddress, setBillingAddress] = useState<BillingAddress>({
+    fullName: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: 'United States',
+  });
+  const [sameAsShipping, setSameAsShipping] = useState(true);
 
   // Mock cart data
   const cartItems = [
@@ -54,11 +72,27 @@ export default function CheckoutPage() {
 
   const handleShippingContinue = (e: React.FormEvent) => {
     e.preventDefault();
+    setCurrentStep('billing');
+  };
+
+  const handleBillingContinue = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (sameAsShipping) {
+      setBillingAddress({
+        fullName: shippingAddress.fullName,
+        address: shippingAddress.address,
+        city: shippingAddress.city,
+        state: shippingAddress.state,
+        zipCode: shippingAddress.zipCode,
+        country: shippingAddress.country,
+      });
+    }
     setCurrentStep('payment');
   };
 
   const steps = [
     { id: 'shipping', name: 'Shipping', completed: false },
+    { id: 'billing', name: 'Billing', completed: false },
     { id: 'payment', name: 'Payment', completed: false },
     { id: 'review', name: 'Review', completed: false },
   ];
@@ -280,6 +314,149 @@ export default function CheckoutPage() {
               </Card>
             )}
 
+            {/* Billing Address Form */}
+            {currentStep === 'billing' && (
+              <Card className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Billing Address</h2>
+
+                <form onSubmit={handleBillingContinue} data-testid="billing-form">
+                  <div className="space-y-4">
+                    {/* Same as shipping checkbox */}
+                    <div className="flex items-center mb-4">
+                      <input
+                        type="checkbox"
+                        id="sameAsShipping"
+                        checked={sameAsShipping}
+                        onChange={(e) => setSameAsShipping(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        data-testid="same-as-shipping"
+                      />
+                      <label htmlFor="sameAsShipping" className="ml-2 text-sm font-medium">
+                        Same as shipping address
+                      </label>
+                    </div>
+
+                    {!sameAsShipping && (
+                      <>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">
+                            Full Name <span className="text-red-600">*</span>
+                          </label>
+                          <Input
+                            required
+                            value={billingAddress.fullName}
+                            onChange={(e) =>
+                              setBillingAddress({ ...billingAddress, fullName: e.target.value })
+                            }
+                            placeholder="John Doe"
+                            data-testid="billing-fullName"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium mb-2">
+                            Address <span className="text-red-600">*</span>
+                          </label>
+                          <Input
+                            required
+                            value={billingAddress.address}
+                            onChange={(e) =>
+                              setBillingAddress({ ...billingAddress, address: e.target.value })
+                            }
+                            placeholder="123 Main St, Apt 4B"
+                            data-testid="billing-address"
+                          />
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              City <span className="text-red-600">*</span>
+                            </label>
+                            <Input
+                              required
+                              value={billingAddress.city}
+                              onChange={(e) =>
+                                setBillingAddress({ ...billingAddress, city: e.target.value })
+                              }
+                              placeholder="San Francisco"
+                              data-testid="billing-city"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              State <span className="text-red-600">*</span>
+                            </label>
+                            <Input
+                              required
+                              value={billingAddress.state}
+                              onChange={(e) =>
+                                setBillingAddress({ ...billingAddress, state: e.target.value })
+                              }
+                              placeholder="CA"
+                              data-testid="billing-state"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              ZIP Code <span className="text-red-600">*</span>
+                            </label>
+                            <Input
+                              required
+                              value={billingAddress.zipCode}
+                              onChange={(e) =>
+                                setBillingAddress({ ...billingAddress, zipCode: e.target.value })
+                              }
+                              placeholder="94102"
+                              data-testid="billing-zipCode"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium mb-2">
+                            Country <span className="text-red-600">*</span>
+                          </label>
+                          <select
+                            required
+                            value={billingAddress.country}
+                            onChange={(e) =>
+                              setBillingAddress({ ...billingAddress, country: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            data-testid="billing-country"
+                          >
+                            <option value="United States">United States</option>
+                            <option value="Canada">Canada</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                            <option value="Australia">Australia</option>
+                          </select>
+                        </div>
+                      </>
+                    )}
+
+                    <div className="pt-4 flex gap-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setCurrentStep('shipping')}
+                        data-testid="back-to-shipping"
+                      >
+                        Back to Shipping
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="flex-1"
+                        data-testid="continue-to-payment"
+                      >
+                        Continue to Payment
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </Card>
+            )}
+
             {/* Payment Step (Placeholder) */}
             {currentStep === 'payment' && (
               <Card className="p-6">
@@ -290,7 +467,7 @@ export default function CheckoutPage() {
                 <div className="flex gap-4">
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentStep('shipping')}
+                    onClick={() => setCurrentStep('billing')}
                   >
                     Back
                   </Button>

@@ -278,7 +278,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 ### Checkout
 - [x] Design multi-step checkout flow
 - [x] Build shipping address form
-- [ ] Create billing address form
+- [x] Create billing address form
 - [ ] Implement shipping method selection
 - [ ] Build payment information form
 - [ ] Create order review step
@@ -381,9 +381,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 
 ### Customer Management
 - [x] Build customer list/table
-- [ ] Create customer detail view
+- [x] Create customer detail view
 - [x] Implement customer search
-- [ ] Add customer order history
+- [x] Add customer order history
 - [ ] Build customer segmentation
 - [ ] Create customer communication tools
 - [x] Implement customer export
@@ -392,9 +392,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] **E2E**: Test customer filtering
 
 ### Inventory Management
-- [ ] Build inventory dashboard
-- [ ] Create stock level monitoring
-- [ ] Implement low-stock alerts
+- [x] Build inventory dashboard
+- [x] Create stock level monitoring
+- [x] Implement low-stock alerts
 - [ ] Build inventory adjustment interface
 - [ ] Add inventory history tracking
 - [ ] Create reorder point settings
