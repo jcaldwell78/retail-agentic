@@ -2,6 +2,7 @@ package com.retail.infrastructure.persistence;
 
 import com.retail.domain.order.Order;
 import org.springframework.data.domain.Pageable;
+import com.retail.domain.order.OrderStatus;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -100,7 +101,7 @@ public interface OrderRepository extends ReactiveMongoRepository<Order, String> 
      * Find orders by status and tenant (accepts String status)
      */
     @Query("{ 'status': ?0, 'tenantId': ?1 }")
-    Flux<Order> findByStatusAndTenantId(Order.OrderStatus status, String tenantId);
+    Flux<Order> findByStatusAndTenantId(OrderStatus status, String tenantId);
 
     /**
      * Count orders created after a specific date for tenant

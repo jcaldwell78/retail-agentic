@@ -1,5 +1,6 @@
 package com.retail.infrastructure.search;
 
+import com.retail.domain.product.Product.ProductStatus;
 import com.retail.domain.product.Product;
 import com.retail.infrastructure.persistence.ProductRepository;
 import org.slf4j.Logger;
@@ -171,7 +172,7 @@ public class ProductIndexingService {
         }
 
         // Boost for active products
-        if (product.getStatus() == Product.ProductStatus.ACTIVE) {
+        if (product.getStatus() == ProductStatus.ACTIVE) {
             score += 10.0;
         }
 

@@ -187,6 +187,15 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
+    // Helper methods
+    public boolean isActive() {
+        return status == ProductStatus.ACTIVE;
+    }
+
+    public void setActive(boolean active) {
+        this.status = active ? ProductStatus.ACTIVE : ProductStatus.INACTIVE;
+    }
+
     // equals, hashCode, and toString
     @Override
     public boolean equals(Object o) {

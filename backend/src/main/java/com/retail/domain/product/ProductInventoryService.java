@@ -1,5 +1,6 @@
 package com.retail.domain.product;
 
+import com.retail.domain.product.Product.ProductStatus;
 import com.retail.domain.inventory.Inventory;
 import com.retail.domain.inventory.InventoryService;
 import com.retail.infrastructure.persistence.ProductRepository;
@@ -133,8 +134,8 @@ public class ProductInventoryService {
 
                     // Auto-deactivate if out of stock and not allowing backorders
                     if (inventory.isOutOfStock() && !inventory.isAllowBackorder()) {
-                        if (product.getStatus() == Product.ProductStatus.ACTIVE) {
-                            product.setStatus(Product.ProductStatus.INACTIVE);
+                        if (product.getStatus() == ProductStatus.ACTIVE) {
+                            product.setStatus(ProductStatus.INACTIVE);
                             product.setUpdatedAt(java.time.Instant.now());
                             logger.info("Auto-deactivated product {} due to out of stock", productId);
                             return productRepository.save(product);

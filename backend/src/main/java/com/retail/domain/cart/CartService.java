@@ -1,6 +1,7 @@
 package com.retail.domain.cart;
 
 import com.retail.domain.product.Product;
+import com.retail.domain.product.Product.ProductStatus;
 import com.retail.infrastructure.persistence.CartRepository;
 import com.retail.infrastructure.persistence.ProductRepository;
 import com.retail.security.tenant.TenantContext;
@@ -87,7 +88,7 @@ public class CartService {
             .flatMap(cart -> productRepository.findById(productId)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Product not found: " + productId)))
                 .flatMap(product -> {
-                    if (product.getStatus() != com.retail.domain.product.Product.ProductStatus.ACTIVE) {
+                    if (product.getStatus() != ProductStatus.ACTIVE) {
                         return Mono.error(new IllegalArgumentException("Product is not available"));
                     }
 
@@ -102,6 +103,7 @@ public class CartService {
                     } else {
                         // Add new item
                         BigDecimal subtotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                        String imageUrl = product.getImages().isEmpty() ? null : product.getImages().get(0).url();
                         Cart.CartItem newItem = new Cart.CartItem(
                             itemId,
                             product.getId(),
@@ -110,7 +112,7 @@ public class CartService {
                             product.getPrice(),
                             quantity,
                             attributes,
-                            product.getImages().isEmpty() ? null : product.getImages().get(0).url(),
+                            imageUrl,
                             subtotal
                         );
 
