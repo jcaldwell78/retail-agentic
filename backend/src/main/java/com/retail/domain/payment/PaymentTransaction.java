@@ -1,121 +1,110 @@
 package com.retail.domain.payment;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Payment transaction entity stored in PostgreSQL for ACID compliance.
  * Tracks payment attempts, status, and external gateway references.
+ * Uses R2DBC for reactive database access.
+ *
+ * Note: Indexes are defined in database schema migration files.
  */
-@Entity
-@Table(
-    name = "payment_transactions",
-    indexes = {
-        @Index(name = "idx_tenant_order", columnList = "tenant_id,order_id"),
-        @Index(name = "idx_gateway_ref", columnList = "gateway_transaction_id"),
-        @Index(name = "idx_created_at", columnList = "created_at")
-    }
-)
+@Table("payment_transactions")
 public class PaymentTransaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @NotBlank(message = "Tenant ID is required")
-    @Column(name = "tenant_id", nullable = false, length = 100)
+    @Column("tenant_id")
     private String tenantId;
 
     @NotBlank(message = "Order ID is required")
-    @Column(name = "order_id", nullable = false, length = 100)
+    @Column("order_id")
     private String orderId;
 
-    @Column(name = "customer_id", length = 100)
+    @Column("customer_id")
     private String customerId;
 
     @NotNull(message = "Amount is required")
-    @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 
     @NotBlank(message = "Currency is required")
-    @Column(nullable = false, length = 3)
     private String currency = "USD";
 
     @NotNull(message = "Payment method is required")
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", nullable = false, length = 50)
+    @Column("payment_method")
     private PaymentMethod paymentMethod;
 
     @NotNull(message = "Status is required")
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
     private PaymentStatus status = PaymentStatus.PENDING;
 
     @NotBlank(message = "Gateway is required")
-    @Column(nullable = false, length = 50)
     private String gateway; // e.g., "STRIPE", "PAYPAL"
 
-    @Column(name = "gateway_transaction_id", length = 255)
+    @Column("gateway_transaction_id")
     private String gatewayTransactionId;
 
-    @Column(name = "gateway_payment_intent_id", length = 255)
+    @Column("gateway_payment_intent_id")
     private String gatewayPaymentIntentId;
 
-    @Column(name = "failure_code", length = 100)
+    @Column("failure_code")
     private String failureCode;
 
-    @Column(name = "failure_message", length = 500)
+    @Column("failure_message")
     private String failureMessage;
 
-    @Column(name = "refund_amount", precision = 19, scale = 4)
+    @Column("refund_amount")
     private BigDecimal refundAmount;
 
-    @Column(name = "refund_reason", length = 500)
+    @Column("refund_reason")
     private String refundReason;
 
-    @Column(name = "refunded_at")
+    @Column("refunded_at")
     private Instant refundedAt;
 
-    @Column(name = "retry_count")
+    @Column("retry_count")
     private Integer retryCount = 0;
 
-    @Column(name = "last_retry_at")
+    @Column("last_retry_at")
     private Instant lastRetryAt;
 
-    @Column(name = "metadata", columnDefinition = "TEXT")
     private String metadata; // JSON string for additional gateway-specific data
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column("created_at")
     private Instant createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column("updated_at")
     private Instant updatedAt;
 
-    @Column(name = "completed_at")
+    @Column("completed_at")
     private Instant completedAt;
 
     // Constructors
     public PaymentTransaction() {
-    }
-
-    @PrePersist
-    protected void onCreate() {
+        this.id = UUID.randomUUID().toString();
         Instant now = Instant.now();
-        createdAt = now;
-        updatedAt = now;
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
+    /**
+     * Call before saving updates to refresh updatedAt timestamp
+     */
+    public void onUpdate() {
+        this.updatedAt = Instant.now();
 
         // Set completedAt when status becomes final
-        if (completedAt == null && isFinalStatus()) {
-            completedAt = Instant.now();
+        if (this.completedAt == null && isFinalStatus()) {
+            this.completedAt = Instant.now();
         }
     }
 
