@@ -300,7 +300,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build order history page
 - [x] Create order tracking/details
 - [x] Implement password reset flow
-- [ ] Add account preferences
+- [x] Add account preferences - Notifications, language, currency, theme settings (AccountPreferencesPage)
 - [x] Build wishlist functionality - Zustand store + WishlistPage with add/remove/clear
 - [ ] **E2E**: Test login and registration flows
 - [ ] **E2E**: Verify profile management
@@ -340,7 +340,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build top products widget - Top 5 products by revenue with rankings
 - [x] Create customer insights - Customer metrics, distribution, and retention stats
 - [ ] Add real-time notifications
-- [ ] Implement date range filtering
+- [x] Implement date range filtering - DateRangeFilter component with presets and custom range
 - [ ] **E2E**: Test dashboard load and authentication
 - [ ] **E2E**: Verify metrics display correctly
 - [ ] **E2E**: Test chart rendering and interactions
@@ -351,8 +351,8 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create product creation form
 - [x] Implement product editing
 - [ ] Build bulk product operations
-- [ ] Add product image upload
-- [ ] Create category management
+- [x] Add product image upload - ImageUpload component with drag/drop, validation, and reordering
+- [x] Create category management - CategoryManagementPage with hierarchical tree view
 - [ ] Implement product attributes editor
 - [ ] Add product import/export (CSV)
 - [ ] **E2E**: Test product list display and filtering
