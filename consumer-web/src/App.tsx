@@ -7,6 +7,7 @@ import ProductsPage from '@/pages/ProductsPage';
 import ProductDetailPage from '@/pages/ProductDetailPage';
 import CartPage from '@/pages/CartPage';
 import CheckoutPage from '@/pages/CheckoutPage';
+import OrderConfirmationPage from '@/pages/OrderConfirmationPage';
 import OrderHistoryPage from '@/pages/OrderHistoryPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import LoginPage from '@/pages/LoginPage';
@@ -31,6 +32,7 @@ function AppContent() {
         <Route path="/products/:id" element={<ProductDetailPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
         <Route
           path="/orders"
           element={

@@ -282,7 +282,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement shipping method selection
 - [ ] Build payment information form
 - [x] Create order review step
-- [ ] Implement order confirmation page
+- [x] Implement order confirmation page
 - [ ] Add guest checkout option
 - [x] Build checkout progress indicator
 - [ ] **E2E**: Test complete checkout flow (happy path)
