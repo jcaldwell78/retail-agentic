@@ -253,7 +253,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Create product reviews section
 - [x] Add related products
 - [x] Implement product share
-- [ ] Add structured data (SEO)
+- [x] Add structured data (SEO) - Schema.org Product markup with ratings and reviews
 - [ ] **E2E**: Test navigation to product detail page
 - [ ] **E2E**: Verify image gallery and zoom functionality
 - [ ] **E2E**: Test variant selection and add to cart
@@ -266,7 +266,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Add cart total calculations
 - [x] Implement promo code input
 - [x] Build save for later
-- [ ] Add cart persistence
+- [x] Add cart persistence - Zustand persist middleware to localStorage
 - [x] Create mini-cart component
 - [ ] **E2E**: Test add to cart workflow
 - [ ] **E2E**: Verify quantity update functionality
@@ -280,10 +280,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build shipping address form
 - [x] Create billing address form
 - [x] Implement shipping method selection
-- [ ] Build payment information form
+- [x] Build payment information form - PaymentForm component with CC/PayPal/Apple Pay/Google Pay
 - [x] Create order review step
 - [x] Implement order confirmation page
-- [ ] Add guest checkout option
+- [ ] Add guest checkout option - Requires login flow integration
 - [x] Build checkout progress indicator
 - [ ] **E2E**: Test complete checkout flow (happy path)
 - [ ] **E2E**: Test guest checkout workflow
