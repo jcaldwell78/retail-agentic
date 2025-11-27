@@ -239,7 +239,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement pagination/infinite scroll
 - [ ] Add product quick view
 - [x] Create search results page
-- [ ] Implement search autocomplete
+- [x] Implement search autocomplete
 - [ ] **E2E**: Test product listing and filtering
 - [ ] **E2E**: Verify search functionality and autocomplete
 - [ ] **E2E**: Test pagination and sorting
