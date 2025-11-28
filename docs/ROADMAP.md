@@ -369,9 +369,9 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Implement order status updates
 - [x] Build fulfillment workflow - FulfillmentWorkflow component with step tracking and shipping info
 - [x] Add order search
-- [ ] Create refund interface
+- [x] Create refund interface - RefundInterface with item selection, shipping refund, and payment method choice
 - [x] Implement order notes/comments - OrderNotes component with add/edit/delete and internal/public notes
-- [ ] Add bulk order operations
+- [x] Add bulk order operations - BulkOrderOperations with export, status update, tagging, and bulk actions
 - [ ] **E2E**: Test order list display and filtering
 - [ ] **E2E**: Verify order detail navigation
 - [ ] **E2E**: Test order status update workflow
