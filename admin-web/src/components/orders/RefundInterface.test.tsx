@@ -297,8 +297,7 @@ describe('RefundInterface', () => {
     expect(onCancel).toHaveBeenCalled();
   });
 
-  it('prevents quantity exceeding original quantity', async () => {
-    const user = userEvent.setup();
+  it('prevents quantity exceeding original quantity', () => {
     render(
       <RefundInterface
         orderId="12345"

@@ -328,7 +328,7 @@ export default function InventoryAdjustment({
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium">{getReasonLabel(record.reason)}</span>
+                        <span className="font-medium">{getReasonLabel(record.reason as AdjustmentReason)}</span>
                         <span className={`text-sm font-semibold ${
                           record.delta > 0 ? 'text-green-600' : 'text-red-600'
                         }`}>

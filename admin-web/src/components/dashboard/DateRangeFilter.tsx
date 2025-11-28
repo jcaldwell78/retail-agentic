@@ -68,7 +68,7 @@ export default function DateRangeFilter({
     }
   };
 
-  const handleRangeSelect = (range: string) => {
+  const handleRangeSelect = (range: 'today' | 'week' | 'month' | 'year' | 'custom') => {
     setSelectedRange(range);
     if (range === 'custom') {
       setShowCustom(true);

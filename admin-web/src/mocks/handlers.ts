@@ -143,30 +143,32 @@ export const handlers = [
   }),
 
   http.post(`${API_BASE}/admin/products`, async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as Record<string, unknown>;
     const newProduct = {
       id: `product-${mockProducts.length + 1}`,
       ...body,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    mockProducts.push(newProduct);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    mockProducts.push(newProduct as any);
     return HttpResponse.json(newProduct, { status: 201 });
   }),
 
   http.put(`${API_BASE}/admin/products/:id`, async ({ request, params }) => {
-    const body = await request.json();
+    const body = await request.json() as Record<string, unknown>;
     const index = mockProducts.findIndex((p) => p.id === params.id);
 
     if (index === -1) {
       return new HttpResponse(null, { status: 404 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockProducts[index] = {
       ...mockProducts[index],
       ...body,
       updatedAt: new Date().toISOString(),
-    };
+    } as any;
 
     return HttpResponse.json(mockProducts[index]);
   }),
