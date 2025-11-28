@@ -89,7 +89,7 @@ export default function CategoryManagementPage() {
 
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['1', '2']));
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [_editingCategory, _setEditingCategory] = useState<Category | null>(null);
   const [newCategory, setNewCategory] = useState({
     name: '',
     slug: '',
@@ -199,7 +199,7 @@ export default function CategoryManagementPage() {
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => setEditingCategory(category)}
+              onClick={() => _setEditingCategory(category)}
               data-testid={`edit-${category.slug}`}
             >
               <Edit className="w-4 h-4" />

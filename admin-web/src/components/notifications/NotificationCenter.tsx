@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bell, X, Check, Package, DollarSign, AlertTriangle, Users, TrendingUp, Settings } from 'lucide-react';
+import { Bell, X, Check, Package, DollarSign, AlertTriangle, Users, Settings } from 'lucide-react';
 
 export interface Notification {
   id: string;

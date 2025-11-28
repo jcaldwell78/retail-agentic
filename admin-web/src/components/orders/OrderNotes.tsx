@@ -25,7 +25,7 @@ interface OrderNotesProps {
 }
 
 export default function OrderNotes({
-  orderId,
+  orderId: _orderId,
   initialNotes = [],
   currentUserName = 'Admin User',
   currentUserRole = 'admin',
