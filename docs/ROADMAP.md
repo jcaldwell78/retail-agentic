@@ -226,7 +226,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Add promotional banners
 - [x] Implement responsive layout
 - [x] Add animations and transitions
-- [ ] Optimize images and performance
+- [x] Optimize images and performance - OptimizedImage, LazyLoad, and performance monitoring utilities
 - [ ] **E2E**: Write tests for home page load and product display
 - [ ] **E2E**: Test responsive layout on mobile/tablet
 - [ ] **E2E**: Verify hero section and navigation work
@@ -339,7 +339,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Add order statistics
 - [x] Build top products widget - Top 5 products by revenue with rankings
 - [x] Create customer insights - Customer metrics, distribution, and retention stats
-- [ ] Add real-time notifications
+- [x] Add real-time notifications - NotificationCenter component with real-time updates and filtering
 - [x] Implement date range filtering - DateRangeFilter component with presets and custom range
 - [ ] **E2E**: Test dashboard load and authentication
 - [ ] **E2E**: Verify metrics display correctly
@@ -367,10 +367,10 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build order list/table with filtering
 - [x] Create order detail view
 - [x] Implement order status updates
-- [ ] Build fulfillment workflow
+- [x] Build fulfillment workflow - FulfillmentWorkflow component with step tracking and shipping info
 - [x] Add order search
 - [ ] Create refund interface
-- [ ] Implement order notes/comments
+- [x] Implement order notes/comments - OrderNotes component with add/edit/delete and internal/public notes
 - [ ] Add bulk order operations
 - [ ] **E2E**: Test order list display and filtering
 - [ ] **E2E**: Verify order detail navigation
@@ -395,8 +395,8 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build inventory dashboard
 - [x] Create stock level monitoring
 - [x] Implement low-stock alerts
-- [ ] Build inventory adjustment interface
-- [ ] Add inventory history tracking
+- [x] Build inventory adjustment interface - InventoryAdjustment component with set/add/subtract and reason tracking
+- [x] Add inventory history tracking - Built into InventoryAdjustment component
 - [ ] Create reorder point settings
 - [ ] Implement bulk inventory updates
 - [ ] **E2E**: Test inventory dashboard display
