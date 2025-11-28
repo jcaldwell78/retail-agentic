@@ -353,7 +353,7 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] Build bulk product operations
 - [x] Add product image upload - ImageUpload component with drag/drop, validation, and reordering
 - [x] Create category management - CategoryManagementPage with hierarchical tree view
-- [ ] Implement product attributes editor
+- [x] Implement product attributes editor - ProductAttributesEditor with comprehensive attribute management
 - [ ] Add product import/export (CSV)
 - [ ] **E2E**: Test product list display and filtering
 - [ ] **E2E**: Test product creation workflow
@@ -404,12 +404,12 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [ ] **E2E**: Test low-stock alert notifications
 
 ### Store Settings
-- [ ] Build general settings page
-- [ ] Create branding customization (logo, colors)
+- [x] Build general settings page - StoreSettingsPage with tabbed interface for all settings
+- [x] Create branding customization (logo, colors) - Integrated into StoreSettingsPage branding tab
 - [ ] Implement domain configuration
 - [ ] Add email template customization
-- [ ] Create shipping configuration
-- [ ] Build tax settings
+- [x] Create shipping configuration - Integrated into StoreSettingsPage shipping tab
+- [x] Build tax settings - Integrated into StoreSettingsPage tax tab
 - [ ] Implement payment gateway configuration
 - [ ] Add user/staff management
 - [ ] **E2E**: Test settings page navigation and authentication
