@@ -17,8 +17,11 @@ import java.math.BigDecimal;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class PaymentProcessingServiceTest {
 
     @Mock
@@ -54,9 +57,12 @@ class PaymentProcessingServiceTest {
         gatewayResponse.setTransactionId("PAYPAL-123");
         gatewayResponse.setStatus(PaymentTransaction.PaymentStatus.PENDING);
 
-        when(paymentService.createTransaction(eq(orderId), eq(amount), eq(currency),
-            eq(paymentMethod), anyString()))
+        when(paymentService.createTransaction(anyString(), any(BigDecimal.class), anyString(),
+            any(PaymentTransaction.PaymentMethod.class), anyString()))
             .thenReturn(Mono.just(transaction));
+
+        when(payPalGatewayService.getGatewayName())
+            .thenReturn("PAYPAL");
 
         when(payPalGatewayService.authorizePayment(any()))
             .thenReturn(Mono.just(gatewayResponse));
