@@ -66,7 +66,7 @@ class NotificationServiceTest {
                 "Order Confirmed",
                 "Your order has been confirmed",
                 templateData
-            )
+            ).contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -108,7 +108,7 @@ class NotificationServiceTest {
                 NotificationChannel.EMAIL,
                 "order-confirmation-template",
                 templateData
-            )
+            ).contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -148,7 +148,7 @@ class NotificationServiceTest {
                 "Check out our special offer",
                 scheduledFor,
                 Map.of()
-            )
+            ).contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNextCount(1)
         .verifyComplete();
@@ -263,7 +263,10 @@ class NotificationServiceTest {
         .thenReturn(Flux.just(notification1, notification2));
 
         // Act & Assert
-        StepVerifier.create(notificationService.getUserNotifications(TEST_USER_ID))
+        StepVerifier.create(
+            notificationService.getUserNotifications(TEST_USER_ID)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
+        )
             .expectNext(notification1)
             .expectNext(notification2)
             .verifyComplete();
@@ -287,6 +290,7 @@ class NotificationServiceTest {
         // Act & Assert
         StepVerifier.create(
             notificationService.getNotificationsByStatus(NotificationStatus.PENDING)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
         )
         .expectNext(notification)
         .verifyComplete();
@@ -310,7 +314,10 @@ class NotificationServiceTest {
         .thenReturn(Flux.just(notification));
 
         // Act & Assert
-        StepVerifier.create(notificationService.getPendingScheduledNotifications())
+        StepVerifier.create(
+            notificationService.getPendingScheduledNotifications()
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
+        )
             .expectNext(notification)
             .verifyComplete();
     }
@@ -332,7 +339,10 @@ class NotificationServiceTest {
         .thenReturn(Flux.just(notification));
 
         // Act & Assert
-        StepVerifier.create(notificationService.getFailedNotificationsForRetry())
+        StepVerifier.create(
+            notificationService.getFailedNotificationsForRetry()
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
+        )
             .expectNext(notification)
             .verifyComplete();
     }
@@ -394,7 +404,10 @@ class NotificationServiceTest {
         .thenReturn(Mono.empty());
 
         // Act & Assert
-        StepVerifier.create(notificationService.cleanupOldNotifications(retentionDays))
+        StepVerifier.create(
+            notificationService.cleanupOldNotifications(retentionDays)
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
+        )
             .verifyComplete();
 
         verify(notificationRepository).deleteByTenantIdAndCreatedAtBefore(
@@ -415,7 +428,10 @@ class NotificationServiceTest {
             .thenReturn(Mono.just(5L));
 
         // Act & Assert
-        StepVerifier.create(notificationService.getNotificationStats())
+        StepVerifier.create(
+            notificationService.getNotificationStats()
+                .contextWrite(TenantContext.withTenantId(TEST_TENANT_ID))
+        )
             .assertNext(stats -> {
                 assertThat(stats.pending()).isEqualTo(10L);
                 assertThat(stats.sent()).isEqualTo(50L);

@@ -10,15 +10,14 @@ spring:
       # No manual configuration needed - flapdoodle handles it automatically
       database: test-retail-db
 
-# Embedded MongoDB configuration
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 7.0.14
+  # R2DBC configuration for tests (H2 in-memory database)
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
 
   # Disable auto-configuration for external services during testing
-  # MongoDB is enabled (using embedded) but others are disabled
+  # MongoDB and R2DBC are enabled (using embedded/in-memory) but others are disabled
   # Tests should use mocks or embedded/in-memory alternatives
   autoconfigure:
     exclude:
@@ -26,8 +25,15 @@ de:
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
       - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration
+
+# Embedded MongoDB configuration
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.9
 
 # API configuration for tests
 api:

@@ -55,7 +55,10 @@ class ReportingServiceTest {
             .thenReturn(Flux.fromIterable(orders));
 
         // Act & Assert
-        StepVerifier.create(reportingService.getSalesSummary(startDate, endDate))
+        StepVerifier.create(
+            reportingService.getSalesSummary(startDate, endDate)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(summary -> {
                 assertThat(summary.orderCount()).isEqualTo(3);
                 assertThat(summary.totalRevenue()).isGreaterThan(BigDecimal.ZERO);
@@ -75,7 +78,10 @@ class ReportingServiceTest {
             .thenReturn(Flux.empty());
 
         // Act & Assert
-        StepVerifier.create(reportingService.getSalesSummary(startDate, endDate))
+        StepVerifier.create(
+            reportingService.getSalesSummary(startDate, endDate)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(summary -> {
                 assertThat(summary.orderCount()).isZero();
                 assertThat(summary.totalRevenue()).isEqualByComparingTo(BigDecimal.ZERO);
@@ -95,7 +101,10 @@ class ReportingServiceTest {
             .thenReturn(Flux.fromIterable(orders));
 
         // Act & Assert
-        StepVerifier.create(reportingService.getDailySales(days))
+        StepVerifier.create(
+            reportingService.getDailySales(days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .expectNextCount(3) // We have 3 orders on different days
             .verifyComplete();
     }
@@ -111,7 +120,10 @@ class ReportingServiceTest {
             .thenReturn(Flux.fromIterable(orders));
 
         // Act & Assert
-        StepVerifier.create(reportingService.getTopProducts(limit, days))
+        StepVerifier.create(
+            reportingService.getTopProducts(limit, days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .expectNextCount(2) // We have 2 unique products in test data
             .verifyComplete();
     }
@@ -126,7 +138,10 @@ class ReportingServiceTest {
             .thenReturn(Flux.fromIterable(orders));
 
         // Act & Assert
-        StepVerifier.create(reportingService.getOrderStatusBreakdown(days))
+        StepVerifier.create(
+            reportingService.getOrderStatusBreakdown(days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .expectNextCount(1) // All test orders have same status
             .verifyComplete();
     }
@@ -141,7 +156,10 @@ class ReportingServiceTest {
             .thenReturn(Flux.fromIterable(orders));
 
         // Act & Assert
-        StepVerifier.create(reportingService.getRevenueByCategory(days))
+        StepVerifier.create(
+            reportingService.getRevenueByCategory(days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .expectNextCount(2) // We have 2 categories in test data
             .verifyComplete();
     }

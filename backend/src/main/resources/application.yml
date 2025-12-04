@@ -7,6 +7,16 @@ spring:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/retaildb}
       auto-index-creation: true
+      # Connection pool configuration for reactive MongoDB
+      # Uses MongoDB Java Driver connection pool
+      # Default values optimized for production
+      max-connection-pool-size: 100
+      min-connection-pool-size: 10
+      max-connection-idle-time: 60000  # 60 seconds
+      max-connection-life-time: 0       # unlimited
+      connect-timeout: 10000            # 10 seconds
+      socket-timeout: 0                 # unlimited for reactive operations
+      server-selection-timeout: 30000   # 30 seconds
 
     # Redis Configuration
     redis:
@@ -45,22 +55,64 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info,metrics,prometheus,env,loggers
       base-path: /actuator
   endpoint:
     health:
       show-details: always
       probes:
         enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
   health:
     mongo:
       enabled: true
     redis:
       enabled: true
+    elasticsearch:
+      enabled: true
+    r2dbc:
+      enabled: true
+    diskspace:
+      enabled: true
   metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active:default}
     export:
       prometheus:
         enabled: true
+        step: 1m
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+    enable:
+      jvm: true
+      process: true
+      system: true
+      http: true
+  info:
+    env:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0  # Sample 100% of requests in dev/test, reduce in production
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_ENDPOINT:http://localhost:9411/api/v2/spans}
+  otlp:
+    tracing:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
 
 # Application Configuration
 app:
@@ -134,3 +186,8 @@ logging:
   level:
     root: WARN
     com.retail: INFO
+
+management:
+  tracing:
+    sampling:
+      probability: 0.1  # Sample 10% of requests in production

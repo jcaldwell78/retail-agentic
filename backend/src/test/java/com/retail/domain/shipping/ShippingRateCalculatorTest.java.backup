@@ -1,0 +1,311 @@
+package com.retail.domain.shipping;
+
+import com.retail.security.tenant.TenantContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import reactor.test.StepVerifier;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class ShippingRateCalculatorTest {
+
+    private ShippingRateCalculator calculator;
+
+    @BeforeEach
+    void setUp() {
+        calculator = new ShippingRateCalculator();
+    }
+
+    @Test
+    void shouldCalculateStandardRate() {
+        ShippingRateRequest request = createBasicRequest();
+
+        StepVerifier.create(calculator.calculateRate(request, "STANDARD"))
+            .assertNext(rate -> {
+                assertThat(rate.getCarrier()).isEqualTo("USPS");
+                assertThat(rate.getServiceLevel()).isEqualTo("STANDARD");
+                assertThat(rate.getRate()).isGreaterThan(BigDecimal.ZERO);
+                assertThat(rate.getEstimatedDays()).isEqualTo(5);
+                assertThat(rate.getCurrency()).isEqualTo("USD");
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldCalculateExpressRate() {
+        ShippingRateRequest request = createBasicRequest();
+
+        StepVerifier.create(calculator.calculateRate(request, "EXPRESS"))
+            .assertNext(rate -> {
+                assertThat(rate.getCarrier()).isEqualTo("FedEx");
+                assertThat(rate.getServiceLevel()).isEqualTo("EXPRESS");
+                assertThat(rate.getRate()).isGreaterThan(BigDecimal.ZERO);
+                assertThat(rate.getEstimatedDays()).isEqualTo(2);
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldCalculateOvernightRateForDomestic() {
+        ShippingRateRequest request = createBasicRequest();
+
+        StepVerifier.create(calculator.calculateRate(request, "OVERNIGHT"))
+            .assertNext(rate -> {
+                assertThat(rate.getCarrier()).isEqualTo("FedEx");
+                assertThat(rate.getServiceLevel()).isEqualTo("OVERNIGHT");
+                assertThat(rate.getRate()).isGreaterThan(BigDecimal.ZERO);
+                assertThat(rate.getEstimatedDays()).isEqualTo(1);
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldNotOfferOvernightForInternational() {
+        ShippingRateRequest request = createBasicRequest();
+        request.setDestinationCountry("CA"); // Canada
+
+        StepVerifier.create(calculator.calculateRates(request).collectList())
+            .assertNext(rates -> {
+                assertThat(rates).hasSize(2); // Only STANDARD and EXPRESS
+                assertThat(rates).noneMatch(r -> r.getServiceLevel().equals("OVERNIGHT"));
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldCalculateAllDomesticRates() {
+        ShippingRateRequest request = createBasicRequest();
+
+        StepVerifier.create(calculator.calculateRates(request).collectList())
+            .assertNext(rates -> {
+                assertThat(rates).hasSize(3); // STANDARD, EXPRESS, OVERNIGHT
+                assertThat(rates).extracting(ShippingRate::getServiceLevel)
+                    .containsExactlyInAnyOrder("STANDARD", "EXPRESS", "OVERNIGHT");
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldIncreaseRateWithWeight() {
+        ShippingRateRequest lightRequest = createBasicRequest();
+        lightRequest.setWeightPounds(new BigDecimal("1.0"));
+
+        ShippingRateRequest heavyRequest = createBasicRequest();
+        heavyRequest.setWeightPounds(new BigDecimal("10.0"));
+
+        StepVerifier.create(calculator.calculateRate(lightRequest, "STANDARD"))
+            .assertNext(lightRate -> {
+                StepVerifier.create(calculator.calculateRate(heavyRequest, "STANDARD"))
+                    .assertNext(heavyRate -> {
+                        assertThat(heavyRate.getRate()).isGreaterThan(lightRate.getRate());
+                    })
+                    .verifyComplete();
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldApplyDistanceMultiplierForInternational() {
+        ShippingRateRequest domesticRequest = createBasicRequest();
+        domesticRequest.setOriginCountry("US");
+        domesticRequest.setDestinationCountry("US");
+
+        ShippingRateRequest internationalRequest = createBasicRequest();
+        internationalRequest.setOriginCountry("US");
+        internationalRequest.setDestinationCountry("CA");
+
+        StepVerifier.create(calculator.calculateRate(domesticRequest, "STANDARD"))
+            .assertNext(domesticRate -> {
+                StepVerifier.create(calculator.calculateRate(internationalRequest, "STANDARD"))
+                    .assertNext(internationalRate -> {
+                        assertThat(internationalRate.getRate()).isGreaterThan(domesticRate.getRate());
+                    })
+                    .verifyComplete();
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldUseDimensionalWeightWhenGreater() {
+        ShippingRateRequest request = createBasicRequest();
+        request.setWeightPounds(new BigDecimal("1.0")); // Light weight
+        request.setLengthInches(new BigDecimal("20"));
+        request.setWidthInches(new BigDecimal("20"));
+        request.setHeightInches(new BigDecimal("20")); // Large box
+
+        StepVerifier.create(calculator.calculateRate(request, "STANDARD"))
+            .assertNext(rate -> {
+                // Dimensional weight should be used, resulting in higher rate than actual weight
+                assertThat(rate.getRate()).isGreaterThan(new BigDecimal("5.50")); // Base + 1lb rate
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldQualifyForFreeShipping() {
+        BigDecimal orderValue = new BigDecimal("100.00");
+        BigDecimal threshold = new BigDecimal("75.00");
+
+        StepVerifier.create(calculator.qualifiesForFreeShipping(orderValue, threshold))
+            .expectNext(true)
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldNotQualifyForFreeShipping() {
+        BigDecimal orderValue = new BigDecimal("50.00");
+        BigDecimal threshold = new BigDecimal("75.00");
+
+        StepVerifier.create(calculator.qualifiesForFreeShipping(orderValue, threshold))
+            .expectNext(false)
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldQualifyForFreeShippingAtExactThreshold() {
+        BigDecimal orderValue = new BigDecimal("75.00");
+        BigDecimal threshold = new BigDecimal("75.00");
+
+        StepVerifier.create(calculator.qualifiesForFreeShipping(orderValue, threshold))
+            .expectNext(true)
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldHandleInvalidServiceLevel() {
+        ShippingRateRequest request = createBasicRequest();
+
+        StepVerifier.create(calculator.calculateRate(request, "INVALID"))
+            .expectErrorMatches(error ->
+                error instanceof IllegalArgumentException &&
+                error.getMessage().contains("Invalid service level")
+            )
+            .verify();
+    }
+
+    @Test
+    void shouldHandleNullDimensions() {
+        ShippingRateRequest request = createBasicRequest();
+        request.setLengthInches(null);
+        request.setWidthInches(null);
+        request.setHeightInches(null);
+
+        StepVerifier.create(calculator.calculateRate(request, "STANDARD"))
+            .assertNext(rate -> {
+                // Should calculate successfully using actual weight
+                assertThat(rate.getRate()).isGreaterThan(BigDecimal.ZERO);
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldRoundRateToTwoDecimalPlaces() {
+        ShippingRateRequest request = createBasicRequest();
+        request.setWeightPounds(new BigDecimal("2.333")); // Odd weight
+
+        StepVerifier.create(calculator.calculateRate(request, "STANDARD"))
+            .assertNext(rate -> {
+                assertThat(rate.getRate().scale()).isEqualTo(2);
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldCalculateLocalShippingRate() {
+        ShippingRateRequest request = createBasicRequest();
+        request.setOriginPostalCode("10001");
+        request.setDestinationPostalCode("10050"); // Close postal codes
+
+        StepVerifier.create(calculator.calculateRate(request, "STANDARD"))
+            .assertNext(rate -> {
+                assertThat(rate.getRate()).isLessThan(new BigDecimal("20.00"));
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldCalculateNationalShippingRate() {
+        ShippingRateRequest request = createBasicRequest();
+        request.setOriginPostalCode("10001"); // New York
+        request.setDestinationPostalCode("90001"); // Los Angeles
+
+        StepVerifier.create(calculator.calculateRate(request, "STANDARD"))
+            .assertNext(rate -> {
+                assertThat(rate.getRate()).isGreaterThan(new BigDecimal("10.00"));
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldHandleDifferentCurrencies() {
+        ShippingRateRequest request = createBasicRequest();
+        request.setCurrency("EUR");
+
+        StepVerifier.create(calculator.calculateRate(request, "STANDARD"))
+            .assertNext(rate -> {
+                assertThat(rate.getCurrency()).isEqualTo("EUR");
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldExpressBeMoreExpensiveThanStandard() {
+        ShippingRateRequest request = createBasicRequest();
+
+        StepVerifier.create(calculator.calculateRates(request).collectList())
+            .assertNext(rates -> {
+                ShippingRate standard = rates.stream()
+                    .filter(r -> r.getServiceLevel().equals("STANDARD"))
+                    .findFirst()
+                    .orElseThrow();
+
+                ShippingRate express = rates.stream()
+                    .filter(r -> r.getServiceLevel().equals("EXPRESS"))
+                    .findFirst()
+                    .orElseThrow();
+
+                assertThat(express.getRate()).isGreaterThan(standard.getRate());
+                assertThat(express.getEstimatedDays()).isLessThan(standard.getEstimatedDays());
+            })
+            .verifyComplete();
+    }
+
+    @Test
+    void shouldOvernightBeMoreExpensiveThanExpress() {
+        ShippingRateRequest request = createBasicRequest();
+
+        StepVerifier.create(calculator.calculateRates(request).collectList())
+            .assertNext(rates -> {
+                ShippingRate express = rates.stream()
+                    .filter(r -> r.getServiceLevel().equals("EXPRESS"))
+                    .findFirst()
+                    .orElseThrow();
+
+                ShippingRate overnight = rates.stream()
+                    .filter(r -> r.getServiceLevel().equals("OVERNIGHT"))
+                    .findFirst()
+                    .orElseThrow();
+
+                assertThat(overnight.getRate()).isGreaterThan(express.getRate());
+                assertThat(overnight.getEstimatedDays()).isLessThan(express.getEstimatedDays());
+            })
+            .verifyComplete();
+    }
+
+    private ShippingRateRequest createBasicRequest() {
+        ShippingRateRequest request = new ShippingRateRequest();
+        request.setOriginPostalCode("10001");
+        request.setOriginCountry("US");
+        request.setDestinationPostalCode("20001");
+        request.setDestinationCountry("US");
+        request.setDestinationState("DC");
+        request.setWeightPounds(new BigDecimal("5.0"));
+        request.setOrderValue(new BigDecimal("100.00"));
+        request.setCurrency("USD");
+        return request;
+    }
+}

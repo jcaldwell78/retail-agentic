@@ -1,0 +1,147 @@
+modules:
+  # HTTP probe for checking web endpoints
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: []  # Defaults to 2xx
+      method: GET
+      headers:
+        Accept: application/json
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+
+  # HTTPS probe with SSL verification
+  https_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: []
+      method: GET
+      headers:
+        Accept: application/json
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"
+      fail_if_ssl: false
+      fail_if_not_ssl: true
+      tls_config:
+        insecure_skip_verify: false
+
+  # Health check probe
+  http_health_check:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        Accept: application/json
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+      fail_if_body_not_matches_regexp:
+        - '"status"\s*:\s*"UP"'
+
+  # Liveness probe
+  http_liveness:
+    prober: http
+    timeout: 3s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        Accept: application/json
+      follow_redirects: false
+
+  # Readiness probe
+  http_readiness:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        Accept: application/json
+      follow_redirects: false
+
+  # TCP probe for checking database connectivity
+  tcp_connect:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+
+  # MongoDB probe
+  tcp_mongodb:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+      tls: false
+
+  # Redis probe
+  tcp_redis:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+      query_response:
+        - expect: "^\\+PONG"
+          send: "PING\r\n"
+
+  # PostgreSQL probe
+  tcp_postgres:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+
+  # Elasticsearch probe
+  http_elasticsearch:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1"]
+      valid_status_codes: [200]
+      method: GET
+      preferred_ip_protocol: "ip4"
+      fail_if_body_not_matches_regexp:
+        - '"status"\s*:\s*"(green|yellow)"'
+
+  # API endpoint with authentication
+  http_api_auth:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200, 201]
+      method: GET
+      headers:
+        Accept: application/json
+        Authorization: Bearer ${API_TOKEN}
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"
+
+  # DNS probe
+  dns_query:
+    prober: dns
+    timeout: 5s
+    dns:
+      query_name: "example.com"
+      query_type: "A"
+      valid_rcodes:
+        - NOERROR
+      preferred_ip_protocol: "ip4"
+
+  # ICMP ping probe
+  icmp:
+    prober: icmp
+    timeout: 5s
+    icmp:
+      preferred_ip_protocol: "ip4"

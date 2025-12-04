@@ -26,7 +26,10 @@ import java.util.Objects;
 @CompoundIndexes({
     @CompoundIndex(name = "tenant_sku_idx", def = "{'tenantId': 1, 'sku': 1}", unique = true),
     @CompoundIndex(name = "tenant_status_idx", def = "{'tenantId': 1, 'status': 1}"),
-    @CompoundIndex(name = "tenant_category_idx", def = "{'tenantId': 1, 'category': 1}")
+    @CompoundIndex(name = "tenant_category_idx", def = "{'tenantId': 1, 'category': 1}"),
+    @CompoundIndex(name = "tenant_status_created_idx", def = "{'tenantId': 1, 'status': 1, 'createdAt': -1}"),
+    @CompoundIndex(name = "tenant_stock_idx", def = "{'tenantId': 1, 'stock': 1}"),
+    @CompoundIndex(name = "tenant_price_idx", def = "{'tenantId': 1, 'price': 1}")
 })
 public class Product {
 

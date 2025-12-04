@@ -10,6 +10,7 @@ import reactor.util.context.Context;
 public class TenantContext {
 
     public static final String TENANT_ID_KEY = "tenantId";
+    public static final String TENANT_ID_HEADER = "X-Tenant-ID";
 
     private TenantContext() {
         // Utility class

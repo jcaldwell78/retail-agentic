@@ -2,14 +2,23 @@ package com.retail.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import com.retail.TestRedisConfiguration;
+import com.retail.TestElasticsearchConfiguration;
 
 /**
  * Tests for HealthController.
+ * Uses full Spring Boot context with test configuration.
  */
-@WebFluxTest(HealthController.class)
+@SpringBootTest
+@AutoConfigureWebTestClient
+@ActiveProfiles("test")
+@Import({TestRedisConfiguration.class, TestElasticsearchConfiguration.class})
 class HealthControllerTest {
 
     @Autowired

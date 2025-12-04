@@ -4,6 +4,7 @@ import com.retail.security.tenant.TenantContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
@@ -18,6 +19,8 @@ import reactor.util.context.Context;
  * - Tenant context setup
  * - Reactor hooks for debugging
  * - Common test utilities
+ * - Mock Redis configuration
+ * - Mock Elasticsearch configuration
  *
  * Usage:
  * <pre>
@@ -36,6 +39,7 @@ import reactor.util.context.Context;
  */
 @SpringBootTest
 @ActiveProfiles("test")
+@Import({TestRedisConfiguration.class, TestElasticsearchConfiguration.class})
 public abstract class BaseIntegrationTest {
 
     protected static final String TEST_TENANT_ID = "test-tenant-001";

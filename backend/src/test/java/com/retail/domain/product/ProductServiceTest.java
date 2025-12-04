@@ -1,5 +1,7 @@
 package com.retail.domain.product;
 
+import com.retail.TestRedisConfiguration;
+import com.retail.TestElasticsearchConfiguration;
 import com.retail.domain.tenant.Tenant;
 import com.retail.infrastructure.persistence.ProductRepository;
 import com.retail.infrastructure.persistence.TenantRepository;
@@ -7,6 +9,7 @@ import com.retail.security.tenant.TenantContext;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Flux;
@@ -22,6 +25,7 @@ import java.time.Instant;
  */
 @SpringBootTest
 @ActiveProfiles("test")
+@Import({TestRedisConfiguration.class, TestElasticsearchConfiguration.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductServiceTest {
 

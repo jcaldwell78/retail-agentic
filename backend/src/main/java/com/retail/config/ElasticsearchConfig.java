@@ -2,6 +2,7 @@ package com.retail.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableReactiveElasticsearchRepositories;
@@ -9,8 +10,10 @@ import org.springframework.data.elasticsearch.repository.config.EnableReactiveEl
 /**
  * Elasticsearch configuration for reactive search.
  * Configures connection and repositories.
+ * Disabled in test profile where mock Elasticsearch is used.
  */
 @Configuration
+@Profile("!test")
 @EnableReactiveElasticsearchRepositories(basePackages = "com.retail.infrastructure.search")
 public class ElasticsearchConfig extends ReactiveElasticsearchConfiguration {
 

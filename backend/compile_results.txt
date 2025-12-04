@@ -1,0 +1,50 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.retail:retail-backend >----------------------
+[INFO] Building Retail Platform Backend 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (default) @ retail-backend ---
+[INFO] argLine set to -javaagent:C:\\Users\\codep\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=D:\\code\\retail-agentic\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ retail-backend ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ retail-backend ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ retail-backend ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ retail-backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 27 source files with javac [debug release 21] to target\test-classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[125,40] cannot find symbol
+  symbol:   method findByTenantIdAndEmail(java.lang.String,java.lang.String)
+  location: variable userRepository of type com.retail.infrastructure.persistence.UserRepository
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[319,33] incompatible types: byte[] cannot be converted to java.lang.String
+[INFO] 2 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17.598 s
+[INFO] Finished at: 2025-12-03T16:12:06-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:testCompile (default-testCompile) on project retail-backend: Compilation failure: Compilation failure: 
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[125,40] cannot find symbol
+[ERROR]   symbol:   method findByTenantIdAndEmail(java.lang.String,java.lang.String)
+[ERROR]   location: variable userRepository of type com.retail.infrastructure.persistence.UserRepository
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[319,33] incompatible types: byte[] cannot be converted to java.lang.String
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -35,8 +35,7 @@ public class User {
     @Email(message = "Valid email is required")
     private String email;
 
-    @NotBlank(message = "Password is required")
-    private String passwordHash;
+    private String passwordHash; // Nullable for OAuth2 users
 
     @NotBlank(message = "First name is required")
     private String firstName;
@@ -53,6 +52,10 @@ public class User {
     private UserStatus status = UserStatus.ACTIVE;
 
     private List<Address> addresses = new ArrayList<>();
+
+    // OAuth2 fields
+    private String oauth2Provider; // "GOOGLE", "FACEBOOK", or null for local auth
+    private String oauth2ProviderId; // Provider's user ID
 
     private Instant createdAt;
     private Instant updatedAt;
@@ -197,9 +200,31 @@ public class User {
         this.lastLoginAt = Instant.now();
     }
 
+    public String getOauth2Provider() {
+        return oauth2Provider;
+    }
+
+    public void setOauth2Provider(String oauth2Provider) {
+        this.oauth2Provider = oauth2Provider;
+        this.updatedAt = Instant.now();
+    }
+
+    public String getOauth2ProviderId() {
+        return oauth2ProviderId;
+    }
+
+    public void setOauth2ProviderId(String oauth2ProviderId) {
+        this.oauth2ProviderId = oauth2ProviderId;
+        this.updatedAt = Instant.now();
+    }
+
     // Helper methods
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public boolean isOAuth2User() {
+        return oauth2Provider != null && !oauth2Provider.isEmpty();
     }
 
     public boolean isActive() {

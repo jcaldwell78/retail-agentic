@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Properties -->
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+    <property name="JSON_LOG_PATTERN" value='{"timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}","level":"%level","thread":"%thread","logger":"%logger","message":"%message","exception":"%exception{full}","tenantId":"%X{tenantId}","userId":"%X{userId}","requestId":"%X{requestId}","method":"%X{method}","uri":"%X{uri}"}%n'/>
+
+    <!-- Console Appender for Local Development -->
+    <springProfile name="default,dev">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <!-- More verbose logging for our application -->
+        <logger name="com.retail" level="DEBUG"/>
+        <logger name="org.springframework.web.reactive" level="DEBUG"/>
+    </springProfile>
+
+    <!-- JSON Logging for Production -->
+    <springProfile name="prod,staging">
+        <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"application":"retail-agentic-backend","environment":"${spring.profiles.active}"}</customFields>
+                <includeContext>true</includeContext>
+                <includeMdc>true</includeMdc>
+                <includeStructuredArguments>true</includeStructuredArguments>
+                <includeTags>true</includeTags>
+                <fieldNames>
+                    <timestamp>timestamp</timestamp>
+                    <version>version</version>
+                    <message>message</message>
+                    <logger>logger</logger>
+                    <thread>thread</thread>
+                    <level>level</level>
+                    <levelValue>levelValue</levelValue>
+                </fieldNames>
+            </encoder>
+        </appender>
+
+        <!-- Rolling File Appender for Production -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_FILE}</file>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"application":"retail-agentic-backend","environment":"${spring.profiles.active}"}</customFields>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+        </appender>
+
+        <!-- Async Wrapper for Better Performance -->
+        <appender name="ASYNC_JSON_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="JSON_CONSOLE"/>
+            <queueSize>512</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <includeCallerData>false</includeCallerData>
+        </appender>
+
+        <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="FILE"/>
+            <queueSize>512</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <includeCallerData>false</includeCallerData>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="ASYNC_JSON_CONSOLE"/>
+            <appender-ref ref="ASYNC_FILE"/>
+        </root>
+
+        <logger name="com.retail" level="INFO"/>
+    </springProfile>
+
+    <!-- Test Profile - Minimal Logging -->
+    <springProfile name="test">
+        <appender name="TEST_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="WARN">
+            <appender-ref ref="TEST_CONSOLE"/>
+        </root>
+
+        <logger name="com.retail" level="INFO"/>
+    </springProfile>
+
+    <!-- Logger Configurations -->
+
+    <!-- Reduce noise from Spring Framework -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.boot" level="INFO"/>
+    <logger name="org.springframework.web" level="INFO"/>
+
+    <!-- MongoDB -->
+    <logger name="org.mongodb.driver" level="WARN"/>
+    <logger name="org.springframework.data.mongodb" level="INFO"/>
+
+    <!-- Redis -->
+    <logger name="io.lettuce" level="WARN"/>
+    <logger name="org.springframework.data.redis" level="INFO"/>
+
+    <!-- R2DBC -->
+    <logger name="io.r2dbc" level="INFO"/>
+    <logger name="org.springframework.r2dbc" level="INFO"/>
+
+    <!-- Security -->
+    <logger name="org.springframework.security" level="INFO"/>
+
+    <!-- Actuator -->
+    <logger name="org.springframework.boot.actuate" level="INFO"/>
+
+    <!-- Our Application -->
+    <logger name="com.retail.controller" level="INFO"/>
+    <logger name="com.retail.service" level="INFO"/>
+    <logger name="com.retail.repository" level="INFO"/>
+    <logger name="com.retail.security" level="INFO"/>
+    <logger name="com.retail.middleware" level="INFO"/>
+
+</configuration>

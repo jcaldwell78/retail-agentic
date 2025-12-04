@@ -84,7 +84,10 @@ class AdminDashboardServiceTest {
             .thenReturn(Flux.empty());
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getDashboardOverview())
+        StepVerifier.create(
+            adminDashboardService.getDashboardOverview()
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(overview -> {
                 assertThat(overview.totalProducts()).isEqualTo(100L);
                 assertThat(overview.totalUsers()).isEqualTo(50L);
@@ -107,7 +110,10 @@ class AdminDashboardServiceTest {
             .thenReturn(Flux.fromIterable(orders));
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getKeyMetrics(startDate, endDate))
+        StepVerifier.create(
+            adminDashboardService.getKeyMetrics(startDate, endDate)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(metrics -> {
                 assertThat(metrics.totalRevenue()).isGreaterThan(BigDecimal.ZERO);
                 assertThat(metrics.orderCount()).isEqualTo(3);
@@ -130,7 +136,10 @@ class AdminDashboardServiceTest {
             .thenReturn(Flux.fromIterable(previousOrders));
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getRevenueTrend(days))
+        StepVerifier.create(
+            adminDashboardService.getRevenueTrend(days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(trend -> {
                 assertThat(trend.currentRevenue()).isGreaterThan(BigDecimal.ZERO);
                 assertThat(trend.previousRevenue()).isGreaterThan(BigDecimal.ZERO);
@@ -156,7 +165,10 @@ class AdminDashboardServiceTest {
         .thenReturn(Flux.just(lowStockProduct));
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getLowStockProducts(threshold))
+        StepVerifier.create(
+            adminDashboardService.getLowStockProducts(threshold)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(lowStock -> {
                 assertThat(lowStock.productId()).isEqualTo("product-1");
                 assertThat(lowStock.currentStock()).isEqualTo(5);
@@ -175,7 +187,10 @@ class AdminDashboardServiceTest {
             .thenReturn(Flux.fromIterable(orders));
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getRecentOrders(limit))
+        StepVerifier.create(
+            adminDashboardService.getRecentOrders(limit)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .expectNextCount(3)
             .verifyComplete();
     }
@@ -198,7 +213,10 @@ class AdminDashboardServiceTest {
             .thenReturn(Mono.just(100L));
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getCustomerGrowth(days))
+        StepVerifier.create(
+            adminDashboardService.getCustomerGrowth(days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(growth -> {
                 assertThat(growth.totalCustomers()).isEqualTo(100L);
                 assertThat(growth.newCustomers()).isEqualTo(2);
@@ -219,7 +237,10 @@ class AdminDashboardServiceTest {
             .thenReturn(Mono.just(100L));
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getConversionMetrics(days))
+        StepVerifier.create(
+            adminDashboardService.getConversionMetrics(days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(metrics -> {
                 assertThat(metrics.visitors()).isEqualTo(100L);
                 assertThat(metrics.orders()).isEqualTo(50L);
@@ -240,7 +261,10 @@ class AdminDashboardServiceTest {
             .thenReturn(Mono.just(0L));
 
         // Act & Assert
-        StepVerifier.create(adminDashboardService.getConversionMetrics(days))
+        StepVerifier.create(
+            adminDashboardService.getConversionMetrics(days)
+                .contextWrite(TenantContext.withTenantId("test-tenant"))
+        )
             .assertNext(metrics -> {
                 assertThat(metrics.visitors()).isZero();
                 assertThat(metrics.orders()).isZero();

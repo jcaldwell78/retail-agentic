@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { ProductQuickView } from '@/components/ProductQuickView';
-import { Eye } from 'lucide-react';
+import { Eye, Filter, X } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -30,6 +30,7 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Mock product data
   const [products] = useState<Product[]>([
@@ -135,6 +136,80 @@ export default function ProductsPage() {
     setQuickViewProduct(null);
   };
 
+  const handleClearFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('all');
+  };
+
+  // Filter content component to avoid duplication
+  const FilterContent = () => (
+    <>
+      {/* Search */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-2">Search</label>
+        <Input
+          type="search"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          data-testid="product-search-input"
+        />
+      </div>
+
+      {/* Categories */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-2">Category</label>
+        <div className="space-y-2">
+          {categories.map((category) => (
+            <label key={category} className="flex items-center">
+              <input
+                type="radio"
+                name="category"
+                value={category}
+                checked={selectedCategory === category}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="mr-2"
+                data-testid={`category-${category}`}
+              />
+              <span className="text-sm capitalize">{category}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Price Range */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-2">Price Range</label>
+        <div className="space-y-2">
+          <label className="flex items-center">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-sm">Under $50</span>
+          </label>
+          <label className="flex items-center">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-sm">$50 - $100</span>
+          </label>
+          <label className="flex items-center">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-sm">$100 - $200</span>
+          </label>
+          <label className="flex items-center">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-sm">Over $200</span>
+          </label>
+        </div>
+      </div>
+
+      <Button
+        variant="outline"
+        className="w-full"
+        onClick={handleClearFilters}
+      >
+        Clear Filters
+      </Button>
+    </>
+  );
+
   // Filter and sort products
   const filteredProducts = products
     .filter((product) => {
@@ -171,109 +246,86 @@ export default function ProductsPage() {
         </div>
 
         <div className="grid lg:grid-cols-4 gap-6">
-          {/* Sidebar - Filters */}
-          <aside className="lg:col-span-1">
+          {/* Desktop Sidebar - Filters */}
+          <aside className="hidden lg:block lg:col-span-1">
             <Card className="p-4 sticky top-4">
               <h2 className="font-semibold text-lg mb-4">Filters</h2>
-
-              {/* Search */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Search</label>
-                <Input
-                  type="search"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  data-testid="product-search-input"
-                />
-              </div>
-
-              {/* Categories */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Category</label>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <label key={category} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="category"
-                        value={category}
-                        checked={selectedCategory === category}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="mr-2"
-                        data-testid={`category-${category}`}
-                      />
-                      <span className="text-sm capitalize">{category}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Price Range</label>
-                <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" />
-                    <span className="text-sm">Under $50</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" />
-                    <span className="text-sm">$50 - $100</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" />
-                    <span className="text-sm">$100 - $200</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" />
-                    <span className="text-sm">Over $200</span>
-                  </label>
-                </div>
-              </div>
-
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('all');
-                }}
-              >
-                Clear Filters
-              </Button>
+              <FilterContent />
             </Card>
           </aside>
+
+          {/* Mobile Filter Drawer */}
+          {isMobileFilterOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                onClick={() => setIsMobileFilterOpen(false)}
+              />
+              {/* Drawer */}
+              <div className="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-background z-50 shadow-lg lg:hidden overflow-y-auto">
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="font-semibold text-lg">Filters</h2>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsMobileFilterOpen(false)}
+                      aria-label="Close filters"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
+                  <FilterContent />
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Main Content - Product Grid */}
           <div className="lg:col-span-3">
             {/* Toolbar */}
             <div className="bg-white rounded-lg p-4 mb-6 flex justify-between items-center flex-wrap gap-4">
               <div className="flex gap-2">
+                {/* Mobile Filter Button */}
                 <Button
-                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  variant="outline"
                   size="sm"
-                  onClick={() => setViewMode('grid')}
-                  data-testid="grid-view-button"
+                  className="lg:hidden"
+                  onClick={() => setIsMobileFilterOpen(true)}
+                  data-testid="mobile-filter-button"
                 >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                  </svg>
+                  <Filter className="w-4 h-4 mr-2" />
+                  Filters
                 </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  data-testid="list-view-button"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </Button>
+
+                {/* View Mode Buttons - Hidden on small mobile */}
+                <div className="hidden sm:flex gap-2">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                    data-testid="grid-view-button"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    data-testid="list-view-button"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </Button>
+                </div>
               </div>
 
               <select
@@ -316,7 +368,7 @@ export default function ProductsPage() {
               <div
                 className={
                   viewMode === 'grid'
-                    ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6'
+                    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
                     : 'space-y-4'
                 }
                 data-testid="products-grid"
