@@ -27,3 +27,12 @@ dist-ssr
 coverage
 *.lcov
 .nyc_output
+
+playwright-report/
+test-results/
+
+*storybook.log
+storybook-static
+
+# Generated API clients
+src/api/generated

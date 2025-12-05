@@ -255,13 +255,168 @@ npm run lint -- --fix
 
 ## Testing
 
+This application supports multiple types of testing to ensure quality and reliability.
+
 ### Unit Tests
 
-Test individual components and functions:
+Test individual components and functions using Vitest:
 
 ```bash
+# Run tests in watch mode
 npm test
+
+# Run tests once
+npm test -- --run
+
+# Run with coverage
+npm run test:coverage
+
+# Run specific test file
+npm test -- MyComponent.test.tsx
+
+# Open interactive UI
+npm run test:ui
 ```
+
+**Writing Unit Tests:**
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import Button from './Button'
+
+describe('Button', () => {
+  it('should handle user interaction', async () => {
+    const user = userEvent.setup()
+    const handleClick = vi.fn()
+    render(<Button onClick={handleClick}>Click me</Button>)
+
+    await user.click(screen.getByRole('button'))
+    expect(handleClick).toHaveBeenCalledOnce()
+  })
+})
+```
+
+### End-to-End (E2E) Tests
+
+E2E tests use Playwright to test the entire application from a user's perspective.
+
+#### Prerequisites
+
+Install Playwright browsers (one-time setup):
+
+```bash
+npm run playwright:install
+```
+
+#### Running E2E Tests
+
+```bash
+# Run all E2E tests (against real backend if available)
+npm run test:e2e
+
+# Run with mock server (no backend needed) - RECOMMENDED
+npm run test:e2e:mock
+
+# Interactive mode with time-travel debugging
+npm run test:e2e:ui
+
+# See browser while tests run
+npm run test:e2e:headed
+
+# Debug mode with step-through execution
+npm run test:e2e:debug
+```
+
+#### Test Modes
+
+**Mock Server Mode (Recommended for Development)**
+
+Uses MSW (Mock Service Worker) to simulate backend API responses:
+
+```bash
+# Use mock server (recommended)
+npm run test:e2e:mock
+```
+
+**Note**: The scripts use `cross-env` for cross-platform compatibility (works on Windows, macOS, and Linux).
+
+Benefits:
+- No backend required
+- Fast execution
+- Predictable test data
+- Perfect for CI/CD
+- Isolated frontend testing
+
+**Real Backend Mode**
+
+Tests against actual running backend:
+
+```bash
+# Start backend first
+cd ../backend
+mvn spring-boot:run
+
+# Then run E2E tests
+cd ../consumer-web
+npm run test:e2e
+```
+
+Benefits:
+- Full integration testing
+- Validates real API contracts
+- Tests with actual data
+
+#### E2E Test Structure
+
+Tests are located in `e2e/` directory:
+
+```
+e2e/
+├── example.spec.ts        # Main E2E test suite
+└── setup.ts               # Test setup and configuration
+```
+
+**Writing E2E Tests:**
+
+```typescript
+import { test, expect } from '@playwright/test'
+
+test.describe('Product Search', () => {
+  test('should search and display results', async ({ page }) => {
+    await page.goto('/')
+
+    // Search for products
+    await page.fill('[data-testid="search-input"]', 'laptop')
+    await page.click('[data-testid="search-button"]')
+
+    // Verify results
+    await expect(page.locator('[data-testid="product-card"]')).toBeVisible()
+    await expect(page.locator('h2')).toContainText('Search Results')
+  })
+})
+```
+
+#### Best Practices
+
+1. **Use data-testid attributes** for stable selectors:
+   ```tsx
+   <button data-testid="add-to-cart">Add to Cart</button>
+   ```
+
+2. **Mock API responses** in `src/mocks/handlers.ts`:
+   ```typescript
+   http.get('/api/v1/products', () => {
+     return HttpResponse.json([
+       { id: '1', name: 'Test Product', price: 99.99 }
+     ])
+   })
+   ```
+
+3. **Test user flows**, not implementation details
+
+4. **Keep tests independent** - each test should work in isolation
 
 ### Component Tests
 
@@ -270,13 +425,14 @@ Test React components with user interactions:
 ```typescript
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import ShoppingCart from './ShoppingCart'
 
-it('should handle user interaction', async () => {
+it('should add item to cart', async () => {
   const user = userEvent.setup()
-  render(<Button>Click me</Button>)
+  render(<ShoppingCart />)
 
-  await user.click(screen.getByRole('button'))
-  expect(screen.getByText('Clicked!')).toBeInTheDocument()
+  await user.click(screen.getByTestId('add-to-cart'))
+  expect(screen.getByTestId('cart-count')).toHaveTextContent('1')
 })
 ```
 
@@ -287,12 +443,64 @@ Test multiple components working together:
 ```typescript
 it('should complete checkout flow', async () => {
   render(<App />)
+
   // Add to cart
+  await user.click(screen.getByTestId('add-to-cart'))
+
   // Go to checkout
+  await user.click(screen.getByTestId('checkout-button'))
+
   // Complete purchase
+  await user.type(screen.getByLabelText('Email'), 'test@example.com')
+  await user.click(screen.getByTestId('place-order'))
+
   expect(screen.getByText('Order confirmed')).toBeInTheDocument()
 })
 ```
+
+### Test Coverage
+
+Generate and view coverage reports:
+
+```bash
+# Generate coverage report
+npm run test:coverage
+
+# View in browser (creates coverage/index.html)
+open coverage/index.html
+```
+
+Target coverage: **80%** for all files
+
+### Continuous Integration
+
+All tests run automatically in CI/CD:
+
+```yaml
+- Unit tests (npm test -- --run)
+- E2E tests with mock server (npm run test:e2e:mock)
+- Type checking (npm run type-check)
+- Linting (npm run lint)
+```
+
+### Troubleshooting Tests
+
+**E2E Tests Fail with "Target closed"**
+- Check browser console for errors
+- Verify mock handlers in `src/mocks/handlers.ts`
+- Ensure elements have correct `data-testid` attributes
+
+**Tests Timeout**
+- Increase timeout in `playwright.config.ts`
+- Check if elements are loading correctly
+- Verify mock server is responding
+
+**Mock Server Not Working**
+- Ensure `USE_MOCK_SERVER=true` is set
+- Check that `e2e/setup.ts` is being executed
+- Verify handlers are properly configured
+
+For more details, see [E2E_TESTING.md](../E2E_TESTING.md)
 
 ## Building for Production
 

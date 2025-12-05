@@ -1,0 +1,355 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file:/D:/apache-maven-3.9.9-bin/apache-maven-3.9.9/lib/jansi-2.4.1.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/D:/apache-maven-3.9.9-bin/apache-maven-3.9.9/lib/guava-33.2.1-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.retail:retail-backend >----------------------
+[INFO] Building Retail Platform Backend 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ retail-backend ---
+[INFO] Deleting D:\code\retail-agentic\backend\target
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (default) @ retail-backend ---
+[INFO] argLine set to -javaagent:C:\\Users\\codep\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=D:\\code\\retail-agentic\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ retail-backend ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ retail-backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 129 source files with javac [debug release 21] to target\classes
+[INFO] /D:/code/retail-agentic/backend/src/main/java/com/retail/security/JwtService.java: Some input files use or override a deprecated API.
+[INFO] /D:/code/retail-agentic/backend/src/main/java/com/retail/security/JwtService.java: Recompile with -Xlint:deprecation for details.
+[INFO] /D:/code/retail-agentic/backend/src/main/java/com/retail/domain/auth/OAuth2Service.java: D:\code\retail-agentic\backend\src\main\java\com\retail\domain\auth\OAuth2Service.java uses unchecked or unsafe operations.
+[INFO] /D:/code/retail-agentic/backend/src/main/java/com/retail/domain/auth/OAuth2Service.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ retail-backend ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ retail-backend ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 27 source files with javac [debug release 21] to target\test-classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:[392,37] no suitable method found for value(java.lang.Class<java.lang.String>,(token)->token)
+    method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(org.hamcrest.Matcher<? super T>) is not applicable
+      (cannot infer type-variable(s) T
+        (actual and formal argument lists differ in length))
+    method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(org.hamcrest.Matcher<? super T>,java.lang.Class<T>) is not applicable
+      (cannot infer type-variable(s) T
+        (argument mismatch; java.lang.Class<java.lang.String> cannot be converted to org.hamcrest.Matcher<? super T>))
+    method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(java.util.function.Consumer<T>) is not applicable
+      (cannot infer type-variable(s) T
+        (actual and formal argument lists differ in length))
+    method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(java.util.function.Consumer<T>,java.lang.Class<T>) is not applicable
+      (cannot infer type-variable(s) T
+        (argument mismatch; java.lang.Class<java.lang.String> cannot be converted to java.util.function.Consumer<T>))
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[47,22] cannot find symbol
+  symbol:   method setTenantId(java.lang.String)
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[53,22] cannot find symbol
+  symbol:   method clear()
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[81,25] cannot find symbol
+  symbol:   method createUser(com.retail.domain.user.User)
+  location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[84,25] cannot find symbol
+  symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+  location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[102,28] cannot find symbol
+  symbol:   method createUser(java.lang.Object)
+  location: class com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[103,17] cannot find symbol
+  symbol:   method getEmail()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[104,17] cannot find symbol
+  symbol:   method getFirstName()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[105,17] cannot find symbol
+  symbol:   method getLastName()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[106,17] cannot find symbol
+  symbol:   method getOauth2Provider()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[107,17] cannot find symbol
+  symbol:   method getOauth2ProviderId()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[132,25] cannot find symbol
+  symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+  location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[149,38] cannot find symbol
+  symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+  location: class com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[178,25] cannot find symbol
+  symbol:   method createUser(com.retail.domain.user.User)
+  location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[181,25] cannot find symbol
+  symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+  location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[197,28] cannot find symbol
+  symbol:   method createUser(java.lang.Object)
+  location: class com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[198,17] cannot find symbol
+  symbol:   method getEmail()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[199,17] cannot find symbol
+  symbol:   method getFirstName()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[200,17] cannot find symbol
+  symbol:   method getLastName()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[201,17] cannot find symbol
+  symbol:   method getOauth2Provider()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[202,17] cannot find symbol
+  symbol:   method getOauth2ProviderId()
+  location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[65,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[83,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[95,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[107,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[124,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[143,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[165,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[190,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[201,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[208,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[231,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[249,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[286,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[296,38] cannot find symbol
+  symbol:   variable TENANT_ID_HEADER
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[123,40] cannot find symbol
+  symbol:   method findByEmail(java.lang.String)
+  location: variable userRepository of type com.retail.infrastructure.persistence.UserRepository
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[317,33] incompatible types: byte[] cannot be converted to java.lang.String
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[365,26] cannot find symbol
+  symbol:   variable UserRole
+  location: class com.retail.domain.user.User
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[366,28] cannot find symbol
+  symbol:   variable UserStatus
+  location: class com.retail.domain.user.User
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/order/OrderServiceUnitTest.java:[395,17] constructor CartItem in record com.retail.domain.cart.Cart.CartItem cannot be applied to given types;
+  required: java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.lang.Integer,java.util.Map<java.lang.String,java.lang.Object>,java.lang.String,java.math.BigDecimal
+  found:    java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,int,<nulltype>,java.math.BigDecimal
+  reason: actual and formal argument lists differ in length
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/order/OrderServiceUnitTest.java:[397,17] constructor CartItem in record com.retail.domain.cart.Cart.CartItem cannot be applied to given types;
+  required: java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.lang.Integer,java.util.Map<java.lang.String,java.lang.Object>,java.lang.String,java.math.BigDecimal
+  found:    java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,int,<nulltype>,java.math.BigDecimal
+  reason: actual and formal argument lists differ in length
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/payment/PaymentProcessingServiceTest.java:[40,22] cannot find symbol
+  symbol:   method setTenantId(java.lang.String)
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/tax/TaxCalculationServiceTest.java:[20,22] cannot find symbol
+  symbol:   method setTenantId(java.lang.String)
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/tax/TaxCalculationServiceTest.java:[25,22] cannot find symbol
+  symbol:   method clear()
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/shipping/ShippingRateCalculatorTest.java:[21,22] cannot find symbol
+  symbol:   method setTenantId(java.lang.String)
+  location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/shipping/ShippingRateCalculatorTest.java:[26,22] cannot find symbol
+  symbol:   method clear()
+  location: class com.retail.security.tenant.TenantContext
+[INFO] 46 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  30.932 s
+[INFO] Finished at: 2025-12-03T15:11:54-06:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:testCompile (default-testCompile) on project retail-backend: Compilation failure: Compilation failure: 
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:[392,37] no suitable method found for value(java.lang.Class<java.lang.String>,(token)->token)
+[ERROR]     method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(org.hamcrest.Matcher<? super T>) is not applicable
+[ERROR]       (cannot infer type-variable(s) T
+[ERROR]         (actual and formal argument lists differ in length))
+[ERROR]     method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(org.hamcrest.Matcher<? super T>,java.lang.Class<T>) is not applicable
+[ERROR]       (cannot infer type-variable(s) T
+[ERROR]         (argument mismatch; java.lang.Class<java.lang.String> cannot be converted to org.hamcrest.Matcher<? super T>))
+[ERROR]     method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(java.util.function.Consumer<T>) is not applicable
+[ERROR]       (cannot infer type-variable(s) T
+[ERROR]         (actual and formal argument lists differ in length))
+[ERROR]     method org.springframework.test.web.reactive.server.JsonPathAssertions.<T>value(java.util.function.Consumer<T>,java.lang.Class<T>) is not applicable
+[ERROR]       (cannot infer type-variable(s) T
+[ERROR]         (argument mismatch; java.lang.Class<java.lang.String> cannot be converted to java.util.function.Consumer<T>))
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[47,22] cannot find symbol
+[ERROR]   symbol:   method setTenantId(java.lang.String)
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[53,22] cannot find symbol
+[ERROR]   symbol:   method clear()
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[81,25] cannot find symbol
+[ERROR]   symbol:   method createUser(com.retail.domain.user.User)
+[ERROR]   location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[84,25] cannot find symbol
+[ERROR]   symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+[ERROR]   location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[102,28] cannot find symbol
+[ERROR]   symbol:   method createUser(java.lang.Object)
+[ERROR]   location: class com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[103,17] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[104,17] cannot find symbol
+[ERROR]   symbol:   method getFirstName()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[105,17] cannot find symbol
+[ERROR]   symbol:   method getLastName()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[106,17] cannot find symbol
+[ERROR]   symbol:   method getOauth2Provider()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[107,17] cannot find symbol
+[ERROR]   symbol:   method getOauth2ProviderId()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[132,25] cannot find symbol
+[ERROR]   symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+[ERROR]   location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[149,38] cannot find symbol
+[ERROR]   symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+[ERROR]   location: class com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[178,25] cannot find symbol
+[ERROR]   symbol:   method createUser(com.retail.domain.user.User)
+[ERROR]   location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[181,25] cannot find symbol
+[ERROR]   symbol:   method updateUser(java.lang.String,com.retail.domain.user.User)
+[ERROR]   location: variable userService of type com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[197,28] cannot find symbol
+[ERROR]   symbol:   method createUser(java.lang.Object)
+[ERROR]   location: class com.retail.domain.user.UserService
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[198,17] cannot find symbol
+[ERROR]   symbol:   method getEmail()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[199,17] cannot find symbol
+[ERROR]   symbol:   method getFirstName()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[200,17] cannot find symbol
+[ERROR]   symbol:   method getLastName()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[201,17] cannot find symbol
+[ERROR]   symbol:   method getOauth2Provider()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/auth/OAuth2ServiceTest.java:[202,17] cannot find symbol
+[ERROR]   symbol:   method getOauth2ProviderId()
+[ERROR]   location: variable user of type java.lang.Object
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[65,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[83,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[95,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[107,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[124,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[143,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[165,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[190,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[201,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[208,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[231,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[249,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[286,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:[296,38] cannot find symbol
+[ERROR]   symbol:   variable TENANT_ID_HEADER
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[123,40] cannot find symbol
+[ERROR]   symbol:   method findByEmail(java.lang.String)
+[ERROR]   location: variable userRepository of type com.retail.infrastructure.persistence.UserRepository
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[317,33] incompatible types: byte[] cannot be converted to java.lang.String
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[365,26] cannot find symbol
+[ERROR]   symbol:   variable UserRole
+[ERROR]   location: class com.retail.domain.user.User
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:[366,28] cannot find symbol
+[ERROR]   symbol:   variable UserStatus
+[ERROR]   location: class com.retail.domain.user.User
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/order/OrderServiceUnitTest.java:[395,17] constructor CartItem in record com.retail.domain.cart.Cart.CartItem cannot be applied to given types;
+[ERROR]   required: java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.lang.Integer,java.util.Map<java.lang.String,java.lang.Object>,java.lang.String,java.math.BigDecimal
+[ERROR]   found:    java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,int,<nulltype>,java.math.BigDecimal
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/order/OrderServiceUnitTest.java:[397,17] constructor CartItem in record com.retail.domain.cart.Cart.CartItem cannot be applied to given types;
+[ERROR]   required: java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,java.lang.Integer,java.util.Map<java.lang.String,java.lang.Object>,java.lang.String,java.math.BigDecimal
+[ERROR]   found:    java.lang.String,java.lang.String,java.lang.String,java.math.BigDecimal,int,<nulltype>,java.math.BigDecimal
+[ERROR]   reason: actual and formal argument lists differ in length
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/payment/PaymentProcessingServiceTest.java:[40,22] cannot find symbol
+[ERROR]   symbol:   method setTenantId(java.lang.String)
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/tax/TaxCalculationServiceTest.java:[20,22] cannot find symbol
+[ERROR]   symbol:   method setTenantId(java.lang.String)
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/tax/TaxCalculationServiceTest.java:[25,22] cannot find symbol
+[ERROR]   symbol:   method clear()
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/shipping/ShippingRateCalculatorTest.java:[21,22] cannot find symbol
+[ERROR]   symbol:   method setTenantId(java.lang.String)
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] /D:/code/retail-agentic/backend/src/test/java/com/retail/domain/shipping/ShippingRateCalculatorTest.java:[26,22] cannot find symbol
+[ERROR]   symbol:   method clear()
+[ERROR]   location: class com.retail.security.tenant.TenantContext
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

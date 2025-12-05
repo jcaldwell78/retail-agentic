@@ -72,24 +72,44 @@ This platform enables multiple retail businesses (tenants) to operate their own 
 
 ### Local Development
 
+#### Option 1: Using Monorepo Scripts (Recommended)
+
 ```bash
 # Clone repository
 git clone <repository-url>
 cd retail-agentic
 
+# Install all dependencies (backend + frontends)
+npm run install:all
+
 # Start databases (MongoDB, Redis, Elasticsearch, PostgreSQL)
+npm run docker:up
+
+# Start all services in parallel (backend + both frontends)
+npm run dev:all
+
+# Or start services individually:
+npm run dev:backend    # Backend only
+npm run dev:consumer   # Consumer web only
+npm run dev:admin      # Admin web only
+```
+
+#### Option 2: Manual Setup
+
+```bash
+# Start databases
 docker-compose up -d
 
-# Start backend
+# Start backend (terminal 1)
 cd backend
 mvn spring-boot:run
 
-# Start consumer web (in new terminal)
+# Start consumer web (terminal 2)
 cd consumer-web
 npm install
 npm run dev
 
-# Start admin web (in new terminal)
+# Start admin web (terminal 3)
 cd admin-web
 npm install
 npm run dev
@@ -99,6 +119,28 @@ npm run dev
 - Consumer Web: http://localhost:3000
 - Admin Web: http://localhost:3001
 - Backend API: http://localhost:8080
+
+**Useful Commands:**
+
+```bash
+# Build everything
+npm run build:all
+
+# Run all tests
+npm run test:all
+
+# Check types across all frontends
+npm run type-check:all
+
+# Lint all frontend code
+npm run lint:all
+
+# Stop databases
+npm run docker:down
+
+# View database logs
+npm run docker:logs
+```
 
 ### Using Kubernetes Locally
 
@@ -118,8 +160,30 @@ kubectl get pods -n retail-platform
 ```
 retail-agentic/
 ├── backend/                 # Java/Spring Boot backend
+│   ├── src/                 # Source code
+│   ├── pom.xml              # Maven configuration
+│   ├── .env.example         # Environment variable template
+│   └── README.md            # Backend-specific docs
 ├── consumer-web/            # Customer-facing React app
+│   ├── src/                 # Source code
+│   ├── package.json         # Dependencies
+│   ├── .env.example         # Environment variable template
+│   └── README.md            # Consumer web docs
 ├── admin-web/               # Admin dashboard React app
+│   ├── src/                 # Source code
+│   ├── package.json         # Dependencies
+│   ├── .env.example         # Environment variable template
+│   └── README.md            # Admin web docs
+├── shared/                  # Shared TypeScript code
+│   ├── types/               # Shared type definitions
+│   ├── utils/               # Utility functions
+│   ├── config/              # Configuration constants
+│   ├── components/          # Shared React components
+│   ├── package.json         # Dependencies
+│   └── README.md            # Shared library docs
+├── docker/                  # Docker configuration
+│   ├── mongodb/             # MongoDB init scripts
+│   └── postgres/            # PostgreSQL init scripts
 ├── helm/                    # Helm charts for deployment
 │   ├── charts/              # Service-specific charts
 │   ├── environments/        # Environment configs
@@ -130,12 +194,14 @@ retail-agentic/
 │   ├── design/              # UI/UX design system
 │   ├── development/         # Development guides
 │   ├── deployment/          # Infrastructure docs
-│   └── guides/              # How-to guides
+│   ├── guides/              # How-to guides
+│   └── ROADMAP.md           # Project roadmap
 ├── .claude/                 # Claude Code AI agent configs
 │   └── agents/              # Agent descriptor files
 ├── .github/
 │   └── workflows/           # GitHub Actions CI/CD
 ├── docker-compose.yml       # Local development stack
+├── package.json             # Monorepo scripts
 ├── CLAUDE.md                # AI agent project context
 └── README.md                # This file
 ```
@@ -179,22 +245,138 @@ See [CLAUDE.md](./CLAUDE.md) for AI agent usage and project context.
 
 ### Testing
 
+The project supports multiple levels of testing to ensure quality and reliability.
+
+#### Unit Tests
+
+**Backend (Java/Spring)**
+
 ```bash
-# Backend unit tests
+cd backend
+
+# Run all unit tests
+mvn test
+
+# Run specific test class
+mvn test -Dtest=ProductServiceTest
+
+# Run with coverage report
+mvn test jacoco:report
+
+# View coverage report
+open target/site/jacoco/index.html
+```
+
+Target coverage: **80%** (enforced by JaCoCo)
+
+**Frontend (React/TypeScript)**
+
+```bash
+# Consumer Web
+cd consumer-web
+npm test                  # Watch mode
+npm test -- --run         # Single run
+npm run test:coverage     # With coverage
+npm run test:ui           # Interactive UI
+
+# Admin Web
+cd admin-web
+npm test                  # Watch mode
+npm test -- --run         # Single run
+npm run test:coverage     # With coverage
+npm run test:ui           # Interactive UI
+```
+
+Target coverage: **80%** for all files
+
+#### End-to-End (E2E) Tests
+
+E2E tests use Playwright to test complete user workflows in both frontends.
+
+**Prerequisites**
+
+```bash
+# Install Playwright browsers (one-time setup)
+cd consumer-web && npm run playwright:install
+cd admin-web && npm run playwright:install
+```
+
+**Running E2E Tests**
+
+**Option 1: Mock Server Mode (Recommended)**
+
+Tests run against MSW (Mock Service Worker) - no backend needed:
+
+```bash
+# Consumer Web E2E tests
+cd consumer-web
+npm run test:e2e:mock          # Headless mode
+npm run test:e2e:ui            # Interactive UI mode
+npm run test:e2e:headed        # Watch browser
+npm run test:e2e:debug         # Step-through debugging
+
+# Admin Web E2E tests
+cd admin-web
+npm run test:e2e:mock          # Headless mode
+npm run test:e2e:ui            # Interactive UI mode
+npm run test:e2e:headed        # Watch browser
+npm run test:e2e:debug         # Step-through debugging
+```
+
+Benefits:
+- No backend required
+- Fast execution
+- Predictable test data
+- Perfect for CI/CD
+- Cross-platform (Windows, macOS, Linux)
+
+**Option 2: Real Backend Mode**
+
+Tests run against actual running backend:
+
+```bash
+# Start backend first
+cd backend
+mvn spring-boot:run
+
+# Run E2E tests
+cd consumer-web && npm run test:e2e
+cd admin-web && npm run test:e2e
+```
+
+Benefits:
+- Full integration testing
+- Validates real API contracts
+- Tests with actual data
+
+#### Integration Tests
+
+Test backend with databases:
+
+```bash
+cd backend
+mvn verify -P integration-tests
+```
+
+#### Running All Tests
+
+```bash
+# Backend tests
 cd backend && mvn test
 
-# Frontend unit tests
-cd consumer-web && npm test
+# Consumer web tests (unit + E2E with mock)
+cd consumer-web && npm test -- --run && npm run test:e2e:mock
 
-# Integration tests
-cd backend && mvn verify -P integration-tests
+# Admin web tests (unit + E2E with mock)
+cd admin-web && npm test -- --run && npm run test:e2e:mock
 
-# E2E tests
-npm run test:e2e
-
-# All tests
+# Or use automation script (if available)
 ./scripts/run-tests.sh
 ```
+
+#### Test Documentation
+
+For detailed E2E testing information, see [E2E_TESTING.md](./E2E_TESTING.md)
 
 ### Pull Request Validation
 

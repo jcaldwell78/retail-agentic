@@ -1,0 +1,20 @@
+{
+  "name": "@retail-agentic/shared",
+  "version": "0.1.0",
+  "description": "Shared utilities, types, and components for Retail Agentic platform",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["retail", "shared", "types"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "eslint": "^8.0.0"
+  }
+}

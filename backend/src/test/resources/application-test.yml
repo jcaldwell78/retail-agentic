@@ -2,21 +2,63 @@ spring:
   application:
     name: retail-backend-test
 
+  # MongoDB configuration for tests
+  # Uses embedded MongoDB provided by de.flapdoodle.embed.mongo
+  data:
+    mongodb:
+      # Embedded MongoDB will auto-configure on a random port
+      # No manual configuration needed - flapdoodle handles it automatically
+      database: test-retail-db
+
+  # R2DBC configuration for tests (H2 in-memory database)
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+
   # Disable auto-configuration for external services during testing
+  # MongoDB and R2DBC are enabled (using embedded/in-memory) but others are disabled
+  # Tests should use mocks or embedded/in-memory alternatives
   autoconfigure:
     exclude:
-      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
       - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration
+
+# Embedded MongoDB configuration
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.9
+
+# API configuration for tests
+api:
+  rate-limit:
+    enabled: false  # Disable rate limiting in tests
+
+# JWT configuration for tests
+jwt:
+  secret: test-secret-key-for-jwt-token-generation-min-256-bits-required-for-hs256
+  expiration: 3600000  # 1 hour for tests
+  refresh-expiration: 7200000  # 2 hours for tests
+
+# Test-specific settings
+test:
+  # Tenant context for tests
+  default-tenant-id: test-tenant-001
+
+  # Mock data configuration
+  data:
+    cleanup-after-test: true
+    seed-before-test: false
 
 logging:
   level:
     root: INFO
     com.retail: DEBUG
+    org.springframework.test: INFO
+    org.springframework.web: DEBUG

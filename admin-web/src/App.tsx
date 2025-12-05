@@ -1,51 +1,101 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+import { lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AuthProvider } from '@/components/auth/AuthProvider';
+import { AdminSidebar } from '@/components/AdminSidebar';
+import { SkipLinks } from '@/components/accessibility/SkipLink';
+import { FocusTarget } from '@/components/accessibility/FocusManagement';
 
-function App() {
-  const [health, setHealth] = useState<{ status: string; service?: string } | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+// Eager load critical pages
+import DashboardPage from '@/pages/DashboardPage';
+import LoginPage from '@/pages/LoginPage';
 
-  useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const response = await fetch('/api/v1/health')
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        const data = await response.json()
-        setHealth(data)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to connect to backend')
-      } finally {
-        setLoading(false)
-      }
-    }
+// Lazy load other pages for code splitting
+const ProductsPage = lazy(() => import('@/pages/ProductsPage'));
+const ProductCreatePage = lazy(() => import('@/pages/ProductCreatePage'));
+const ProductEditPage = lazy(() => import('@/pages/ProductEditPage'));
+const OrdersPage = lazy(() => import('@/pages/OrdersPage'));
+const OrderDetailPage = lazy(() => import('@/pages/OrderDetailPage'));
+const CustomersPage = lazy(() => import('@/pages/CustomersPage'));
+const CustomerDetailPage = lazy(() => import('@/pages/CustomerDetailPage'));
+const InventoryPage = lazy(() => import('@/pages/InventoryPage'));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
-    checkHealth()
-  }, [])
-
+// Loading fallback component
+function PageLoader() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Retail Platform - Admin Dashboard</h1>
-        <div className="status-card">
-          <h2>Backend Status</h2>
-          {loading && <p>Checking connection...</p>}
-          {error && <p className="error">⚠️ {error}</p>}
-          {health && (
-            <div className="health-info">
-              <p>✅ Status: {health.status}</p>
-              <p>Service: {health.service || 'Unknown'}</p>
-            </div>
-          )}
-        </div>
-        <p className="description">
-          Administrative dashboard for managing tenants, products, orders, and system configuration.
-        </p>
-      </header>
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
+        <p className="mt-2 text-sm text-muted-foreground">Loading...</p>
+      </div>
     </div>
-  )
+  );
 }
 
-export default App
+// Pages where sidebar should be hidden
+const noSidebarRoutes = ['/login'];
+
+function AppContent() {
+  const location = useLocation();
+  const showSidebar = !noSidebarRoutes.includes(location.pathname);
+
+  const skipLinks = [
+    { href: '#main-content', label: 'Skip to main content' },
+    { href: '#sidebar', label: 'Skip to navigation' },
+  ];
+
+  if (!showSidebar) {
+    return (
+      <>
+        <SkipLinks links={skipLinks} />
+        <FocusTarget id="main-content" className="focus:outline-none">
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
+        </FocusTarget>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <SkipLinks links={skipLinks} />
+      <div className="flex h-screen overflow-hidden">
+        <AdminSidebar />
+        <FocusTarget id="main-content" className="flex-1 overflow-y-auto bg-background focus:outline-none md:mt-0 mt-16">
+          <main>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products/new" element={<ProductCreatePage />} />
+            <Route path="/products/:id/edit" element={<ProductEditPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/orders/:id" element={<OrderDetailPage />} />
+            <Route path="/customers" element={<CustomersPage />} />
+            <Route path="/customers/:id" element={<CustomerDetailPage />} />
+            <Route path="/inventory" element={<InventoryPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+          </main>
+        </FocusTarget>
+      </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
+
+export default App;

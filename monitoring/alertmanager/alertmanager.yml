@@ -1,0 +1,169 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: '${SMTP_HOST:smtp.example.com:587}'
+  smtp_from: '${SMTP_FROM:alerts@retail.example.com}'
+  smtp_auth_username: '${SMTP_USERNAME:}'
+  smtp_auth_password: '${SMTP_PASSWORD:}'
+  smtp_require_tls: true
+
+# Templates for alert notifications
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# Route tree for alert notifications
+route:
+  # Default receiver for all alerts
+  receiver: 'default'
+
+  # Group alerts by these labels
+  group_by: ['alertname', 'severity', 'component']
+
+  # Wait time before sending first notification for a group
+  group_wait: 30s
+
+  # Wait time before sending notification about new alerts in a group
+  group_interval: 5m
+
+  # Wait time before resending a notification
+  repeat_interval: 4h
+
+  # Child routes with specific receivers
+  routes:
+    # Critical alerts go to PagerDuty and Slack
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      continue: true
+      repeat_interval: 1h
+
+    # Warning alerts go to Slack only
+    - match:
+        severity: warning
+      receiver: 'warning-alerts'
+      continue: false
+      repeat_interval: 4h
+
+    # Business alerts go to business team
+    - match:
+        component: business
+      receiver: 'business-team'
+      continue: false
+
+    # Infrastructure alerts go to DevOps team
+    - match_re:
+        component: 'jvm|mongodb|redis|elasticsearch'
+      receiver: 'devops-team'
+      continue: false
+
+# Inhibition rules - suppress certain alerts when others are firing
+inhibit_rules:
+  # Suppress warning if critical alert for same component is firing
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'component', 'instance']
+
+  # Suppress specific alerts when service is down
+  - source_match:
+      alertname: 'ServiceDown'
+    target_match_re:
+      alertname: '.*'
+    equal: ['instance']
+
+# Receivers define notification channels
+receivers:
+  # Default receiver (email to ops team)
+  - name: 'default'
+    email_configs:
+      - to: '${ALERT_EMAIL_DEFAULT:ops@retail.example.com}'
+        headers:
+          Subject: '[Retail Platform] {{ .GroupLabels.alertname }}'
+        html: |
+          <h2>Alert: {{ .GroupLabels.alertname }}</h2>
+          <p><strong>Severity:</strong> {{ .GroupLabels.severity }}</p>
+          <p><strong>Component:</strong> {{ .GroupLabels.component }}</p>
+          {{ range .Alerts }}
+          <h3>{{ .Annotations.summary }}</h3>
+          <p>{{ .Annotations.description }}</p>
+          <p><strong>Started:</strong> {{ .StartsAt }}</p>
+          {{ if .Annotations.dashboard }}
+          <p><a href="{{ .Annotations.dashboard }}">View Dashboard</a></p>
+          {{ end }}
+          {{ end }}
+
+  # Critical alerts receiver (PagerDuty + Slack)
+  - name: 'critical-alerts'
+    pagerduty_configs:
+      - service_key: '${PAGERDUTY_SERVICE_KEY:}'
+        description: '{{ .GroupLabels.alertname }}: {{ .GroupLabels.component }}'
+        details:
+          summary: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+          description: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+          severity: 'critical'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL:}'
+        channel: '${SLACK_CHANNEL_CRITICAL:#alerts-critical}'
+        username: 'AlertManager'
+        icon_emoji: ':rotating_light:'
+        title: ':rotating_light: CRITICAL: {{ .GroupLabels.alertname }}'
+        text: |
+          *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+          *Component:* {{ .GroupLabels.component }}
+          *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+          {{ range .Alerts }}{{ if .Annotations.dashboard }}
+          <{{ .Annotations.dashboard }}|View Dashboard>
+          {{ end }}{{ end }}
+        send_resolved: true
+    email_configs:
+      - to: '${ALERT_EMAIL_CRITICAL:oncall@retail.example.com}'
+        headers:
+          Subject: '[CRITICAL] {{ .GroupLabels.alertname }} - Retail Platform'
+
+  # Warning alerts receiver (Slack only)
+  - name: 'warning-alerts'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL:}'
+        channel: '${SLACK_CHANNEL_WARNING:#alerts-warning}'
+        username: 'AlertManager'
+        icon_emoji: ':warning:'
+        title: ':warning: Warning: {{ .GroupLabels.alertname }}'
+        text: |
+          *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+          *Component:* {{ .GroupLabels.component }}
+          *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+        send_resolved: true
+
+  # Business team receiver
+  - name: 'business-team'
+    email_configs:
+      - to: '${ALERT_EMAIL_BUSINESS:business@retail.example.com}'
+        headers:
+          Subject: '[Business Alert] {{ .GroupLabels.alertname }}'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL:}'
+        channel: '${SLACK_CHANNEL_BUSINESS:#business-alerts}'
+        username: 'AlertManager'
+        icon_emoji: ':chart_with_downwards_trend:'
+        title: 'Business Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+          *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+
+  # DevOps team receiver
+  - name: 'devops-team'
+    email_configs:
+      - to: '${ALERT_EMAIL_DEVOPS:devops@retail.example.com}'
+        headers:
+          Subject: '[Infrastructure] {{ .GroupLabels.alertname }}'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL:}'
+        channel: '${SLACK_CHANNEL_DEVOPS:#devops-alerts}'
+        username: 'AlertManager'
+        icon_emoji: ':gear:'
+        title: 'Infrastructure Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          *Summary:* {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}
+          *Component:* {{ .GroupLabels.component }}
+          *Description:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+        send_resolved: true
