@@ -176,6 +176,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Apache Commons Lang3 - override version for compatibility with commons-compress 1.28.0 -->
+        <!-- commons-compress 1.28.0 (used by embedded MongoDB) requires commons-lang3 >= 3.14.0 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+        </dependency>
+
         <!-- ByteBuddy override for Java 25 support (Mockito dependency) -->
         <dependency>
             <groupId>net.bytebuddy</groupId>
