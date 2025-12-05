@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import EmailTemplateCustomization from './EmailTemplateCustomization';
 
@@ -266,8 +266,8 @@ describe('EmailTemplateCustomization', () => {
         id: 'test',
         name: 'Test Template',
         subject: 'Test Subject',
-        htmlBody: '<p>Test</p>',
-        textBody: 'Test',
+        htmlContent: '<p>Test</p>',
+        textContent: 'Test',
         category: 'marketing' as const,
         variables: [],
         isDefault: false, // This makes the reset button appear
@@ -291,8 +291,8 @@ describe('EmailTemplateCustomization', () => {
         id: 'test',
         name: 'Test Template',
         subject: 'Test Subject',
-        htmlBody: '<p>Test</p>',
-        textBody: 'Test',
+        htmlContent: '<p>Test</p>',
+        textContent: 'Test',
         category: 'marketing' as const,
         variables: [],
         isDefault: false, // Makes reset button visible

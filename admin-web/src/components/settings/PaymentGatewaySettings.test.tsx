@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PaymentGatewaySettings, {
@@ -7,7 +7,7 @@ import PaymentGatewaySettings, {
 
 describe('PaymentGatewaySettings', () => {
   let onSave: ReturnType<typeof vi.fn>;
-  let onTestConnection: ReturnType<typeof vi.fn>;
+  let onTestConnection: Mock<[gateway: 'paypal' | 'stripe'], Promise<{ success: boolean; message: string }>>;
 
   beforeEach(() => {
     onSave = vi.fn();

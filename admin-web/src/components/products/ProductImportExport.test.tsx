@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ProductImportExport, {
-  Product,
   ImportResult,
 } from './ProductImportExport';
+import type { Product } from './ProductImportExport';
 
 describe('ProductImportExport', () => {
   let onExport: ReturnType<typeof vi.fn>;
-  let onImport: ReturnType<typeof vi.fn>;
+  let onImport: Mock<[products: Product[]], Promise<ImportResult>>;
 
   beforeEach(() => {
     onExport = vi.fn();

@@ -209,16 +209,6 @@ class ErrorTracker {
   }
 
   /**
-   * Get current user context
-   */
-  private getUserContext(): Partial<ErrorContext> {
-    return {
-      userId: sessionStorage.getItem('error_tracker_user_id') || undefined,
-      tenantId: sessionStorage.getItem('error_tracker_tenant_id') || undefined,
-    };
-  }
-
-  /**
    * Track a page view
    */
   trackPageView(pageName: string, properties?: Record<string, any>): void {
