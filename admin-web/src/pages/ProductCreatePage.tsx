@@ -1,10 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import { ProductForm } from '../components/ProductForm';
 
+interface ProductFormData {
+  name: string;
+  sku: string;
+  description: string;
+  price: string;
+  currency: string;
+  stock: string;
+  category: string[];
+  status: 'ACTIVE' | 'INACTIVE' | 'DISCONTINUED';
+}
+
 export default function ProductCreatePage() {
   const navigate = useNavigate();
 
-  const handleSubmit = (data: Record<string, unknown>) => {
+  const handleSubmit = (data: ProductFormData) => {
     console.log('Creating product:', data);
     // TODO: API call to create product
     // After successful creation, navigate to products list

@@ -56,7 +56,7 @@ export default function BulkProductOperations({
   const [bulkAction, setBulkAction] = useState<string>('');
   const [bulkUpdateField, setBulkUpdateField] = useState<string>('');
   const [bulkUpdateValue, setBulkUpdateValue] = useState<string>('');
-  const [priceAdjustmentType, setPriceAdjustmentType] = useState<'set' | 'increase' | 'decrease'>('set');
+  const [priceAdjustmentType, setPriceAdjustmentType] = useState<'set' | 'increase' | 'decrease' | 'percentage'>('set');
   const [priceAdjustmentValue, setPriceAdjustmentValue] = useState<string>('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');

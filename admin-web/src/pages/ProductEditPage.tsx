@@ -2,10 +2,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ProductForm } from '../components/ProductForm';
 import { useState, useEffect } from 'react';
 
+interface ProductFormData {
+  name: string;
+  sku: string;
+  description: string;
+  price: string;
+  currency: string;
+  stock: string;
+  category: string[];
+  status: 'ACTIVE' | 'INACTIVE' | 'DISCONTINUED';
+}
+
 export default function ProductEditPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Record<string, unknown> | null>(null);
+  const [product, setProduct] = useState<Partial<ProductFormData> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +37,7 @@ export default function ProductEditPage() {
     }, 500);
   }, [id]);
 
-  const handleSubmit = (data: Record<string, unknown>) => {
+  const handleSubmit = (data: ProductFormData) => {
     console.log('Updating product:', id, data);
     // TODO: API call to update product
     navigate('/products');
@@ -54,7 +65,7 @@ export default function ProductEditPage() {
       </div>
 
       <ProductForm
-        initialData={product}
+        initialData={product ?? undefined}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isEditing

@@ -348,7 +348,7 @@ export default function UserManagement({
               <Label htmlFor="role">Role</Label>
               <Select
                 value={newUser.role}
-                onValueChange={(value: string) => setNewUser({ ...newUser, role: value })}
+                onValueChange={(value: string) => setNewUser({ ...newUser, role: value as 'ADMIN' | 'STAFF' | 'CUSTOMER' })}
               >
                 <SelectTrigger data-testid="new-role">
                   <SelectValue />
@@ -423,7 +423,7 @@ export default function UserManagement({
                 <Select
                   value={editingUser.role}
                   onValueChange={(value: string) =>
-                    setEditingUser({ ...editingUser, role: value })
+                    setEditingUser({ ...editingUser, role: value as 'ADMIN' | 'STAFF' | 'CUSTOMER' })
                   }
                 >
                   <SelectTrigger data-testid="edit-role">
@@ -441,7 +441,7 @@ export default function UserManagement({
                 <Select
                   value={editingUser.status}
                   onValueChange={(value: string) =>
-                    setEditingUser({ ...editingUser, status: value })
+                    setEditingUser({ ...editingUser, status: value as 'ACTIVE' | 'SUSPENDED' | 'INACTIVE' })
                   }
                 >
                   <SelectTrigger data-testid="edit-status">

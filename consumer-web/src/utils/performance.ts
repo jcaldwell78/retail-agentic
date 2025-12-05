@@ -181,7 +181,7 @@ class PerformanceMonitor {
     // In production, send to your analytics service
     // e.g., Google Analytics, DataDog, etc.
     if (typeof window !== 'undefined' && (window as { gtag?: (...args: unknown[]) => void }).gtag) {
-      (window as { gtag: (...args: unknown[]) => void }).gtag('event', 'performance_metric', {
+      (window as unknown as { gtag: (...args: unknown[]) => void }).gtag('event', 'performance_metric', {
         metric_name: metric.name,
         metric_value: metric.value,
         ...metric.metadata,
@@ -273,9 +273,16 @@ export function getNetworkInfo(): {
 } | null {
   if (typeof navigator === 'undefined') return null;
 
-  const connection = (navigator as { connection?: unknown; mozConnection?: unknown; webkitConnection?: unknown }).connection ||
-                     (navigator as { connection?: unknown; mozConnection?: unknown; webkitConnection?: unknown }).mozConnection ||
-                     (navigator as { connection?: unknown; mozConnection?: unknown; webkitConnection?: unknown }).webkitConnection;
+  interface NetworkInformation {
+    effectiveType?: string;
+    downlink?: number;
+    rtt?: number;
+    saveData?: boolean;
+  }
+
+  const connection = (navigator as { connection?: NetworkInformation; mozConnection?: NetworkInformation; webkitConnection?: NetworkInformation }).connection ||
+                     (navigator as { connection?: NetworkInformation; mozConnection?: NetworkInformation; webkitConnection?: NetworkInformation }).mozConnection ||
+                     (navigator as { connection?: NetworkInformation; mozConnection?: NetworkInformation; webkitConnection?: NetworkInformation }).webkitConnection;
 
   if (!connection) return null;
 

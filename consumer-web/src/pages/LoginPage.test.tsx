@@ -256,7 +256,7 @@ describe('LoginPage - Loading State', () => {
     });
 
     // Resolve the promise
-    resolveLogin();
+    resolveLogin?.(undefined);
   });
 
   it('should disable form inputs during loading', async () => {
@@ -276,7 +276,7 @@ describe('LoginPage - Loading State', () => {
       expect(screen.getByRole('button', { name: /Signing in/ })).toBeDisabled();
     });
 
-    resolveLogin();
+    resolveLogin?.(undefined);
   });
 });
 

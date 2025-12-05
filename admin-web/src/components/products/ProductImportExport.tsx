@@ -104,7 +104,7 @@ export default function ProductImportExport({
         }
       });
 
-      products.push(product);
+      products.push(product as unknown as Product);
     }
 
     return products;

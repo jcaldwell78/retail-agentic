@@ -409,7 +409,7 @@ describe('RegisterPage - Loading State', () => {
       expect(screen.getByText('Creating account...')).toBeInTheDocument();
     });
 
-    resolveRegister();
+    resolveRegister?.(undefined);
   });
 
   it('should disable form inputs during loading', async () => {
@@ -430,7 +430,7 @@ describe('RegisterPage - Loading State', () => {
       expect(screen.getByRole('button', { name: /Creating account/ })).toBeDisabled();
     });
 
-    resolveRegister();
+    resolveRegister?.(undefined);
   });
 });
 
