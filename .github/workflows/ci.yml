@@ -95,6 +95,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install Rollup binaries (workaround for npm workspace bug)
+        run: |
+          cd consumer-web
+          npm install --no-save @rollup/rollup-linux-x64-gnu
+          cd ../admin-web
+          npm install --no-save @rollup/rollup-linux-x64-gnu
+
       - name: Type check
         working-directory: ./consumer-web
         run: npm run type-check
@@ -134,6 +141,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Install Rollup binaries (workaround for npm workspace bug)
+        run: |
+          cd consumer-web
+          npm install --no-save @rollup/rollup-linux-x64-gnu
+          cd ../admin-web
+          npm install --no-save @rollup/rollup-linux-x64-gnu
 
       - name: Type check
         working-directory: ./admin-web
