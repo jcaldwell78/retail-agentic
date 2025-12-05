@@ -83,10 +83,11 @@ describe('NotificationCenter', () => {
 
     await user.click(screen.getByTestId('notification-bell'));
 
-    const notifications = screen.getAllByTestId(/notification-/);
-    await user.click(notifications[0]);
+    // Click an unread notification (id '1' is unread)
+    const unreadNotification = screen.getByTestId('notification-1');
+    await user.click(unreadNotification);
 
-    expect(onMarkAsRead).toHaveBeenCalled();
+    expect(onMarkAsRead).toHaveBeenCalledWith('1');
   });
 
   it('calls onNotificationClick when notification is clicked', async () => {
@@ -97,13 +98,14 @@ describe('NotificationCenter', () => {
 
     await user.click(screen.getByTestId('notification-bell'));
 
-    const notifications = screen.getAllByTestId(/notification-/);
-    await user.click(notifications[0]);
+    const notification = screen.getByTestId('notification-1');
+    await user.click(notification);
 
     expect(onNotificationClick).toHaveBeenCalledWith(
       expect.objectContaining({
-        type: expect.any(String),
-        title: expect.any(String),
+        id: '1',
+        type: 'order',
+        title: 'New Order Received',
       })
     );
   });
@@ -158,8 +160,8 @@ describe('NotificationCenter', () => {
 
     await user.click(screen.getByTestId('notification-bell'));
 
-    const notifications = screen.getAllByTestId(/notification-/);
-    expect(notifications.length).toBeLessThanOrEqual(2);
+    const notifications = screen.getAllByTestId(/^notification-\d+$/);
+    expect(notifications.length).toBe(2);
   });
 
   it('shows important notifications with red badge', () => {
@@ -176,7 +178,8 @@ describe('NotificationCenter', () => {
 
     await user.click(screen.getByTestId('notification-bell'));
 
-    expect(screen.getByText(/ago|Just now/)).toBeInTheDocument();
+    const timestamps = screen.getAllByText(/ago|Just now/);
+    expect(timestamps.length).toBeGreaterThan(0);
   });
 
   it('shows empty state when no notifications', async () => {
@@ -205,7 +208,7 @@ describe('NotificationCenter', () => {
 
   it('closes dropdown when clicking outside', async () => {
     const user = userEvent.setup();
-    render(
+    const { container } = render(
       <div>
         <NotificationCenter />
         <div data-testid="outside">Outside</div>
@@ -215,7 +218,12 @@ describe('NotificationCenter', () => {
     await user.click(screen.getByTestId('notification-bell'));
     expect(screen.getByTestId('notification-dropdown')).toBeInTheDocument();
 
-    await user.click(screen.getByTestId('outside'));
+    // Click on the overlay backdrop that closes on outside click
+    const backdrop = container.querySelector('.fixed.inset-0.z-40');
+    if (backdrop) {
+      await user.click(backdrop as Element);
+    }
+
     expect(screen.queryByTestId('notification-dropdown')).not.toBeInTheDocument();
   });
 

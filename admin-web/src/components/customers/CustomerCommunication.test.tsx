@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CustomerCommunication, { CommunicationTemplate, CommunicationCampaign } from './CustomerCommunication';
 
@@ -93,8 +93,10 @@ describe('CustomerCommunication', () => {
   it('displays campaign status badges', () => {
     render(<CustomerCommunication campaigns={mockCampaigns} />);
 
-    expect(screen.getByText('Sent')).toBeInTheDocument();
-    expect(screen.getByText('Draft')).toBeInTheDocument();
+    const sentBadges = screen.getAllByText('Sent');
+    expect(sentBadges.length).toBeGreaterThan(0);
+    const draftBadges = screen.getAllByText('Draft');
+    expect(draftBadges.length).toBeGreaterThan(0);
   });
 
   it('shows send button for draft campaigns', () => {
@@ -151,6 +153,10 @@ describe('CustomerCommunication', () => {
     await user.click(screen.getByTestId('templates-tab'));
     await user.click(screen.getByTestId('create-template-btn'));
 
+    await waitFor(() => {
+      expect(screen.getByTestId('create-template-dialog')).toBeInTheDocument();
+    });
+
     await user.type(screen.getByTestId('template-name'), 'Test Template');
     await user.type(screen.getByTestId('template-subject'), 'Test Subject');
     await user.type(screen.getByTestId('template-body'), 'Test body content');
@@ -172,6 +178,10 @@ describe('CustomerCommunication', () => {
 
     await user.click(screen.getByTestId('templates-tab'));
     await user.click(screen.getByTestId('create-template-btn'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-template-dialog')).toBeInTheDocument();
+    });
 
     expect(screen.getByTestId('save-template')).toBeDisabled();
 
@@ -319,9 +329,13 @@ describe('CustomerCommunication', () => {
     await user.click(screen.getByTestId('templates-tab'));
     await user.click(screen.getByTestId('create-template-btn'));
 
+    await waitFor(() => {
+      expect(screen.getByTestId('create-template-dialog')).toBeInTheDocument();
+    });
+
     await user.selectOptions(screen.getByTestId('template-type'), 'sms');
     await user.type(screen.getByTestId('template-name'), 'SMS Template');
-    await user.type(screen.getByTestId('template-subject'), 'Subject');
+    // SMS doesn't have subject field, so skip it
     await user.type(screen.getByTestId('template-body'), 'SMS content');
 
     await user.click(screen.getByTestId('save-template'));
@@ -341,6 +355,10 @@ describe('CustomerCommunication', () => {
 
     await user.click(screen.getByTestId('templates-tab'));
     await user.click(screen.getByTestId('create-template-btn'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('create-template-dialog')).toBeInTheDocument();
+    });
 
     await user.selectOptions(screen.getByTestId('template-category'), 'notification');
     await user.type(screen.getByTestId('template-name'), 'Test Template');
@@ -362,7 +380,9 @@ describe('CustomerCommunication', () => {
 
     await user.click(screen.getByTestId('templates-tab'));
 
-    expect(screen.getByTestId('template-1')).toHaveTextContent('1/1/2024');
+    const template1 = screen.getByTestId('template-1');
+    const expectedDate = new Date('2024-01-01').toLocaleDateString();
+    expect(template1).toHaveTextContent(expectedDate);
   });
 
   it('shows campaign scheduled date when applicable', () => {
@@ -379,7 +399,9 @@ describe('CustomerCommunication', () => {
 
     render(<CustomerCommunication campaigns={[scheduledCampaign]} />);
 
-    expect(screen.getByTestId('campaign-3')).toHaveTextContent('12/25/2024');
+    const campaign3 = screen.getByTestId('campaign-3');
+    const expectedDate = new Date('2024-12-25').toLocaleDateString();
+    expect(campaign3).toHaveTextContent(expectedDate);
   });
 
   it('handles campaign with no segment selected', async () => {

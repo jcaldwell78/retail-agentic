@@ -233,29 +233,55 @@ describe('Performance Utilities', () => {
     it('preloads images successfully', async () => {
       const urls = ['/image1.jpg', '/image2.jpg'];
 
+      // Mock the Image constructor
+      const mockImages: HTMLImageElement[] = [];
+      const originalImage = global.Image;
+
+      (global as any).Image = class MockImage {
+        onload: (() => void) | null = null;
+        onerror: (() => void) | null = null;
+        src: string = '';
+
+        constructor() {
+          mockImages.push(this as any);
+          // Simulate immediate load
+          setTimeout(() => {
+            if (this.onload) this.onload();
+          }, 0);
+        }
+      };
+
       const promise = preloadImages(urls);
-
-      // Simulate successful image loads
-      const images = document.querySelectorAll('img');
-      images.forEach(img => {
-        img.dispatchEvent(new Event('load'));
-      });
-
       await expect(promise).resolves.toBeDefined();
+
+      // Restore original Image
+      global.Image = originalImage;
     });
 
     it('rejects when image fails to load', async () => {
       const urls = ['/invalid.jpg'];
 
+      // Mock the Image constructor to fail
+      const originalImage = global.Image;
+
+      (global as any).Image = class MockImage {
+        onload: (() => void) | null = null;
+        onerror: (() => void) | null = null;
+        src: string = '';
+
+        constructor() {
+          // Simulate immediate error
+          setTimeout(() => {
+            if (this.onerror) this.onerror();
+          }, 0);
+        }
+      };
+
       const promise = preloadImages(urls);
-
-      // Simulate image error
-      setTimeout(() => {
-        const img = document.querySelector('img');
-        img?.dispatchEvent(new Event('error'));
-      }, 0);
-
       await expect(promise).rejects.toThrow();
+
+      // Restore original Image
+      global.Image = originalImage;
     });
 
     it('returns empty array for empty input', async () => {

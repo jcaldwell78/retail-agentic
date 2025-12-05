@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {/* Hero Section */}
       <section
         className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white"
@@ -60,20 +60,20 @@ export default function HomePage() {
                     <span className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium mb-4">
                       Limited Time Offer
                     </span>
-                    <h3 className="text-3xl md:text-4xl font-bold mb-3">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-3">
                       Summer Sale
-                    </h3>
+                    </h2>
                     <p className="text-lg mb-6 text-orange-50">
                       Up to 50% off on selected items
                     </p>
                     <span className="inline-flex items-center gap-2 font-semibold group-hover:gap-3 transition-all">
                       Shop Now
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </span>
                   </div>
-                  <div className="absolute right-0 bottom-0 opacity-20 text-8xl">
+                  <div className="absolute right-0 bottom-0 opacity-20 text-8xl" aria-hidden="true">
                     🎉
                   </div>
                 </div>
@@ -88,20 +88,20 @@ export default function HomePage() {
                     <span className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium mb-4">
                       Just Arrived
                     </span>
-                    <h3 className="text-3xl md:text-4xl font-bold mb-3">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-3">
                       New Collection
-                    </h3>
+                    </h2>
                     <p className="text-lg mb-6 text-blue-50">
                       Discover the latest trends
                     </p>
                     <span className="inline-flex items-center gap-2 font-semibold group-hover:gap-3 transition-all">
                       Explore Now
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </span>
                   </div>
-                  <div className="absolute right-0 bottom-0 opacity-20 text-8xl">
+                  <div className="absolute right-0 bottom-0 opacity-20 text-8xl" aria-hidden="true">
                     ✨
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export default function HomePage() {
                     <div className={`${category.color} w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-4`}>
                       {category.icon}
                     </div>
-                    <h3 className="font-semibold">{category.name}</h3>
+                    <p className="font-semibold">{category.name}</p>
                   </CardContent>
                 </Card>
               </Link>
@@ -151,7 +151,7 @@ export default function HomePage() {
             {[1, 2, 3, 4].map((item) => (
               <Card key={item} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="aspect-square bg-gray-200 flex items-center justify-center">
-                  <span className="text-4xl">📦</span>
+                  <span className="text-4xl" aria-hidden="true">📦</span>
                 </div>
                 <CardContent className="p-4">
                   <h3 className="font-semibold mb-2">Product Name {item}</h3>
@@ -172,29 +172,29 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4" aria-hidden="true">
                 🚚
               </div>
-              <h3 className="font-semibold text-lg mb-2">Free Shipping</h3>
+              <h2 className="font-semibold text-lg mb-2">Free Shipping</h2>
               <p className="text-gray-600">On orders over $50</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4" aria-hidden="true">
                 🔒
               </div>
-              <h3 className="font-semibold text-lg mb-2">Secure Payment</h3>
+              <h2 className="font-semibold text-lg mb-2">Secure Payment</h2>
               <p className="text-gray-600">100% secure transactions</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4" aria-hidden="true">
                 🔄
               </div>
-              <h3 className="font-semibold text-lg mb-2">Easy Returns</h3>
+              <h2 className="font-semibold text-lg mb-2">Easy Returns</h2>
               <p className="text-gray-600">30-day return policy</p>
             </div>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

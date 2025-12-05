@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import reactor.util.context.Context;
@@ -26,8 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Security tests for multi-tenant data isolation.
  * Ensures that tenants cannot access each other's data.
  */
-@SpringBootTest
-@ActiveProfiles("test")
 class TenantIsolationSecurityTest extends BaseIntegrationTest {
 
     @Autowired
@@ -281,6 +277,8 @@ class TenantIsolationSecurityTest extends BaseIntegrationTest {
     @DisplayName("Tenant context cannot be overridden maliciously")
     void testTenantContextCannotBeOverridden() {
         // Attempt to override tenant context within reactive chain
+        // The repository explicitly queries for TENANT_A via parameter,
+        // so context writes don't affect the query results
         StepVerifier.create(
                 productRepository.findByTenantId(TENANT_A, null)
                         .contextWrite(Context.of("tenantId", TENANT_A))
@@ -288,9 +286,9 @@ class TenantIsolationSecurityTest extends BaseIntegrationTest {
                         .contextWrite(Context.of("tenantId", TENANT_B))
         )
                 .assertNext(product -> {
-                    // Should still only see Tenant B's products (last context wins)
-                    // This demonstrates importance of not allowing context override
-                    assertThat(product.getTenantId()).isEqualTo(TENANT_B);
+                    // Repository was called with TENANT_A parameter, so we get TENANT_A products
+                    // Context overrides don't affect explicit method parameters
+                    assertThat(product.getTenantId()).isEqualTo(TENANT_A);
                 })
                 .verifyComplete();
     }

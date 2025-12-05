@@ -95,8 +95,9 @@ describe('CheckoutPage - Accessibility', () => {
 
     const results = await axe(container, {
       rules: {
-        'aria-invalid-attr': { enabled: true },
         'aria-required-attr': { enabled: true },
+        'aria-required-children': { enabled: true },
+        'aria-required-parent': { enabled: true },
       },
     });
 

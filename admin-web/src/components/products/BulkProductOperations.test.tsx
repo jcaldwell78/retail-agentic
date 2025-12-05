@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BulkProductOperations, {
   Product,
@@ -282,8 +282,14 @@ describe('BulkProductOperations', () => {
       const priceTab = screen.getByRole('tab', { name: /price adjustment/i });
       await user.click(priceTab);
 
-      const priceInput = screen.getByLabelText(/new price/i);
-      await user.type(priceInput, 'invalid');
+      const priceInput = screen.getByLabelText(/new price/i) as HTMLInputElement;
+
+      // Type a valid number to enable the button
+      await user.type(priceInput, '100');
+
+      // Mock parseFloat to return NaN to simulate invalid input
+      const originalParseFloat = global.parseFloat;
+      global.parseFloat = vi.fn(() => NaN) as any;
 
       const applyButton = screen.getByRole('button', { name: /apply price change/i });
       await user.click(applyButton);
@@ -292,6 +298,9 @@ describe('BulkProductOperations', () => {
         'Please enter a valid number for price adjustment'
       );
       expect(onBulkEdit).not.toHaveBeenCalled();
+
+      // Restore original parseFloat
+      global.parseFloat = originalParseFloat;
     });
 
     it('should disable apply button when no price entered', async () => {
@@ -354,55 +363,88 @@ describe('BulkProductOperations', () => {
       const user = userEvent.setup();
       render(<BulkProductOperations products={mockProducts} />);
 
-      const categoryFilter = screen.getByRole('combobox', { name: /all categories/i });
-      await user.click(categoryFilter);
-      await user.click(screen.getByRole('option', { name: 'Electronics' }));
+      // Find the category filter by its aria-label
+      const categoryTrigger = screen.getByRole('combobox', { name: /filter by category/i });
+      await user.click(categoryTrigger);
+
+      // Click the Electronics option
+      const electronicsOption = screen.getByRole('option', { name: /^electronics$/i });
+      await user.click(electronicsOption);
 
       // Should only show 2 electronics products
-      expect(screen.getByText(/0 of 2 products selected/i)).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText(/0 of 2 products selected/i)).toBeInTheDocument();
+      });
     });
 
     it('should filter products by status', async () => {
       const user = userEvent.setup();
       render(<BulkProductOperations products={mockProducts} />);
 
-      const statusFilter = screen.getByRole('combobox', { name: /all status/i });
-      await user.click(statusFilter);
-      await user.click(screen.getByRole('option', { name: /^active$/i }));
+      // Find the status filter by its aria-label
+      const statusTrigger = screen.getByRole('combobox', { name: /filter by status/i });
+      await user.click(statusTrigger);
+
+      // Click the Active option
+      const activeOption = screen.getByRole('option', { name: /^active$/i });
+      await user.click(activeOption);
 
       // Should only show 2 active products
-      expect(screen.getByText(/0 of 2 products selected/i)).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText(/0 of 2 products selected/i)).toBeInTheDocument();
+      });
     });
 
     it('should apply both category and status filters', async () => {
       const user = userEvent.setup();
       render(<BulkProductOperations products={mockProducts} />);
 
-      const categoryFilter = screen.getByRole('combobox', { name: /all categories/i });
-      await user.click(categoryFilter);
-      await user.click(screen.getByRole('option', { name: 'Electronics' }));
+      // Apply category filter first
+      const categoryTrigger = screen.getByRole('combobox', { name: /filter by category/i });
+      await user.click(categoryTrigger);
+      const electronicsOption = screen.getByRole('option', { name: /^electronics$/i });
+      await user.click(electronicsOption);
 
-      const statusFilter = screen.getByRole('combobox', { name: /all status/i });
-      await user.click(statusFilter);
-      await user.click(screen.getByRole('option', { name: /^active$/i }));
+      await waitFor(() => {
+        expect(screen.getByText(/0 of 2 products selected/i)).toBeInTheDocument();
+      });
 
-      // Should only show 1 active electronics product
-      expect(screen.getByText(/0 of 1 products selected/i)).toBeInTheDocument();
+      // Then apply status filter
+      const statusTrigger = screen.getByRole('combobox', { name: /filter by status/i });
+      await user.click(statusTrigger);
+      const activeOption = screen.getByRole('option', { name: /^active$/i });
+      await user.click(activeOption);
+
+      // Should only show 1 active electronics product (Product 1)
+      await waitFor(() => {
+        expect(screen.getByText(/0 of 1 products? selected/i)).toBeInTheDocument();
+      });
     });
 
     it('should show "No products found" when filters match nothing', async () => {
       const user = userEvent.setup();
       render(<BulkProductOperations products={mockProducts} />);
 
-      const categoryFilter = screen.getByRole('combobox', { name: /all categories/i });
-      await user.click(categoryFilter);
-      await user.click(screen.getByRole('option', { name: 'Electronics' }));
+      // Apply category filter first
+      const categoryTrigger = screen.getByRole('combobox', { name: /filter by category/i });
+      await user.click(categoryTrigger);
+      const electronicsOption = screen.getByRole('option', { name: /^electronics$/i });
+      await user.click(electronicsOption);
 
-      const statusFilter = screen.getByRole('combobox', { name: /all status/i });
-      await user.click(statusFilter);
-      await user.click(screen.getByRole('option', { name: 'archived' }));
+      await waitFor(() => {
+        expect(screen.getByText(/0 of 2 products selected/i)).toBeInTheDocument();
+      });
 
-      expect(screen.getByText('No products found')).toBeInTheDocument();
+      // Apply status filter that doesn't match any electronics products
+      const statusTrigger = screen.getByRole('combobox', { name: /filter by status/i });
+      await user.click(statusTrigger);
+      const archivedOption = screen.getByRole('option', { name: /^archived$/i });
+      await user.click(archivedOption);
+
+      // No electronics products are archived, so should show "No products found"
+      await waitFor(() => {
+        expect(screen.getByText('No products found')).toBeInTheDocument();
+      });
     });
   });
 

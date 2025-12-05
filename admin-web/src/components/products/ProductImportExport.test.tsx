@@ -57,13 +57,15 @@ describe('ProductImportExport', () => {
       global.URL.revokeObjectURL = revokeObjectURLMock;
 
       const clickMock = vi.fn();
+      // Store original createElement to avoid infinite recursion
+      const originalCreateElement = document.createElement.bind(document);
       const createElementSpy = vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
         if (tagName === 'a') {
-          const link = document.createElement('a') as HTMLAnchorElement;
+          const link = originalCreateElement('a') as HTMLAnchorElement;
           link.click = clickMock;
           return link;
         }
-        return document.createElement(tagName);
+        return originalCreateElement(tagName);
       });
 
       const downloadButton = screen.getByRole('button', { name: /download template/i });

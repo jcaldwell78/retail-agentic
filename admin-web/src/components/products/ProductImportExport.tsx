@@ -235,8 +235,8 @@ Another Product,SKU-002,Clothing,29.99,50,active,Another sample product`;
                                 <TableCell>{product.name}</TableCell>
                                 <TableCell>{product.sku}</TableCell>
                                 <TableCell>{product.category}</TableCell>
-                                <TableCell>${product.price.toFixed(2)}</TableCell>
-                                <TableCell>{product.stock}</TableCell>
+                                <TableCell>${product.price?.toFixed(2) ?? '0.00'}</TableCell>
+                                <TableCell>{product.stock ?? 0}</TableCell>
                                 <TableCell>
                                   <Badge variant={product.status === 'active' ? 'default' : 'secondary'}>
                                     {product.status}

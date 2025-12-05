@@ -49,7 +49,7 @@ export default function ProductsPage() {
       <div className="container mx-auto max-w-7xl">
         <header className="mb-8 flex items-center justify-between">
           <div>
-            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground" aria-label="Back to Dashboard">
               ← Back to Dashboard
             </Link>
             <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground">
@@ -59,18 +59,18 @@ export default function ProductsPage() {
               Manage your product catalog
             </p>
           </div>
-          <Button>Add Product</Button>
+          <Button aria-label="Add new product">Add Product</Button>
         </header>
 
         <Card>
           <CardHeader>
-            <CardTitle>Product List</CardTitle>
+            <CardTitle as="h2">Product List</CardTitle>
             <CardDescription>
               View and manage all products in your catalog
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
+            <Table aria-label="Products table">
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -91,17 +91,17 @@ export default function ProductsPage() {
                     <TableCell>${product.price.toFixed(2)}</TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell>
-                      <Badge variant={product.status === 'Active' ? 'success' : 'warning'}>
+                      <Badge variant={product.status === 'Active' ? 'success' : 'warning'} aria-label={`Product status: ${product.status}`}>
                         {product.status}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="icon" aria-label={`Edit ${product.name}`}>
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-4 w-4" aria-hidden="true" />
                         </Button>
                         <Button variant="ghost" size="icon" aria-label={`Delete ${product.name}`}>
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
                         </Button>
                       </div>
                     </TableCell>

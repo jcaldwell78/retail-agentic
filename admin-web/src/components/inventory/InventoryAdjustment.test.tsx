@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import InventoryAdjustment from './InventoryAdjustment';
 
@@ -34,11 +34,23 @@ describe('InventoryAdjustment', () => {
     const user = userEvent.setup();
     render(<InventoryAdjustment item={mockItem} />);
 
-    await user.click(screen.getByTestId('type-add'));
-    expect(screen.getByTestId('type-add')).toHaveClass(/default/);
+    // Initially, 'set' should be selected (variant='default')
+    const setButton = screen.getByTestId('type-set');
+    expect(setButton.className).toContain('bg-primary');
 
+    // Click 'add' button
+    await user.click(screen.getByTestId('type-add'));
+    const addButton = screen.getByTestId('type-add');
+    expect(addButton.className).toContain('bg-primary');
+    // Set button should now be outline
+    expect(setButton.className).not.toContain('bg-primary');
+
+    // Click 'subtract' button
     await user.click(screen.getByTestId('type-subtract'));
-    expect(screen.getByTestId('type-subtract')).toHaveClass(/default/);
+    const subtractButton = screen.getByTestId('type-subtract');
+    expect(subtractButton.className).toContain('bg-primary');
+    // Add button should now be outline
+    expect(addButton.className).not.toContain('bg-primary');
   });
 
   it('calculates new stock when set type is selected', async () => {
@@ -160,7 +172,6 @@ describe('InventoryAdjustment', () => {
 
   it('shows confirmation after successful adjustment', async () => {
     const user = userEvent.setup();
-    vi.useFakeTimers();
 
     render(<InventoryAdjustment item={mockItem} />);
 
@@ -169,25 +180,27 @@ describe('InventoryAdjustment', () => {
     await user.type(input, '120');
     await user.click(screen.getByTestId('submit-adjustment'));
 
+    // Confirmation should appear immediately after submit
     expect(screen.getByTestId('adjustment-confirmation')).toBeInTheDocument();
     expect(screen.getByText('Inventory Adjusted')).toBeInTheDocument();
-
-    vi.useRealTimers();
   });
 
   it('calls onClose after confirmation timeout', async () => {
-    const user = userEvent.setup();
-    const onClose = vi.fn();
     vi.useFakeTimers();
+    const onClose = vi.fn();
 
     render(<InventoryAdjustment item={mockItem} onClose={onClose} />);
 
-    await user.click(screen.getByTestId('type-set'));
+    // Use fireEvent instead of userEvent to avoid async issues with fake timers
+    fireEvent.click(screen.getByTestId('type-set'));
     const input = screen.getByTestId('adjustment-value');
-    await user.type(input, '120');
-    await user.click(screen.getByTestId('submit-adjustment'));
+    fireEvent.change(input, { target: { value: '120' } });
+    fireEvent.click(screen.getByTestId('submit-adjustment'));
 
-    vi.advanceTimersByTime(2000);
+    // Advance timers past the 2000ms timeout
+    await act(async () => {
+      vi.advanceTimersByTime(2000);
+    });
 
     expect(onClose).toHaveBeenCalled();
     vi.useRealTimers();
@@ -231,9 +244,14 @@ describe('InventoryAdjustment', () => {
 
     render(<InventoryAdjustment item={mockItem} adjustmentHistory={history} />);
 
+    // Initially history is hidden
+    expect(screen.queryByTestId('history-1')).not.toBeInTheDocument();
+
+    // Click to show history
     await user.click(screen.getByTestId('toggle-history'));
     expect(screen.getByTestId('history-1')).toBeInTheDocument();
 
+    // Click to hide history
     await user.click(screen.getByTestId('toggle-history'));
     expect(screen.queryByTestId('history-1')).not.toBeInTheDocument();
   });
@@ -248,10 +266,11 @@ describe('InventoryAdjustment', () => {
     const input = screen.getByTestId('adjustment-value');
     await user.type(input, '10');
 
-    // Should show 0, not -5
+    // Should show 0, not -5 in the preview
     expect(screen.getByText(/New Stock:/)).toBeInTheDocument();
-    const newStockText = screen.getByText(/0/);
-    expect(newStockText).toBeInTheDocument();
+    // The preview shows "New Stock: 0 (-5)" where 0 is the clamped value
+    const previewSection = screen.getByText(/New Stock:/).parentElement;
+    expect(previewSection).toHaveTextContent('0');
   });
 
   it('calls onClose when cancel button is clicked', async () => {
@@ -260,7 +279,8 @@ describe('InventoryAdjustment', () => {
 
     render(<InventoryAdjustment item={mockItem} onClose={onClose} />);
 
-    await user.click(screen.getByText('Cancel'));
+    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    await user.click(cancelButton);
     expect(onClose).toHaveBeenCalled();
   });
 });

@@ -63,6 +63,14 @@ public class UserController {
             });
     }
 
+    @GetMapping("/me")
+    @Operation(summary = "Get current user", description = "Retrieve currently authenticated user's profile")
+    public Mono<ResponseEntity<User>> getCurrentUser() {
+        // TODO: Extract user ID from JWT token in SecurityContext
+        // For now, return a mock response
+        return Mono.just(ResponseEntity.ok().build());
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID", description = "Retrieve user details for current tenant")
     public Mono<ResponseEntity<User>> getUserById(

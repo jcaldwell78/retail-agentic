@@ -318,7 +318,7 @@ export default function BulkProductOperations({
 
             <div className="flex gap-2">
               <Select value={filterCategory} onValueChange={setFilterCategory}>
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-[150px]" aria-label="Filter by category">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
@@ -332,7 +332,7 @@ export default function BulkProductOperations({
               </Select>
 
               <Select value={filterStatus} onValueChange={setFilterStatus}>
-                <SelectTrigger className="w-[120px]">
+                <SelectTrigger className="w-[120px]" aria-label="Filter by status">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent>

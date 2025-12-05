@@ -38,7 +38,7 @@ public class SavedCartService {
         return TenantContext.getTenantId()
             .flatMap(tenantId ->
                 savedCartRepository.findByTenantIdAndUserId(tenantId, userId)
-                    .switchIfEmpty(createSavedCart(tenantId, userId, null))
+                    .switchIfEmpty(Mono.defer(() -> createSavedCart(tenantId, userId, null)))
             );
     }
 
@@ -52,7 +52,7 @@ public class SavedCartService {
         return TenantContext.getTenantId()
             .flatMap(tenantId ->
                 savedCartRepository.findByTenantIdAndSessionId(tenantId, sessionId)
-                    .switchIfEmpty(createSavedCart(tenantId, null, sessionId))
+                    .switchIfEmpty(Mono.defer(() -> createSavedCart(tenantId, null, sessionId)))
             );
     }
 
@@ -260,7 +260,7 @@ public class SavedCartService {
                     savedCartRepository.findByTenantIdAndSessionId(tenantId, sessionId)
                         .defaultIfEmpty(new SavedCart()),
                     savedCartRepository.findByTenantIdAndUserId(tenantId, userId)
-                        .switchIfEmpty(createSavedCart(tenantId, userId, null))
+                        .switchIfEmpty(Mono.defer(() -> createSavedCart(tenantId, userId, null)))
                 )
                 .flatMap(tuple -> {
                     SavedCart sessionCart = tuple.getT1();

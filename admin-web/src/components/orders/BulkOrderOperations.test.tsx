@@ -373,7 +373,8 @@ describe('BulkOrderOperations', () => {
     });
   });
 
-  it('disables tag confirm when input is empty', () => {
+  it('disables tag confirm when input is empty', async () => {
+    const user = userEvent.setup();
     render(
       <BulkOrderOperations
         orders={mockOrders}
@@ -382,7 +383,7 @@ describe('BulkOrderOperations', () => {
       />
     );
 
-    userEvent.click(screen.getByTestId('tag-btn'));
+    await user.click(screen.getByTestId('tag-btn'));
 
     const confirmButton = screen.getByTestId('confirm-tag');
     expect(confirmButton).toBeDisabled();

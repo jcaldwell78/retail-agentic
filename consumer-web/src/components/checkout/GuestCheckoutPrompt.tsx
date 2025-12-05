@@ -25,6 +25,11 @@ export default function GuestCheckoutPrompt({
   const handleGuestCheckout = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!guestEmail.trim()) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+
     if (!validateEmail(guestEmail)) {
       setEmailError('Please enter a valid email address');
       return;
@@ -52,7 +57,7 @@ export default function GuestCheckoutPrompt({
               </p>
             </div>
 
-            <form onSubmit={handleGuestCheckout} data-testid="guest-checkout-form">
+            <form onSubmit={handleGuestCheckout} data-testid="guest-checkout-form" noValidate>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="guest-email" className="block text-sm font-medium mb-2">

@@ -85,7 +85,8 @@ describe('RefundInterface', () => {
     await user.type(qtyInput, '2');
 
     await waitFor(() => {
-      expect(screen.getByText('$199.98')).toBeInTheDocument();
+      const refundAmounts = screen.getAllByText('$199.98');
+      expect(refundAmounts.length).toBeGreaterThan(0);
     });
   });
 
@@ -211,6 +212,11 @@ describe('RefundInterface', () => {
     await user.clear(qtyInput);
     await user.type(qtyInput, '1');
 
+    // Wait for quantity to update
+    await waitFor(() => {
+      expect(qtyInput).toHaveValue(1);
+    });
+
     // Check refund shipping
     await user.click(screen.getByTestId('refund-shipping'));
 
@@ -233,7 +239,7 @@ describe('RefundInterface', () => {
           method: 'original',
         })
       );
-    });
+    }, { timeout: 3000 });
   });
 
   it('shows completion message after successful refund', async () => {

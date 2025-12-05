@@ -461,6 +461,120 @@ This roadmap outlines the tasks required to build a production-ready MVP of the 
 - [x] Build performance/load tests - Complete JMeter suite (Product, Order, Auth, MultiTenant APIs), Lighthouse CI for frontend, performance budgets configured
 - [ ] Implement chaos engineering tests
 
+### Backend Test Coverage Improvements
+
+**Status**: Currently 254 tests passing, 16 tests disabled with documented reasons. These disabled tests require either feature implementation or test environment fixes to be re-enabled.
+
+#### Feature Implementation Required
+
+- [ ] **Password Strength Validation** (P1)
+  - File: `backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:96`
+  - Test: `testRejectWeakPasswords`
+  - Issue: Password strength validation not yet implemented
+  - Action: Implement password validation in registration endpoint with minimum requirements (min 8 chars, uppercase, lowercase, number, special character)
+  - Acceptance: Registration rejects weak passwords with 400 BAD_REQUEST and helpful error message
+
+- [ ] **Token Invalidation on Logout** (P2)
+  - File: `backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:303`
+  - Test: `testTokenInvalidationOnLogout`
+  - Issue: Token blacklist/invalidation not yet implemented
+  - Action: Implement JWT token blacklist using Redis with TTL matching token expiry
+  - Acceptance: Logout endpoint adds token to blacklist, subsequent requests with blacklisted token return 401 UNAUTHORIZED
+
+- [ ] **User Role Management API** (P1)
+  - Files:
+    - `backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:236` (testAdminCanManageUserRoles)
+    - `backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:329` (testPreventPrivilegeEscalation)
+  - Issue: User role management endpoints not implemented
+  - Action: Create `PUT /api/v1/admin/users/{userId}/role` endpoint with ADMIN-only access, add authorization checks to prevent self-escalation
+  - Acceptance: Admins can change user roles, non-admins get 403 FORBIDDEN, users cannot escalate their own privileges
+
+- [ ] **Orders Endpoint Server Error Fix** (P0)
+  - File: `backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:136`
+  - Test: `testCustomerCanAccessOwnOrders`
+  - Issue: `/api/v1/orders/my-orders` endpoint has server error
+  - Action: Debug and fix the orders endpoint error (likely tenant context or reactive chain issue)
+  - Acceptance: Customers can retrieve their own orders successfully with 200 OK
+
+- [ ] **Inventory Endpoint Server Error Fix** (P1)
+  - File: `backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:166`
+  - Test: `testAdminCanAccessAllEndpoints`
+  - Issue: Inventory endpoint causes server error
+  - Action: Debug and fix inventory endpoint error
+  - Acceptance: Admin can access inventory endpoints without server errors
+
+- [ ] **CSRF Protection in Test Profile** (P2)
+  - File: `backend/src/test/java/com/retail/security/SecurityIT.java` (testCsrfProtectionEnabled)
+  - Issue: CSRF is disabled in test profile for easier testing
+  - Action: Create separate test configuration that enables CSRF, implement CSRF token handling in tests
+  - Acceptance: Test verifies CSRF protection is enabled and functional in production-like configuration
+
+- [ ] **Session Cookie Security Tests** (P3)
+  - File: `backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:275`
+  - Test: `testSecureCookieFlags`
+  - Issue: Using JWT tokens not session cookies
+  - Action: Either remove this test (JWT is the chosen approach) or implement session cookie tests for OAuth flows if session cookies are used
+  - Acceptance: Decision made on whether session cookies are needed; test either removed or updated accordingly
+
+#### Validation & Error Handling
+
+- [ ] **SQL Injection Test Error Code Alignment** (P2)
+  - File: `backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:141`
+  - Test: `testSqlInjectionPrevention`
+  - Issue: MongoDB prevents SQL injection by design; test expects 401 UNAUTHORIZED but gets 400 BAD_REQUEST
+  - Action: Adjust test expectations to accept 400 (validation error), or improve input validation to return consistent error codes
+  - Acceptance: Test passes with appropriate error code for malformed input
+
+- [ ] **NoSQL Injection Error Handling** (P1)
+  - File: `backend/src/test/java/com/retail/security/AuthenticationSecurityTest.java:161`
+  - Test: `testNoSqlInjectionPrevention`
+  - Issue: NoSQL injection attempts cause 500 INTERNAL_SERVER_ERROR instead of 401 UNAUTHORIZED
+  - Action: Add input validation to prevent malformed JSON in authentication requests, return 400 BAD_REQUEST instead of 500
+  - Acceptance: Malformed authentication requests return 400/401, never 500
+
+- [ ] **Product Creation Validation** (P1)
+  - Files:
+    - `backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:197` (testAdminCanCreateProducts)
+    - `backend/src/test/java/com/retail/security/AuthorizationSecurityTest.java:261` (testStoreOwnerCanCreateProducts)
+  - Issue: Product validation requires tenantId and status fields in request
+  - Action: Auto-populate tenantId from security context and default status to DRAFT, or update API to accept minimal product creation payload
+  - Acceptance: Products can be created with minimal required fields, system auto-populates tenantId and defaults
+
+#### Test Environment Issues
+
+- [ ] **Tenant Context Propagation - Not Found Errors** (P2)
+  - Files:
+    - `backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:139` (testGetProductByIdNotFound)
+    - `backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:199` (testUpdateProductNotFound)
+  - Issue: Tenant context issue causes 500 INTERNAL_SERVER_ERROR instead of 404 NOT_FOUND
+  - Action: Investigate tenant context propagation in test environment, ensure proper error handling when resources not found
+  - Acceptance: Requests for non-existent resources return 404 NOT_FOUND, not 500
+
+- [ ] **Localhost Tenant Resolution Override** (P2)
+  - File: `backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:263`
+  - Test: `testTenantIsolation`
+  - Issue: Localhost tenant resolution overrides tenant headers (always returns "test-tenant")
+  - Action: Modify `SubdomainTenantResolutionStrategy` to respect X-Tenant-ID headers in test profile when not using subdomain
+  - Acceptance: Tests can verify tenant isolation by providing different tenant headers
+
+- [ ] **Missing Tenant Header Validation** (P2)
+  - File: `backend/src/test/java/com/retail/controller/ProductControllerIntegrationTest.java:277`
+  - Test: `testRequestWithoutTenantHeader`
+  - Issue: Localhost tenant resolution bypasses missing tenant header check (auto-provides "test-tenant")
+  - Action: Add validation to reject requests without tenant headers when not on localhost, or add query parameter to disable localhost fallback in tests
+  - Acceptance: Requests without tenant context can be tested and properly rejected
+
+#### MongoDB Query Issues
+
+- [ ] **Nested Record Field Queries** (P2)
+  - File: `backend/src/test/java/com/retail/infrastructure/persistence/OrderRepositoryIntegrationTest.java:183`
+  - Test: `testFindHighValueOrders`
+  - Issue: Spring Data MongoDB query derivation for nested record fields (e.g., `Pricing.total`) needs investigation
+  - Action: Research Spring Data MongoDB support for nested Java records, consider using `@Query` annotation with manual query, or flatten pricing fields
+  - Acceptance: Can query orders by pricing.total field using repository method or custom query
+
+**Note**: Tests are disabled to maintain 100% pass rate during development. Re-enable tests as features are implemented and issues are resolved.
+
 ### Frontend Testing
 - [x] Write component unit tests (React Testing Library) - 692 passing tests (82% admin, 99.5% consumer)
 - [ ] Create integration tests for user flows

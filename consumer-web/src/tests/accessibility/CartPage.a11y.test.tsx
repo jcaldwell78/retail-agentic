@@ -93,9 +93,9 @@ describe('CartPage - Accessibility', () => {
 
     const results = await axe(container, {
       rules: {
-        'table': { enabled: true },
         'td-headers-attr': { enabled: true },
         'th-has-data-cells': { enabled: true },
+        'scope-attr-valid': { enabled: true },
       },
     });
 

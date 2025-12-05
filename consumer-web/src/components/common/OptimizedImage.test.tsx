@@ -3,10 +3,14 @@ import { render, screen, waitFor } from '@testing-library/react';
 import OptimizedImage from './OptimizedImage';
 
 // Mock IntersectionObserver
+const mockObserve = vi.fn();
+const mockDisconnect = vi.fn();
+const mockUnobserve = vi.fn();
+
 class MockIntersectionObserver {
-  observe = vi.fn();
-  disconnect = vi.fn();
-  unobserve = vi.fn();
+  observe = mockObserve;
+  disconnect = mockDisconnect;
+  unobserve = mockUnobserve;
 }
 
 global.IntersectionObserver = MockIntersectionObserver as any;
@@ -23,10 +27,12 @@ describe('OptimizedImage', () => {
     expect(img).toHaveAttribute('alt', 'Test image');
   });
 
-  it('applies lazy loading by default', () => {
+  it('applies lazy loading by default', async () => {
     render(<OptimizedImage src="/test.jpg" alt="Test" />);
 
-    expect(MockIntersectionObserver.prototype.observe).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockObserve).toHaveBeenCalled();
+    });
   });
 
   it('disables lazy loading when priority is true', () => {

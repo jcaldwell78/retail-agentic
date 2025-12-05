@@ -213,7 +213,9 @@ class TaxCalculationServiceTest {
             service.getEffectiveTaxRate("DE", "19901")
                 .contextWrite(TenantContext.withTenantId("test-tenant"))
         )
-            .expectNext(BigDecimal.ZERO)
+            .assertNext(rate -> {
+                assertThat(rate).isEqualByComparingTo(BigDecimal.ZERO);
+            })
             .verifyComplete();
     }
 

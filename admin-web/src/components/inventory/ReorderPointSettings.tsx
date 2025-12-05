@@ -101,9 +101,11 @@ export default function ReorderPointSettings({
   };
 
   const updateProduct = (productId: string, field: keyof ProductReorderSettings, value: any) => {
+    // Prevent NaN values for numeric fields
+    const sanitizedValue = typeof value === 'number' && isNaN(value) ? 0 : value;
     setProducts(
       products.map((p) =>
-        p.productId === productId ? { ...p, [field]: value } : p
+        p.productId === productId ? { ...p, [field]: sanitizedValue } : p
       )
     );
   };

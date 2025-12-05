@@ -67,7 +67,8 @@ export default function CustomerCommunication({
   });
 
   const handleCreateTemplate = () => {
-    if (!newTemplate.name || !newTemplate.subject) return;
+    if (!newTemplate.name || !newTemplate.body) return;
+    if (newTemplate.type === 'email' && !newTemplate.subject) return;
 
     onCreateTemplate?.(newTemplate);
     setNewTemplate({
@@ -407,7 +408,11 @@ export default function CustomerCommunication({
               <div className="flex gap-2 pt-4">
                 <Button
                   onClick={handleCreateTemplate}
-                  disabled={!newTemplate.name || !newTemplate.subject || !newTemplate.body}
+                  disabled={
+                    !newTemplate.name ||
+                    !newTemplate.body ||
+                    (newTemplate.type === 'email' && !newTemplate.subject)
+                  }
                   className="flex-1"
                   data-testid="save-template"
                 >

@@ -106,7 +106,7 @@ export default function CheckoutPage() {
   const currentStepIndex = steps.findIndex((s) => s.id === currentStep);
 
   return (
-    <div className="min-h-screen bg-gray-50" data-testid="checkout-page">
+    <main className="min-h-screen bg-gray-50" data-testid="checkout-page">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-8">
@@ -279,10 +279,11 @@ export default function CheckoutPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium mb-2">
+                      <label htmlFor="shipping-country" className="block text-sm font-medium mb-2">
                         Country <span className="text-red-600">*</span>
                       </label>
                       <select
+                        id="shipping-country"
                         required
                         value={shippingAddress.country}
                         onChange={(e) =>
@@ -420,10 +421,11 @@ export default function CheckoutPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium mb-2">
+                          <label htmlFor="billing-country" className="block text-sm font-medium mb-2">
                             Country <span className="text-red-600">*</span>
                           </label>
                           <select
+                            id="billing-country"
                             required
                             value={billingAddress.country}
                             onChange={(e) =>
@@ -831,6 +833,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

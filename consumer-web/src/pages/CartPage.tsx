@@ -98,7 +98,7 @@ export default function CartPage() {
   const hasOutOfStock = cartItems.some((item) => !item.inStock);
 
   return (
-    <div className="min-h-screen bg-gray-50" data-testid="cart-page">
+    <main className="min-h-screen bg-gray-50" data-testid="cart-page">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
@@ -165,9 +165,9 @@ export default function CartPage() {
                             to={`/products/${item.productId}`}
                             className="block"
                           >
-                            <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
+                            <p className="text-lg font-semibold text-gray-900 hover:text-blue-600">
                               {item.name}
-                            </h3>
+                            </p>
                           </Link>
 
                           {!item.inStock && (
@@ -201,6 +201,7 @@ export default function CartPage() {
                                 className="w-8 h-8 border border-gray-300 rounded-md hover:bg-gray-100"
                                 data-testid={`decrease-quantity-${item.id}`}
                                 disabled={!item.inStock}
+                                aria-label={`Decrease quantity for ${item.name}`}
                               >
                                 −
                               </button>
@@ -217,6 +218,7 @@ export default function CartPage() {
                                 className="w-8 h-8 border border-gray-300 rounded-md hover:bg-gray-100"
                                 data-testid={`increase-quantity-${item.id}`}
                                 disabled={!item.inStock}
+                                aria-label={`Increase quantity for ${item.name}`}
                               >
                                 +
                               </button>
@@ -261,6 +263,7 @@ export default function CartPage() {
                       className="w-5 h-5 text-red-600 mr-3 mt-0.5"
                       fill="currentColor"
                       viewBox="0 0 20 20"
+                      aria-hidden="true"
                     >
                       <path
                         fillRule="evenodd"
@@ -269,9 +272,9 @@ export default function CartPage() {
                       />
                     </svg>
                     <div>
-                      <h3 className="text-sm font-medium text-red-800">
+                      <p className="text-sm font-medium text-red-800">
                         Some items are out of stock
-                      </h3>
+                      </p>
                       <p className="mt-1 text-sm text-red-700">
                         Please remove out-of-stock items to proceed with checkout.
                       </p>
@@ -307,9 +310,9 @@ export default function CartPage() {
                                 to={`/products/${item.productId}`}
                                 className="block"
                               >
-                                <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
+                                <p className="text-lg font-semibold text-gray-900 hover:text-blue-600">
                                   {item.name}
-                                </h3>
+                                </p>
                               </Link>
 
                               {!item.inStock && (
@@ -499,6 +502,6 @@ export default function CartPage() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

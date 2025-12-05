@@ -60,7 +60,7 @@ export default function OrdersPage() {
     <div className="min-h-screen bg-background p-8">
       <div className="container mx-auto max-w-7xl">
         <header className="mb-8">
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground" aria-label="Back to Dashboard">
             ← Back to Dashboard
           </Link>
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground">
@@ -73,13 +73,13 @@ export default function OrdersPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Order List</CardTitle>
+            <CardTitle as="h2">Order List</CardTitle>
             <CardDescription>
               View all orders and their status
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
+            <Table aria-label="Orders table">
               <TableHeader>
                 <TableRow>
                   <TableHead>Order ID</TableHead>
@@ -100,13 +100,13 @@ export default function OrdersPage() {
                     <TableCell>{order.items}</TableCell>
                     <TableCell>${order.total.toFixed(2)}</TableCell>
                     <TableCell>
-                      <Badge variant={statusVariant[order.status]}>
+                      <Badge variant={statusVariant[order.status]} aria-label={`Order status: ${order.status}`}>
                         {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="icon" aria-label={`View order ${order.id}`}>
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4" aria-hidden="true" />
                       </Button>
                     </TableCell>
                   </TableRow>

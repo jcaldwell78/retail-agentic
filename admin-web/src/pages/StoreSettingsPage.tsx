@@ -94,23 +94,29 @@ export default function StoreSettingsPage() {
   };
 
   const updateShippingSettings = (field: string, value: number) => {
+    // Prevent NaN values
+    const sanitizedValue = isNaN(value) ? 0 : value;
     setSettings({
       ...settings,
-      shipping: { ...settings.shipping, [field]: value },
+      shipping: { ...settings.shipping, [field]: sanitizedValue },
     });
   };
 
   const updateTaxSettings = (field: string, value: boolean | number) => {
+    // Prevent NaN values for numeric fields
+    const sanitizedValue = typeof value === 'number' && isNaN(value) ? 0 : value;
     setSettings({
       ...settings,
-      tax: { ...settings.tax, [field]: value },
+      tax: { ...settings.tax, [field]: sanitizedValue },
     });
   };
 
   const updateNotificationSettings = (field: string, value: boolean | number) => {
+    // Prevent NaN values for numeric fields
+    const sanitizedValue = typeof value === 'number' && isNaN(value) ? 0 : value;
     setSettings({
       ...settings,
-      notifications: { ...settings.notifications, [field]: value },
+      notifications: { ...settings.notifications, [field]: sanitizedValue },
     });
   };
 

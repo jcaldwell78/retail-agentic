@@ -413,7 +413,8 @@ describe('DomainConfiguration', () => {
     render(<DomainConfiguration currentDomains={mockDomains} />);
 
     const domain1 = screen.getByTestId('domain-domain-1');
-    expect(domain1).toHaveTextContent('Added 1/1/2024');
+    // Account for timezone differences - the date could be 12/31/2023 or 1/1/2024 depending on timezone
+    expect(domain1.textContent).toMatch(/Added (12\/31\/2023|1\/1\/2024)/);
   });
 
   it('shows next steps information in add dialog', async () => {

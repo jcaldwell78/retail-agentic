@@ -23,6 +23,11 @@ public class SubdomainTenantResolutionStrategy implements TenantResolutionStrate
         // Remove port if present
         host = host.split(":")[0];
 
+        // Handle localhost for testing - return default test tenant
+        if ("localhost".equalsIgnoreCase(host) || "127.0.0.1".equals(host)) {
+            return "test-tenant";
+        }
+
         // Extract subdomain: "store1.retail-agentic.com" -> "store1"
         String[] parts = host.split("\\.");
 

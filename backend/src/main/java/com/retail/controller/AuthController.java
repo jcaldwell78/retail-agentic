@@ -108,6 +108,15 @@ public class AuthController {
     }
 
     /**
+     * User logout.
+     */
+    @PostMapping("/logout")
+    public Mono<ResponseEntity<Map<String, String>>> logout() {
+        // TODO: Invalidate JWT token (add to blacklist)
+        return Mono.just(ResponseEntity.ok(Map.of("message", "Logged out successfully")));
+    }
+
+    /**
      * User registration.
      */
     @PostMapping("/register")

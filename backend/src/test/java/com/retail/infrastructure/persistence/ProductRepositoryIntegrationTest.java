@@ -6,7 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import reactor.test.StepVerifier;
@@ -22,8 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Integration tests for ProductRepository.
  * Tests tenant-aware repository operations with MongoDB.
  */
-@DataMongoTest
+@SpringBootTest
 @ActiveProfiles("test")
+@Import(com.retail.BaseTestConfiguration.class)
 class ProductRepositoryIntegrationTest {
 
     @Autowired
@@ -216,6 +218,7 @@ class ProductRepositoryIntegrationTest {
         );
 
         String otherTenantId = "other-tenant-002";
+        otherTenantProduct.setTenantId(otherTenantId);
 
         // Save product for other tenant
         productRepository.save(otherTenantProduct)

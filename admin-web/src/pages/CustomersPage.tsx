@@ -70,14 +70,16 @@ export default function CustomersPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               data-testid="customer-search-input"
+              aria-label="Search customers by name or email"
             />
           </div>
-          <Button variant="outline">
+          <Button variant="outline" aria-label="Filter customers">
             <svg
               className="w-4 h-4 mr-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -88,12 +90,13 @@ export default function CustomersPage() {
             </svg>
             Filter
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" aria-label="Export customers data">
             <svg
               className="w-4 h-4 mr-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -110,7 +113,7 @@ export default function CustomersPage() {
       {/* Customer Table */}
       <Card>
         <div className="overflow-x-auto">
-          <table className="w-full" data-testid="customers-table">
+          <table className="w-full" data-testid="customers-table" aria-label="Customers table">
             <thead className="bg-gray-50 border-b">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -176,6 +179,7 @@ export default function CustomersPage() {
                         e.stopPropagation();
                         navigate(`/customers/${customer.id}`);
                       }}
+                      aria-label={`View ${customer.name} details`}
                     >
                       View
                     </Button>
@@ -186,6 +190,7 @@ export default function CustomersPage() {
                         e.stopPropagation();
                         navigate('/orders');
                       }}
+                      aria-label={`View ${customer.name} orders`}
                     >
                       Orders
                     </Button>
@@ -202,6 +207,7 @@ export default function CustomersPage() {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -210,7 +216,7 @@ export default function CustomersPage() {
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">No customers found</h3>
+              <h2 className="mt-4 text-lg font-medium text-gray-900">No customers found</h2>
               <p className="mt-2 text-sm text-gray-500">
                 Try adjusting your search criteria
               </p>
@@ -225,10 +231,10 @@ export default function CustomersPage() {
               Showing 1 to {filteredCustomers.length} of {customers.length} customers
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled>
+              <Button variant="outline" size="sm" disabled aria-label="Go to previous page">
                 Previous
               </Button>
-              <Button variant="outline" size="sm" disabled>
+              <Button variant="outline" size="sm" disabled aria-label="Go to next page">
                 Next
               </Button>
             </div>

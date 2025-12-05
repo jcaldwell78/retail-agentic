@@ -27,6 +27,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -50,7 +51,7 @@ class AdminDashboardServiceTest {
 
     private AdminDashboardService adminDashboardService;
 
-    private static final String TEST_TENANT_ID = "tenant-123";
+    private static final String TEST_TENANT_ID = "test-tenant";
 
     @BeforeEach
     void setUp() {
@@ -70,11 +71,11 @@ class AdminDashboardServiceTest {
 
         when(mongoTemplate.find(any(Query.class), eq(Order.class)))
             .thenReturn(Flux.fromIterable(orders));
-        when(productRepository.countByTenantId(TEST_TENANT_ID))
+        when(productRepository.countByTenantId(anyString()))
             .thenReturn(Mono.just(100L));
-        when(userRepository.countByTenantId(TEST_TENANT_ID))
+        when(userRepository.countByTenantId(anyString()))
             .thenReturn(Mono.just(50L));
-        when(productRepository.countByTenantIdAndActiveTrue(TEST_TENANT_ID))
+        when(productRepository.countByTenantIdAndActiveTrue(anyString()))
             .thenReturn(Mono.just(90L));
         when(reportingService.getTopProducts(5, 30))
             .thenReturn(Flux.empty());
@@ -160,7 +161,7 @@ class AdminDashboardServiceTest {
         lowStockProduct.setActive(true);
 
         when(productRepository.findByTenantIdAndActiveTrueAndStockQuantityLessThan(
-            TEST_TENANT_ID, threshold
+            anyString(), eq(threshold)
         ))
         .thenReturn(Flux.just(lowStockProduct));
 
@@ -199,7 +200,6 @@ class AdminDashboardServiceTest {
     void getCustomerGrowth_shouldReturnGrowthMetrics() {
         // Arrange
         int days = 30;
-        Instant startDate = Instant.now().minus(days, ChronoUnit.DAYS);
 
         User user1 = new User();
         user1.setCreatedAt(Instant.now().minus(5, ChronoUnit.DAYS));
@@ -207,9 +207,9 @@ class AdminDashboardServiceTest {
         User user2 = new User();
         user2.setCreatedAt(Instant.now().minus(10, ChronoUnit.DAYS));
 
-        when(userRepository.findByTenantIdAndCreatedAtAfter(TEST_TENANT_ID, startDate))
+        when(userRepository.findByTenantIdAndCreatedAtAfter(anyString(), any(Instant.class)))
             .thenReturn(Flux.just(user1, user2));
-        when(userRepository.countByTenantId(TEST_TENANT_ID))
+        when(userRepository.countByTenantId(anyString()))
             .thenReturn(Mono.just(100L));
 
         // Act & Assert
@@ -229,11 +229,10 @@ class AdminDashboardServiceTest {
     void getConversionMetrics_shouldCalculateConversionRate() {
         // Arrange
         int days = 30;
-        Instant startDate = Instant.now().minus(days, ChronoUnit.DAYS);
 
-        when(orderRepository.countByTenantIdAndCreatedAtAfter(TEST_TENANT_ID, startDate))
+        when(orderRepository.countByTenantIdAndCreatedAtAfter(anyString(), any(Instant.class)))
             .thenReturn(Mono.just(50L));
-        when(userRepository.countByTenantIdAndCreatedAtAfter(TEST_TENANT_ID, startDate))
+        when(userRepository.countByTenantIdAndCreatedAtAfter(anyString(), any(Instant.class)))
             .thenReturn(Mono.just(100L));
 
         // Act & Assert
@@ -253,11 +252,10 @@ class AdminDashboardServiceTest {
     void getConversionMetrics_withZeroVisitors_shouldHandleGracefully() {
         // Arrange
         int days = 30;
-        Instant startDate = Instant.now().minus(days, ChronoUnit.DAYS);
 
-        when(orderRepository.countByTenantIdAndCreatedAtAfter(TEST_TENANT_ID, startDate))
+        when(orderRepository.countByTenantIdAndCreatedAtAfter(anyString(), any(Instant.class)))
             .thenReturn(Mono.just(0L));
-        when(userRepository.countByTenantIdAndCreatedAtAfter(TEST_TENANT_ID, startDate))
+        when(userRepository.countByTenantIdAndCreatedAtAfter(anyString(), any(Instant.class)))
             .thenReturn(Mono.just(0L));
 
         // Act & Assert

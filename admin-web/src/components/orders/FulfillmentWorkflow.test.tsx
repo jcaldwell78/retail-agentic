@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FulfillmentWorkflow from './FulfillmentWorkflow';
 
@@ -71,7 +71,6 @@ describe('FulfillmentWorkflow', () => {
 
   it('requires tracking number to confirm shipment', async () => {
     const user = userEvent.setup();
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
 
     render(
       <FulfillmentWorkflow
@@ -81,10 +80,15 @@ describe('FulfillmentWorkflow', () => {
     );
 
     await user.click(screen.getByTestId('mark-shipped-btn'));
-    await user.click(screen.getByTestId('confirm-shipped'));
 
-    expect(alertSpy).toHaveBeenCalledWith('Please enter a tracking number');
-    alertSpy.mockRestore();
+    // Wait for the form to appear
+    await waitFor(() => {
+      expect(screen.getByTestId('confirm-shipped')).toBeInTheDocument();
+    });
+
+    // The button should be disabled when tracking number is empty
+    const confirmButton = screen.getByTestId('confirm-shipped');
+    expect(confirmButton).toBeDisabled();
   });
 
   it('calls onStatusUpdate when marking as shipped with valid data', async () => {

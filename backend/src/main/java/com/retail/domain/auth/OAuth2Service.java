@@ -43,26 +43,32 @@ public class OAuth2Service {
      * @return JWT token for authenticated user
      */
     public Mono<String> authenticateWithOAuth2(OAuth2LoginRequest request) {
-        return Mono.fromCallable(() -> OAuth2Provider.fromString(request.getProvider()))
-            .flatMap(provider -> TenantContext.getTenantId()
-                .flatMap(tenantId -> {
-                    logger.info("OAuth2 authentication for provider: {} tenant: {}", provider, tenantId);
+        return Mono.defer(() -> {
+            try {
+                OAuth2Provider provider = OAuth2Provider.fromString(request.getProvider());
+                return TenantContext.getTenantId()
+                    .flatMap(tenantId -> {
+                        logger.info("OAuth2 authentication for provider: {} tenant: {}", provider, tenantId);
 
-                    return fetchUserInfo(provider, request.getAccessToken())
-                        .flatMap(userInfo -> findOrCreateUser(tenantId, provider, userInfo))
-                        .flatMap(user -> {
-                            user.recordLogin();
-                            return userService.updateProfile(user.getId(), user)
-                                .map(updatedUser -> jwtService.generateToken(
-                                    updatedUser.getId(),
-                                    updatedUser.getEmail(),
-                                    updatedUser.getRole().toString(),
-                                    updatedUser.getTenantId()
-                                ));
-                        })
-                        .doOnSuccess(token -> logger.info("OAuth2 authentication successful for tenant: {}", tenantId))
-                        .doOnError(error -> logger.error("OAuth2 authentication failed", error));
-                }));
+                        return fetchUserInfo(provider, request.getAccessToken())
+                            .flatMap(userInfo -> findOrCreateUser(tenantId, provider, userInfo))
+                            .flatMap(user -> {
+                                user.recordLogin();
+                                return userService.updateProfile(user.getId(), user)
+                                    .map(updatedUser -> jwtService.generateToken(
+                                        updatedUser.getId(),
+                                        updatedUser.getEmail(),
+                                        updatedUser.getRole().toString(),
+                                        updatedUser.getTenantId()
+                                    ));
+                            })
+                            .doOnSuccess(token -> logger.info("OAuth2 authentication successful for tenant: {}", tenantId))
+                            .doOnError(error -> logger.error("OAuth2 authentication failed", error));
+                    });
+            } catch (IllegalArgumentException e) {
+                return Mono.error(e);
+            }
+        });
     }
 
     /**

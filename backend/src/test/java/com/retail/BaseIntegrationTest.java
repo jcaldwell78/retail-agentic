@@ -39,7 +39,7 @@ import reactor.util.context.Context;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-@Import({TestRedisConfiguration.class, TestElasticsearchConfiguration.class})
+@Import(BaseTestConfiguration.class)
 public abstract class BaseIntegrationTest {
 
     protected static final String TEST_TENANT_ID = "test-tenant-001";

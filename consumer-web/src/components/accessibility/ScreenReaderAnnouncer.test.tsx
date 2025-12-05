@@ -4,12 +4,9 @@ import { renderHook, act } from '@testing-library/react';
 import { ScreenReaderAnnouncer, useScreenReaderAnnounce } from './ScreenReaderAnnouncer';
 
 describe('ScreenReaderAnnouncer', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should render with polite aria-live by default', () => {
@@ -51,21 +48,17 @@ describe('ScreenReaderAnnouncer', () => {
   });
 
   it('should clear message after specified time', async () => {
-    const { container, rerender } = render(
-      <ScreenReaderAnnouncer message="Initial message" clearAfter={3000} />
+    const { container } = render(
+      <ScreenReaderAnnouncer message="Initial message" clearAfter={100} />
     );
 
     const announcer = container.querySelector('[role="status"]');
     expect(announcer).toHaveTextContent('Initial message');
 
-    // Fast-forward time
-    act(() => {
-      vi.advanceTimersByTime(3000);
-    });
-
+    // Wait for message to clear
     await waitFor(() => {
       expect(announcer).toHaveTextContent('');
-    });
+    }, { timeout: 200 });
   });
 
   it('should update message when prop changes', () => {
@@ -80,28 +73,24 @@ describe('ScreenReaderAnnouncer', () => {
     expect(announcer).toHaveTextContent('Second message');
   });
 
-  it('should not clear message when clearAfter is 0', () => {
+  it('should not clear message when clearAfter is 0', async () => {
     const { container } = render(
       <ScreenReaderAnnouncer message="Persistent message" clearAfter={0} />
     );
 
     const announcer = container.querySelector('[role="status"]');
 
-    act(() => {
-      vi.advanceTimersByTime(10000);
-    });
+    // Wait a bit to ensure it doesn't clear
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     expect(announcer).toHaveTextContent('Persistent message');
   });
 });
 
 describe('useScreenReaderAnnounce', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should provide announce function and message', () => {
@@ -125,39 +114,31 @@ describe('useScreenReaderAnnounce', () => {
     const { result } = renderHook(() => useScreenReaderAnnounce());
 
     act(() => {
-      result.current.announce('Temporary message');
+      result.current.announce('Temporary message', 100);
     });
 
     expect(result.current.message).toBe('Temporary message');
 
-    act(() => {
-      vi.advanceTimersByTime(5000);
-    });
-
     await waitFor(() => {
       expect(result.current.message).toBe('');
-    });
+    }, { timeout: 200 });
   });
 
   it('should clear message after custom time', async () => {
     const { result } = renderHook(() => useScreenReaderAnnounce());
 
     act(() => {
-      result.current.announce('Custom time message', 2000);
+      result.current.announce('Custom time message', 50);
     });
 
     expect(result.current.message).toBe('Custom time message');
 
-    act(() => {
-      vi.advanceTimersByTime(2000);
-    });
-
     await waitFor(() => {
       expect(result.current.message).toBe('');
-    });
+    }, { timeout: 150 });
   });
 
-  it('should not clear message when clearAfter is 0', () => {
+  it('should not clear message when clearAfter is 0', async () => {
     const { result } = renderHook(() => useScreenReaderAnnounce());
 
     act(() => {
@@ -166,52 +147,46 @@ describe('useScreenReaderAnnounce', () => {
 
     expect(result.current.message).toBe('Persistent message');
 
-    act(() => {
-      vi.advanceTimersByTime(10000);
-    });
+    // Wait a bit to ensure it doesn't clear
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     expect(result.current.message).toBe('Persistent message');
   });
 
-  it('should clear previous timeout when new announcement is made', () => {
+  it('should clear previous timeout when new announcement is made', async () => {
     const { result } = renderHook(() => useScreenReaderAnnounce());
 
     act(() => {
-      result.current.announce('First message', 5000);
+      result.current.announce('First message', 200);
     });
 
-    act(() => {
-      vi.advanceTimersByTime(2000);
-    });
+    // Wait a bit but not long enough to clear
+    await new Promise(resolve => setTimeout(resolve, 50));
 
     // Announce new message before first one clears
     act(() => {
-      result.current.announce('Second message', 5000);
+      result.current.announce('Second message', 200);
     });
 
     expect(result.current.message).toBe('Second message');
 
-    // Advance to where first message would have cleared
-    act(() => {
-      vi.advanceTimersByTime(3000);
-    });
+    // Wait until the first message would have cleared
+    await new Promise(resolve => setTimeout(resolve, 170));
 
-    // Should still have second message (total 5000ms not passed for second message)
+    // Should still have second message (total 200ms not passed for second message)
     expect(result.current.message).toBe('Second message');
   });
 
-  it('should cleanup timeout on unmount', () => {
+  it('should cleanup timeout on unmount', async () => {
     const { result, unmount } = renderHook(() => useScreenReaderAnnounce());
 
     act(() => {
-      result.current.announce('Message before unmount');
+      result.current.announce('Message before unmount', 100);
     });
 
     unmount();
 
     // Should not throw or cause issues
-    act(() => {
-      vi.advanceTimersByTime(10000);
-    });
+    await new Promise(resolve => setTimeout(resolve, 150));
   });
 });

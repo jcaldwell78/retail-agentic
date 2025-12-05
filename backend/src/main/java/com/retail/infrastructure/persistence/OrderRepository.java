@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
@@ -58,9 +59,10 @@ public interface OrderRepository extends ReactiveMongoRepository<Order, String> 
 
     /**
      * Find orders above a certain total for tenant
+     * Uses custom query to handle nested record field properly
      */
-    @Query("{ 'tenantId': ?0, 'total': { $gte: ?1 } }")
-    Flux<Order> findHighValueOrders(String tenantId, double minTotal, Pageable pageable);
+    @org.springframework.data.mongodb.repository.Query("{ 'tenantId': ?0, 'pricing.total': { $gte: ?1 } }")
+    Flux<Order> findByTenantIdAndPricing_TotalGreaterThanEqual(String tenantId, BigDecimal minTotal, Pageable pageable);
 
     /**
      * Count orders for tenant

@@ -226,7 +226,7 @@ export default function ProductDetailPage() {
   }, [product, structuredData]);
 
   return (
-    <div className="min-h-screen bg-gray-50" data-testid="product-detail-page">
+    <main className="min-h-screen bg-gray-50" data-testid="product-detail-page">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm">
@@ -653,6 +653,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

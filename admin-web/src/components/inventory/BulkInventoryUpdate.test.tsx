@@ -247,11 +247,11 @@ describe('BulkInventoryUpdate', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('update-results')).toBeInTheDocument();
+      const counts = screen.getAllByText('1');
+      expect(counts.length).toBeGreaterThan(0); // Success and/or failure counts
+      expect(screen.getByText('Successful')).toBeInTheDocument();
+      expect(screen.getByText('Failed')).toBeInTheDocument();
     });
-
-    expect(screen.getByText('1')).toBeInTheDocument(); // Success count
-    expect(screen.getByText('Successful')).toBeInTheDocument();
-    expect(screen.getByText('Failed')).toBeInTheDocument();
   });
 
   it('displays detailed results for each item', async () => {
@@ -275,7 +275,12 @@ describe('BulkInventoryUpdate', () => {
     await user.click(screen.getByTestId('apply-update-btn'));
 
     await waitFor(() => {
-      expect(screen.getByText('PROD-001')).toBeInTheDocument();
+      expect(screen.getByTestId('update-results')).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      const skus = screen.getAllByText('PROD-001');
+      expect(skus.length).toBeGreaterThan(0);
       expect(screen.getByText('Updated successfully')).toBeInTheDocument();
       expect(screen.getByText('100 → 150')).toBeInTheDocument();
     });

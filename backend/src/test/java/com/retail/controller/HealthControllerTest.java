@@ -1,41 +1,35 @@
 package com.retail.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import com.retail.TestRedisConfiguration;
-import com.retail.TestElasticsearchConfiguration;
+
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for HealthController.
- * Uses full Spring Boot context with test configuration.
+ * Unit tests for HealthController.
+ * Tests controller methods directly without HTTP layer.
  */
-@SpringBootTest
-@AutoConfigureWebTestClient
-@ActiveProfiles("test")
-@Import({TestRedisConfiguration.class, TestElasticsearchConfiguration.class})
 class HealthControllerTest {
 
-    @Autowired
-    private WebTestClient webTestClient;
+    private HealthController healthController;
+
+    @BeforeEach
+    void setUp() {
+        healthController = new HealthController();
+    }
 
     @Test
     void health_ShouldReturnStatusUp() {
-        webTestClient.get()
-            .uri("/api/v1/health")
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isOk()
-            .expectHeader().contentType(MediaType.APPLICATION_JSON)
-            .expectBody()
-            .jsonPath("$.status").isEqualTo("UP")
-            .jsonPath("$.service").isEqualTo("retail-backend")
-            .jsonPath("$.version").isEqualTo("1.0.0")
-            .jsonPath("$.timestamp").exists();
+        // Act
+        Map<String, Object> health = healthController.health().block();
+
+        // Assert
+        assertThat(health).isNotNull();
+        assertThat(health.get("status")).isEqualTo("UP");
+        assertThat(health.get("service")).isEqualTo("retail-backend");
+        assertThat(health.get("version")).isEqualTo("1.0.0");
+        assertThat(health.get("timestamp")).isNotNull();
     }
 }

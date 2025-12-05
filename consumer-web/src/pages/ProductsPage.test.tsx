@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import ProductsPage from './ProductsPage';
@@ -77,36 +77,39 @@ describe('ProductsPage - Search', () => {
   });
 
   it('should filter products by search query', async () => {
-    const user = userEvent.setup();
     renderWithRouter(<ProductsPage />);
 
-    const searchInput = screen.getByTestId('product-search-input');
-    await user.type(searchInput, 'headphones');
+    const searchInput = screen.getByTestId('product-search-input') as HTMLInputElement;
+    fireEvent.change(searchInput, { target: { value: 'headphones' } });
 
-    expect(screen.getByText('Wireless Headphones')).toBeInTheDocument();
-    expect(screen.queryByText('Smart Watch')).not.toBeInTheDocument();
-    expect(screen.queryByText('Cotton T-Shirt')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Wireless Headphones')).toBeInTheDocument();
+      expect(screen.queryByText('Smart Watch')).not.toBeInTheDocument();
+      expect(screen.queryByText('Cotton T-Shirt')).not.toBeInTheDocument();
+    });
   });
 
   it('should update product count after search', async () => {
-    const user = userEvent.setup();
     renderWithRouter(<ProductsPage />);
 
-    const searchInput = screen.getByTestId('product-search-input');
-    await user.type(searchInput, 'watch');
+    const searchInput = screen.getByTestId('product-search-input') as HTMLInputElement;
+    fireEvent.change(searchInput, { target: { value: 'watch' } });
 
-    expect(screen.getByText('1 products found')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('1 products found')).toBeInTheDocument();
+    });
   });
 
   it('should show empty state when no products match search', async () => {
-    const user = userEvent.setup();
     renderWithRouter(<ProductsPage />);
 
-    const searchInput = screen.getByTestId('product-search-input');
-    await user.type(searchInput, 'nonexistent product xyz');
+    const searchInput = screen.getByTestId('product-search-input') as HTMLInputElement;
+    fireEvent.change(searchInput, { target: { value: 'nonexistent product xyz' } });
 
-    expect(screen.getByText('No products found')).toBeInTheDocument();
-    expect(screen.getByText('Try adjusting your search or filter criteria')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('No products found')).toBeInTheDocument();
+      expect(screen.getByText('Try adjusting your search or filter criteria')).toBeInTheDocument();
+    });
   });
 });
 
@@ -247,20 +250,28 @@ describe('ProductsPage - Filters', () => {
   });
 
   it('should clear all filters', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     renderWithRouter(<ProductsPage />);
 
     // Apply filters
-    const searchInput = screen.getByTestId('product-search-input');
-    await user.type(searchInput, 'headphones');
+    let searchInput = screen.getByTestId('product-search-input') as HTMLInputElement;
+    fireEvent.change(searchInput, { target: { value: 'headphones' } });
+
+    await waitFor(() => {
+      expect(screen.getByText('1 products found')).toBeInTheDocument();
+    });
+
     await user.click(screen.getByTestId('category-Electronics'));
 
     // Clear filters
     await user.click(screen.getByText('Clear Filters'));
 
-    expect(searchInput).toHaveValue('');
-    expect(screen.getByTestId('category-all')).toBeChecked();
-    expect(screen.getByText('6 products found')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('6 products found')).toBeInTheDocument();
+      searchInput = screen.getByTestId('product-search-input') as HTMLInputElement;
+      expect(searchInput).toHaveValue('');
+      expect(screen.getByTestId('category-all')).toBeChecked();
+    });
   });
 });
 
