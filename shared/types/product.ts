@@ -15,7 +15,7 @@ export interface Product {
   images: ProductImage[];
   categories: string[];
   tags: string[];
-  attributes: Record<string, any>;
+  attributes: Record<string, unknown>;
   variants?: ProductVariant[];
   inventory: ProductInventory;
   status: ProductStatus;

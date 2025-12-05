@@ -89,6 +89,7 @@ export default function CategoryManagementPage() {
 
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(['1', '2']));
   const [showAddDialog, setShowAddDialog] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_editingCategory, _setEditingCategory] = useState<Category | null>(null);
   const [newCategory, setNewCategory] = useState({
     name: '',

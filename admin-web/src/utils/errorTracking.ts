@@ -13,7 +13,7 @@ export interface ErrorContext {
   timestamp?: string;
   component?: string;
   action?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface ErrorReport {
@@ -211,7 +211,7 @@ class ErrorTracker {
   /**
    * Track a page view
    */
-  trackPageView(pageName: string, properties?: Record<string, any>): void {
+  trackPageView(pageName: string, properties?: Record<string, unknown>): void {
     this.captureInfo(`Page view: ${pageName}`, {
       component: 'navigation',
       action: 'page_view',
@@ -222,7 +222,7 @@ class ErrorTracker {
   /**
    * Track a custom event
    */
-  trackEvent(eventName: string, properties?: Record<string, any>): void {
+  trackEvent(eventName: string, properties?: Record<string, unknown>): void {
     this.captureInfo(`Event: ${eventName}`, {
       action: 'custom_event',
       ...properties,
@@ -270,10 +270,10 @@ export const setUser = (userId: string, tenantId?: string) =>
 
 export const clearUser = () => errorTracker.clearUser();
 
-export const trackPageView = (pageName: string, properties?: Record<string, any>) =>
+export const trackPageView = (pageName: string, properties?: Record<string, unknown>) =>
   errorTracker.trackPageView(pageName, properties);
 
-export const trackEvent = (eventName: string, properties?: Record<string, any>) =>
+export const trackEvent = (eventName: string, properties?: Record<string, unknown>) =>
   errorTracker.trackEvent(eventName, properties);
 
 export const trackPerformance = (metricName: string, value: number, unit?: string) =>

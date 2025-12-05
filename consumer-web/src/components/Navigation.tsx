@@ -12,20 +12,8 @@ export function Navigation() {
   const [isMiniCartOpen, setIsMiniCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Array<{ id: string; name: string; price: number; category: string }>>([]);
   const searchRef = useRef<HTMLDivElement>(null);
-
-  // Mock products for autocomplete
-  const allProducts = [
-    { id: '1', name: 'Wireless Headphones', price: 99.99, category: 'Electronics' },
-    { id: '2', name: 'Smart Watch', price: 249.99, category: 'Electronics' },
-    { id: '3', name: 'Laptop Stand', price: 49.99, category: 'Accessories' },
-    { id: '4', name: 'Mechanical Keyboard', price: 129.99, category: 'Electronics' },
-    { id: '5', name: 'USB-C Cable', price: 19.99, category: 'Accessories' },
-    { id: '6', name: 'Wireless Mouse', price: 39.99, category: 'Electronics' },
-    { id: '7', name: 'Phone Case', price: 24.99, category: 'Accessories' },
-    { id: '8', name: 'Bluetooth Speaker', price: 79.99, category: 'Audio' },
-  ];
 
   // Close search when clicking outside
   useEffect(() => {
@@ -40,6 +28,18 @@ export function Navigation() {
 
   // Filter products based on search query
   useEffect(() => {
+    // Mock products for autocomplete
+    const allProducts = [
+      { id: '1', name: 'Wireless Headphones', price: 99.99, category: 'Electronics' },
+      { id: '2', name: 'Smart Watch', price: 249.99, category: 'Electronics' },
+      { id: '3', name: 'Laptop Stand', price: 49.99, category: 'Accessories' },
+      { id: '4', name: 'Mechanical Keyboard', price: 129.99, category: 'Electronics' },
+      { id: '5', name: 'USB-C Cable', price: 19.99, category: 'Accessories' },
+      { id: '6', name: 'Wireless Mouse', price: 39.99, category: 'Electronics' },
+      { id: '7', name: 'Phone Case', price: 24.99, category: 'Accessories' },
+      { id: '8', name: 'Bluetooth Speaker', price: 79.99, category: 'Audio' },
+    ];
+
     if (searchQuery.length > 1) {
       const filtered = allProducts.filter((product) =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase())

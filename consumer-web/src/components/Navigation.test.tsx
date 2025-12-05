@@ -21,7 +21,7 @@ vi.mock('@/hooks/useAuth', () => ({
 }));
 
 vi.mock('@/components/MiniCart', () => ({
-  MiniCart: ({ isOpen, onClose }: any) =>
+  MiniCart: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
     isOpen ? <div data-testid="mini-cart" onClick={onClose}>Mini Cart</div> : null,
 }));
 

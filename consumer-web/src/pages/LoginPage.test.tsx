@@ -240,7 +240,7 @@ describe('LoginPage - Loading State', () => {
   });
 
   it('should show loading state during login', async () => {
-    let resolveLogin: any;
+    let resolveLogin: ((value: unknown) => void) | undefined;
     mockLogin.mockReturnValue(new Promise(resolve => { resolveLogin = resolve; }));
 
     const user = userEvent.setup();
@@ -260,7 +260,7 @@ describe('LoginPage - Loading State', () => {
   });
 
   it('should disable form inputs during loading', async () => {
-    let resolveLogin: any;
+    let resolveLogin: ((value: unknown) => void) | undefined;
     mockLogin.mockReturnValue(new Promise(resolve => { resolveLogin = resolve; }));
 
     const user = userEvent.setup();

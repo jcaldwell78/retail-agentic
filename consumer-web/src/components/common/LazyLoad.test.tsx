@@ -16,7 +16,7 @@ class MockIntersectionObserver {
   trigger(isIntersecting: boolean) {
     this.callback(
       [{ isIntersecting } as IntersectionObserverEntry],
-      this as any
+      this as unknown as IntersectionObserver
     );
   }
 }
@@ -25,8 +25,8 @@ let mockObserver: MockIntersectionObserver;
 
 global.IntersectionObserver = vi.fn((callback) => {
   mockObserver = new MockIntersectionObserver(callback);
-  return mockObserver as any;
-}) as any;
+  return mockObserver as unknown as IntersectionObserver;
+}) as unknown as typeof IntersectionObserver;
 
 describe('LazyLoad', () => {
   it('renders placeholder initially', () => {

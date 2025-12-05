@@ -17,6 +17,7 @@ export default function ProductDetailPage() {
   const [newReview, setNewReview] = useState({ rating: 5, title: '', comment: '' });
 
   // Mock product data
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const product = {
     id,
     name: 'Wireless Headphones',
@@ -151,6 +152,7 @@ export default function ProductDetailPage() {
   };
 
   // Generate structured data for SEO (Schema.org Product markup)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const structuredData = {
     '@context': 'https://schema.org/',
     '@type': 'Product',

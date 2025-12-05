@@ -163,12 +163,11 @@ export const handlers = [
       return new HttpResponse(null, { status: 404 });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockProducts[index] = {
       ...mockProducts[index],
       ...body,
       updatedAt: new Date().toISOString(),
-    } as any;
+    } as typeof mockProducts[0];
 
     return HttpResponse.json(mockProducts[index]);
   }),

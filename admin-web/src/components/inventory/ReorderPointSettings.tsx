@@ -100,7 +100,7 @@ export default function ReorderPointSettings({
     setEditingId(null);
   };
 
-  const updateProduct = (productId: string, field: keyof ProductReorderSettings, value: any) => {
+  const updateProduct = (productId: string, field: keyof ProductReorderSettings, value: string | number | boolean) => {
     // Prevent NaN values for numeric fields
     const sanitizedValue = typeof value === 'number' && isNaN(value) ? 0 : value;
     setProducts(

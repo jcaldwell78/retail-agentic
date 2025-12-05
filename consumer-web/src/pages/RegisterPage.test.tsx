@@ -392,7 +392,7 @@ describe('RegisterPage - Loading State', () => {
   });
 
   it('should show loading state during registration', async () => {
-    let resolveRegister: any;
+    let resolveRegister: ((value: unknown) => void) | undefined;
     mockRegister.mockReturnValue(new Promise(resolve => { resolveRegister = resolve; }));
 
     const user = userEvent.setup();
@@ -413,7 +413,7 @@ describe('RegisterPage - Loading State', () => {
   });
 
   it('should disable form inputs during loading', async () => {
-    let resolveRegister: any;
+    let resolveRegister: ((value: unknown) => void) | undefined;
     mockRegister.mockReturnValue(new Promise(resolve => { resolveRegister = resolve; }));
 
     const user = userEvent.setup();

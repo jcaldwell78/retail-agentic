@@ -3,6 +3,7 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { useAuth } from './useAuth';
 import { usersApi } from '@/lib/api';
 import type { User, AuthResponse } from '@/lib/api';
+import type { Mock } from 'vitest';
 
 // Mock the usersApi
 vi.mock('@/lib/api', () => ({
@@ -132,8 +133,8 @@ describe('useAuth - login', () => {
   });
 
   it('should login successfully', async () => {
-    (usersApi.authenticate as any).mockResolvedValue(mockAuthResponse);
-    (usersApi.getById as any).mockResolvedValue(mockUser);
+    (usersApi.authenticate as Mock).mockResolvedValue(mockAuthResponse);
+    (usersApi.getById as Mock).mockResolvedValue(mockUser);
 
     const { result } = renderHook(() => useAuth());
 
@@ -157,8 +158,8 @@ describe('useAuth - login', () => {
   });
 
   it('should save credentials to localStorage on login', async () => {
-    (usersApi.authenticate as any).mockResolvedValue(mockAuthResponse);
-    (usersApi.getById as any).mockResolvedValue(mockUser);
+    (usersApi.authenticate as Mock).mockResolvedValue(mockAuthResponse);
+    (usersApi.getById as Mock).mockResolvedValue(mockUser);
 
     const { result } = renderHook(() => useAuth());
 
@@ -178,8 +179,8 @@ describe('useAuth - login', () => {
   });
 
   it('should call API with correct credentials', async () => {
-    (usersApi.authenticate as any).mockResolvedValue(mockAuthResponse);
-    (usersApi.getById as any).mockResolvedValue(mockUser);
+    (usersApi.authenticate as Mock).mockResolvedValue(mockAuthResponse);
+    (usersApi.getById as Mock).mockResolvedValue(mockUser);
 
     const { result } = renderHook(() => useAuth());
 
@@ -202,7 +203,7 @@ describe('useAuth - login', () => {
 
   it('should handle login error', async () => {
     const mockError = new Error('Authentication failed');
-    (usersApi.authenticate as any).mockRejectedValue(mockError);
+    (usersApi.authenticate as Mock).mockRejectedValue(mockError);
 
     const { result } = renderHook(() => useAuth());
 
@@ -226,10 +227,10 @@ describe('useAuth - login', () => {
   });
 
   it('should set loading during login', async () => {
-    (usersApi.authenticate as any).mockImplementation(
+    (usersApi.authenticate as Mock).mockImplementation(
       () => new Promise((resolve) => setTimeout(() => resolve(mockAuthResponse), 100))
     );
-    (usersApi.getById as any).mockResolvedValue(mockUser);
+    (usersApi.getById as Mock).mockResolvedValue(mockUser);
 
     const { result } = renderHook(() => useAuth());
 
@@ -272,9 +273,9 @@ describe('useAuth - register', () => {
   });
 
   it('should register successfully', async () => {
-    (usersApi.register as any).mockResolvedValue(mockUser);
-    (usersApi.authenticate as any).mockResolvedValue(mockAuthResponse);
-    (usersApi.getById as any).mockResolvedValue(mockUser);
+    (usersApi.register as Mock).mockResolvedValue(mockUser);
+    (usersApi.authenticate as Mock).mockResolvedValue(mockAuthResponse);
+    (usersApi.getById as Mock).mockResolvedValue(mockUser);
 
     const { result } = renderHook(() => useAuth());
 
@@ -296,9 +297,9 @@ describe('useAuth - register', () => {
   });
 
   it('should auto-login after registration', async () => {
-    (usersApi.register as any).mockResolvedValue(mockUser);
-    (usersApi.authenticate as any).mockResolvedValue(mockAuthResponse);
-    (usersApi.getById as any).mockResolvedValue(mockUser);
+    (usersApi.register as Mock).mockResolvedValue(mockUser);
+    (usersApi.authenticate as Mock).mockResolvedValue(mockAuthResponse);
+    (usersApi.getById as Mock).mockResolvedValue(mockUser);
 
     const { result } = renderHook(() => useAuth());
 
@@ -326,7 +327,7 @@ describe('useAuth - register', () => {
 
   it('should handle registration error', async () => {
     const mockError = new Error('Registration failed');
-    (usersApi.register as any).mockRejectedValue(mockError);
+    (usersApi.register as Mock).mockRejectedValue(mockError);
 
     const { result } = renderHook(() => useAuth());
 

@@ -229,7 +229,7 @@ export default function BulkProductOperations({
                   <Label htmlFor="price-type">Adjustment Type</Label>
                   <Select
                     value={priceAdjustmentType}
-                    onValueChange={(value: any) => setPriceAdjustmentType(value)}
+                    onValueChange={(value: string) => setPriceAdjustmentType(value as 'set' | 'increase' | 'decrease' | 'percentage')}
                   >
                     <SelectTrigger id="price-type">
                       <SelectValue />

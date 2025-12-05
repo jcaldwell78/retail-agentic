@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 export default function ProductEditPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function ProductEditPage() {
     }, 500);
   }, [id]);
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: Record<string, unknown>) => {
     console.log('Updating product:', id, data);
     // TODO: API call to update product
     navigate('/products');

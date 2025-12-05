@@ -12,7 +12,7 @@ export interface Notification {
   isImportant: boolean;
   actionUrl?: string;
   actionLabel?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface NotificationCenterProps {

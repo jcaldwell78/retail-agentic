@@ -32,7 +32,7 @@ interface BulkOrderOperationsProps {
   orders: Order[];
   selectedOrders: Set<string>;
   onSelectionChange: (selected: Set<string>) => void;
-  onBulkAction?: (action: BulkAction, orderIds: string[], data?: any) => Promise<void>;
+  onBulkAction?: (action: BulkAction, orderIds: string[], data?: unknown) => Promise<void>;
 }
 
 export default function BulkOrderOperations({
@@ -68,7 +68,7 @@ export default function BulkOrderOperations({
     onSelectionChange(newSelected);
   };
 
-  const executeBulkAction = async (action: BulkAction, data?: any) => {
+  const executeBulkAction = async (action: BulkAction, data?: unknown) => {
     if (selectedOrders.size === 0) {
       alert('Please select orders first');
       return;

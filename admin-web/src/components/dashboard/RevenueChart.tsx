@@ -14,6 +14,7 @@ interface RevenueChartProps {
 
 export default function RevenueChart({ data, period = 'week' }: RevenueChartProps) {
   // Mock data for demonstration
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const chartData = data || [
     { date: '2024-01-01', revenue: 12450, orders: 45 },
     { date: '2024-01-02', revenue: 15600, orders: 52 },

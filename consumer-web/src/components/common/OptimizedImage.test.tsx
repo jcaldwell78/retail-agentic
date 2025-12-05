@@ -13,7 +13,7 @@ class MockIntersectionObserver {
   unobserve = mockUnobserve;
 }
 
-global.IntersectionObserver = MockIntersectionObserver as any;
+global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
 describe('OptimizedImage', () => {
   beforeEach(() => {

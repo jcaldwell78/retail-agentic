@@ -6,7 +6,7 @@ export interface PerformanceMetric {
   name: string;
   value: number;
   timestamp: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 class PerformanceMonitor {
@@ -27,8 +27,8 @@ class PerformanceMonitor {
     try {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1] as any;
-        this.recordMetric('LCP', lastEntry.renderTime || lastEntry.loadTime);
+        const lastEntry = entries[entries.length - 1] as PerformanceEntry & { renderTime?: number; loadTime?: number };
+        this.recordMetric('LCP', lastEntry.renderTime || lastEntry.loadTime || 0);
       });
       lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
       this.observers.set('lcp', lcpObserver);
@@ -40,8 +40,9 @@ class PerformanceMonitor {
     try {
       const fidObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        entries.forEach((entry: any) => {
-          this.recordMetric('FID', entry.processingStart - entry.startTime);
+        entries.forEach((entry) => {
+          const perfEntry = entry as PerformanceEntry & { processingStart?: number };
+          this.recordMetric('FID', (perfEntry.processingStart || 0) - entry.startTime);
         });
       });
       fidObserver.observe({ entryTypes: ['first-input'] });
@@ -55,9 +56,10 @@ class PerformanceMonitor {
       let clsValue = 0;
       const clsObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        entries.forEach((entry: any) => {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value;
+        entries.forEach((entry) => {
+          const layoutShift = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number };
+          if (!layoutShift.hadRecentInput) {
+            clsValue += layoutShift.value || 0;
             this.recordMetric('CLS', clsValue);
           }
         });
@@ -72,7 +74,7 @@ class PerformanceMonitor {
   /**
    * Record a custom performance metric
    */
-  recordMetric(name: string, value: number, metadata?: Record<string, any>) {
+  recordMetric(name: string, value: number, metadata?: Record<string, unknown>) {
     const metric: PerformanceMetric = {
       name,
       value,
@@ -178,8 +180,8 @@ class PerformanceMonitor {
   private sendToAnalytics(metric: PerformanceMetric) {
     // In production, send to your analytics service
     // e.g., Google Analytics, DataDog, etc.
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'performance_metric', {
+    if (typeof window !== 'undefined' && (window as { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as { gtag: (...args: unknown[]) => void }).gtag('event', 'performance_metric', {
         metric_name: metric.name,
         metric_value: metric.value,
         ...metric.metadata,
@@ -218,7 +220,7 @@ export function usePerformance(componentName: string) {
 /**
  * Debounce function for performance optimization
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: never[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -233,7 +235,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function for performance optimization
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: never[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -255,7 +257,7 @@ export function isLowEndDevice(): boolean {
   if (typeof navigator === 'undefined') return false;
 
   const hardwareConcurrency = navigator.hardwareConcurrency || 2;
-  const deviceMemory = (navigator as any).deviceMemory || 4;
+  const deviceMemory = (navigator as { deviceMemory?: number }).deviceMemory || 4;
 
   return hardwareConcurrency <= 2 || deviceMemory <= 2;
 }
@@ -271,9 +273,9 @@ export function getNetworkInfo(): {
 } | null {
   if (typeof navigator === 'undefined') return null;
 
-  const connection = (navigator as any).connection ||
-                     (navigator as any).mozConnection ||
-                     (navigator as any).webkitConnection;
+  const connection = (navigator as { connection?: unknown; mozConnection?: unknown; webkitConnection?: unknown }).connection ||
+                     (navigator as { connection?: unknown; mozConnection?: unknown; webkitConnection?: unknown }).mozConnection ||
+                     (navigator as { connection?: unknown; mozConnection?: unknown; webkitConnection?: unknown }).webkitConnection;
 
   if (!connection) return null;
 

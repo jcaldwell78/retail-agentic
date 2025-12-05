@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
  * Hook to manage focus on mount
  * Useful for modals, dialogs, and dynamic content
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAutoFocus<T extends HTMLElement = HTMLElement>(
   shouldFocus: boolean = true
 ) {
@@ -22,6 +23,7 @@ export function useAutoFocus<T extends HTMLElement = HTMLElement>(
  * Hook to trap focus within a container
  * Essential for modal dialogs and popups (WCAG 2.1 Level A)
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFocusTrap<T extends HTMLElement = HTMLElement>(
   isActive: boolean = true
 ) {
@@ -73,6 +75,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLElement>(
  * Hook to restore focus to previous element
  * Used when closing modals/dialogs
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFocusReturn() {
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -91,6 +94,7 @@ export function useFocusReturn() {
  * Hook to manage focus based on route changes
  * Announces page changes to screen readers
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useRouteAnnouncement(pageName: string) {
   useEffect(() => {
     // Set page title for screen readers

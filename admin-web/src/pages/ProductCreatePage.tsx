@@ -4,7 +4,7 @@ import { ProductForm } from '../components/ProductForm';
 export default function ProductCreatePage() {
   const navigate = useNavigate();
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = (data: Record<string, unknown>) => {
     console.log('Creating product:', data);
     // TODO: API call to create product
     // After successful creation, navigate to products list

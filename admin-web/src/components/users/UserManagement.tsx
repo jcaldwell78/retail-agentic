@@ -262,12 +262,12 @@ export default function UserManagement({
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
-                      <Badge variant={getRoleBadgeVariant(user.role) as any}>
+                      <Badge variant={getRoleBadgeVariant(user.role) as 'default' | 'secondary' | 'destructive' | 'outline'}>
                         {user.role}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getStatusBadgeVariant(user.status) as any}>
+                      <Badge variant={getStatusBadgeVariant(user.status) as 'default' | 'secondary' | 'destructive' | 'outline'}>
                         {user.status}
                       </Badge>
                     </TableCell>
@@ -348,7 +348,7 @@ export default function UserManagement({
               <Label htmlFor="role">Role</Label>
               <Select
                 value={newUser.role}
-                onValueChange={(value: any) => setNewUser({ ...newUser, role: value })}
+                onValueChange={(value: string) => setNewUser({ ...newUser, role: value })}
               >
                 <SelectTrigger data-testid="new-role">
                   <SelectValue />
@@ -422,7 +422,7 @@ export default function UserManagement({
                 <Label htmlFor="edit-role">Role</Label>
                 <Select
                   value={editingUser.role}
-                  onValueChange={(value: any) =>
+                  onValueChange={(value: string) =>
                     setEditingUser({ ...editingUser, role: value })
                   }
                 >
@@ -440,7 +440,7 @@ export default function UserManagement({
                 <Label htmlFor="edit-status">Status</Label>
                 <Select
                   value={editingUser.status}
-                  onValueChange={(value: any) =>
+                  onValueChange={(value: string) =>
                     setEditingUser({ ...editingUser, status: value })
                   }
                 >

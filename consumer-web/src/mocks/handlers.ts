@@ -14,7 +14,7 @@ interface CartItem {
   sku: string;
   price: number;
   quantity: number;
-  attributes: Record<string, any>;
+  attributes: Record<string, unknown>;
   imageUrl?: string;
   subtotal: number;
 }
@@ -149,7 +149,7 @@ export const handlers = [
     }
 
     const existingItemIndex = mockCart.items.findIndex(
-      (item: any) => item.productId === productId
+      (item) => item.productId === productId
     );
 
     if (existingItemIndex >= 0) {
@@ -172,11 +172,11 @@ export const handlers = [
 
     // Recalculate totals
     mockCart.itemCount = mockCart.items.reduce(
-      (sum: number, item: any) => sum + item.quantity,
+      (sum: number, item) => sum + item.quantity,
       0
     );
     mockCart.summary.subtotal = mockCart.items.reduce(
-      (sum: number, item: any) => sum + item.subtotal,
+      (sum: number, item) => sum + item.subtotal,
       0
     );
     mockCart.summary.tax = mockCart.summary.subtotal * 0.1;
@@ -195,7 +195,7 @@ export const handlers = [
     const { quantity } = body as { quantity: number };
     const { itemId } = params;
 
-    const itemIndex = mockCart.items.findIndex((item: any) => item.id === itemId);
+    const itemIndex = mockCart.items.findIndex((item) => item.id === itemId);
 
     if (itemIndex === -1) {
       return new HttpResponse(null, { status: 404 });
@@ -211,11 +211,11 @@ export const handlers = [
 
     // Recalculate totals
     mockCart.itemCount = mockCart.items.reduce(
-      (sum: number, item: any) => sum + item.quantity,
+      (sum: number, item) => sum + item.quantity,
       0
     );
     mockCart.summary.subtotal = mockCart.items.reduce(
-      (sum: number, item: any) => sum + item.subtotal,
+      (sum: number, item) => sum + item.subtotal,
       0
     );
     mockCart.summary.tax = mockCart.summary.subtotal * 0.1;
@@ -232,7 +232,7 @@ export const handlers = [
   http.delete(`${API_BASE}/cart/:sessionId/items/:itemId`, ({ params }) => {
     const { itemId } = params;
 
-    const itemIndex = mockCart.items.findIndex((item: any) => item.id === itemId);
+    const itemIndex = mockCart.items.findIndex((item) => item.id === itemId);
 
     if (itemIndex === -1) {
       return new HttpResponse(null, { status: 404 });
@@ -242,11 +242,11 @@ export const handlers = [
 
     // Recalculate totals
     mockCart.itemCount = mockCart.items.reduce(
-      (sum: number, item: any) => sum + item.quantity,
+      (sum: number, item) => sum + item.quantity,
       0
     );
     mockCart.summary.subtotal = mockCart.items.reduce(
-      (sum: number, item: any) => sum + item.subtotal,
+      (sum: number, item) => sum + item.subtotal,
       0
     );
     mockCart.summary.tax = mockCart.summary.subtotal * 0.1;
@@ -261,7 +261,7 @@ export const handlers = [
 
   // Create order
   http.post(`${API_BASE}/orders`, async ({ request }) => {
-    const body = (await request.json()) as Record<string, any>;
+    const body = (await request.json()) as Record<string, unknown>;
 
     return HttpResponse.json({
       id: `order-${Date.now()}`,

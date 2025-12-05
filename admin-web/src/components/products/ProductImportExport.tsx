@@ -93,7 +93,7 @@ export default function ProductImportExport({
     const products: Product[] = [];
     for (let i = 1; i < lines.length; i++) {
       const values = lines[i].split(',').map((v) => v.trim());
-      const product: any = {};
+      const product: Record<string, string | number> = {};
 
       headers.forEach((header, index) => {
         const value = values[index];

@@ -237,13 +237,13 @@ describe('Performance Utilities', () => {
       const mockImages: HTMLImageElement[] = [];
       const originalImage = global.Image;
 
-      (global as any).Image = class MockImage {
+      (global as { Image: unknown }).Image = class MockImage {
         onload: (() => void) | null = null;
         onerror: (() => void) | null = null;
         src: string = '';
 
         constructor() {
-          mockImages.push(this as any);
+          mockImages.push(this as unknown as HTMLImageElement);
           // Simulate immediate load
           setTimeout(() => {
             if (this.onload) this.onload();
@@ -264,7 +264,7 @@ describe('Performance Utilities', () => {
       // Mock the Image constructor to fail
       const originalImage = global.Image;
 
-      (global as any).Image = class MockImage {
+      (global as { Image: unknown }).Image = class MockImage {
         onload: (() => void) | null = null;
         onerror: (() => void) | null = null;
         src: string = '';

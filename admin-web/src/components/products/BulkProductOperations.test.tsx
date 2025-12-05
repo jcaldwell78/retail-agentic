@@ -289,7 +289,7 @@ describe('BulkProductOperations', () => {
 
       // Mock parseFloat to return NaN to simulate invalid input
       const originalParseFloat = global.parseFloat;
-      global.parseFloat = vi.fn(() => NaN) as any;
+      global.parseFloat = vi.fn(() => NaN) as unknown as typeof parseFloat;
 
       const applyButton = screen.getByRole('button', { name: /apply price change/i });
       await user.click(applyButton);

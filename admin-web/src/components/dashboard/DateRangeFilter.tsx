@@ -33,7 +33,7 @@ export default function DateRangeFilter({
           to: now,
           label: 'Today',
         };
-      case 'week':
+      case 'week': {
         const weekAgo = new Date(today);
         weekAgo.setDate(weekAgo.getDate() - 7);
         return {
@@ -41,7 +41,8 @@ export default function DateRangeFilter({
           to: now,
           label: 'Last 7 Days',
         };
-      case 'month':
+      }
+      case 'month': {
         const monthAgo = new Date(today);
         monthAgo.setDate(monthAgo.getDate() - 30);
         return {
@@ -49,7 +50,8 @@ export default function DateRangeFilter({
           to: now,
           label: 'Last 30 Days',
         };
-      case 'year':
+      }
+      case 'year': {
         const yearAgo = new Date(today);
         yearAgo.setFullYear(yearAgo.getFullYear() - 1);
         return {
@@ -57,6 +59,7 @@ export default function DateRangeFilter({
           to: now,
           label: 'Last Year',
         };
+      }
       case 'custom':
         return {
           from: customFrom ? new Date(customFrom) : today,

@@ -22,7 +22,7 @@ export interface ShippingInfo {
 interface FulfillmentWorkflowProps {
   orderId: string;
   currentStatus: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  onStatusUpdate?: (status: string, data?: any) => void;
+  onStatusUpdate?: (status: string, data?: unknown) => void;
 }
 
 export default function FulfillmentWorkflow({

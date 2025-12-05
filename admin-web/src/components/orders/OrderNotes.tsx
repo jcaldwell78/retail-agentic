@@ -25,7 +25,8 @@ interface OrderNotesProps {
 }
 
 export default function OrderNotes({
-  orderId: _orderId,
+  // orderId is not currently used but kept for future API integration
+  orderId: _orderId, // eslint-disable-line @typescript-eslint/no-unused-vars
   initialNotes = [],
   currentUserName = 'Admin User',
   currentUserRole = 'admin',

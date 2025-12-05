@@ -47,6 +47,7 @@ export function ScreenReaderAnnouncer({
  * Usage: const announce = useScreenReaderAnnounce();
  *        announce('Item added to cart');
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useScreenReaderAnnounce() {
   const [message, setMessage] = useState('');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
