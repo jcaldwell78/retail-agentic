@@ -2,7 +2,7 @@ name: CI - Build and Test
 
 on:
   push:
-    branches: [main, develop, mvp]
+    branches: [main]
   pull_request:
     # Run on all pull requests, regardless of target branch
 
