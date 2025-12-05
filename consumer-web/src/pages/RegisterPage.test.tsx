@@ -26,11 +26,13 @@ describe('RegisterPage', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -56,11 +58,13 @@ describe('RegisterPage - Form Fields', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -134,11 +138,13 @@ describe('RegisterPage - Form Input', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -209,11 +215,13 @@ describe('RegisterPage - Form Validation', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -275,11 +283,13 @@ describe('RegisterPage - Form Submission', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -371,11 +381,13 @@ describe('RegisterPage - Loading State', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -428,11 +440,13 @@ describe('RegisterPage - Navigation Links', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -452,11 +466,13 @@ describe('RegisterPage - Accessibility', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -494,11 +510,13 @@ describe('RegisterPage - Error Display', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: mockRegister,
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 

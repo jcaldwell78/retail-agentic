@@ -5,9 +5,15 @@ import type { User } from '@/lib/api';
 
 const mockUser: User = {
   id: '1',
+  tenantId: 'tenant-1',
   email: 'test@example.com',
   firstName: 'Test',
   lastName: 'User',
+  role: 'CUSTOMER',
+  status: 'ACTIVE',
+  addresses: [],
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-01T00:00:00Z',
 };
 
 const mockToken = 'test-token-123';
@@ -68,12 +74,12 @@ describe('useUserStore - setUser', () => {
     expect(result.current.isAuthenticated).toBe(true);
   });
 
-  it('should set isAuthenticated to false when user is null', () => {
+  it('should set isAuthenticated to false when user is logged out', () => {
     const { result } = renderHook(() => useUserStore());
 
     act(() => {
       result.current.setUser(mockUser);
-      result.current.setUser(null);
+      result.current.logout();
     });
 
     expect(result.current.isAuthenticated).toBe(false);
@@ -302,16 +308,28 @@ describe('useUserStore - Complex Scenarios', () => {
 
     const user1: User = {
       id: '1',
+      tenantId: 'tenant-1',
       email: 'user1@example.com',
       firstName: 'User',
       lastName: 'One',
+      role: 'CUSTOMER',
+      status: 'ACTIVE',
+      addresses: [],
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     };
 
     const user2: User = {
       id: '2',
+      tenantId: 'tenant-1',
       email: 'user2@example.com',
       firstName: 'User',
       lastName: 'Two',
+      role: 'CUSTOMER',
+      status: 'ACTIVE',
+      addresses: [],
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     };
 
     act(() => {
@@ -356,9 +374,15 @@ describe('useUserStore - Edge Cases', () => {
 
     const emptyUser: User = {
       id: '',
+      tenantId: '',
       email: '',
       firstName: '',
       lastName: '',
+      role: 'CUSTOMER',
+      status: 'ACTIVE',
+      addresses: [],
+      createdAt: '',
+      updatedAt: '',
     };
 
     act(() => {

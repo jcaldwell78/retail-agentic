@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react';
 import { ScreenReaderAnnouncer, useScreenReaderAnnounce } from './ScreenReaderAnnouncer';
 

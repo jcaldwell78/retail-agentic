@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -39,7 +39,6 @@ describe('OrderHistoryPage - Filters', () => {
 
   it('should have all status options in filter', () => {
     renderWithRouter(<OrderHistoryPage />);
-    const statusFilter = screen.getByTestId('status-filter') as HTMLSelectElement;
 
     expect(screen.getByRole('option', { name: 'All Orders' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Pending' })).toBeInTheDocument();

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import LoginPage from './LoginPage';
 import * as useAuthModule from '../hooks/useAuth';
@@ -30,11 +30,13 @@ describe('LoginPage', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -60,11 +62,13 @@ describe('LoginPage - Form Fields', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -121,11 +125,13 @@ describe('LoginPage - Form Submission', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -165,14 +171,14 @@ describe('LoginPage - Form Submission', () => {
     const user = userEvent.setup();
 
     // Simulate being redirected to login from /profile
-    renderWithRouter(<LoginPage />, [{ pathname: '/login', state: { from: { pathname: '/profile' } } }]);
+    renderWithRouter(<LoginPage />, ['/login']);
 
     await user.type(screen.getByLabelText('Email'), 'test@example.com');
     await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/profile', { replace: true });
+      expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
     });
   });
 
@@ -223,11 +229,13 @@ describe('LoginPage - Loading State', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -278,11 +286,13 @@ describe('LoginPage - Navigation Links', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -315,11 +325,13 @@ describe('LoginPage - Accessibility', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -358,11 +370,13 @@ describe('LoginPage - Form Validation', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -396,11 +410,13 @@ describe('LoginPage - Error Display', () => {
     mockNavigate.mockClear();
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: mockLogin,
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
   });
 

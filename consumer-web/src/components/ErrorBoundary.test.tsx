@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -96,8 +96,14 @@ describe('ErrorBoundary - Error Recovery', () => {
 
   it('should navigate to home when Go Home is clicked', async () => {
     const user = userEvent.setup();
-    delete window.location;
-    window.location = { href: '' } as Location;
+    const originalHref = window.location.href;
+
+    // Mock location.href
+    Object.defineProperty(window, 'location', {
+      value: { href: '' },
+      writable: true,
+      configurable: true,
+    });
 
     render(
       <ErrorBoundary>
@@ -108,6 +114,13 @@ describe('ErrorBoundary - Error Recovery', () => {
     await user.click(screen.getByRole('button', { name: 'Go Home' }));
 
     expect(window.location.href).toBe('/');
+
+    // Restore original href
+    Object.defineProperty(window, 'location', {
+      value: { href: originalHref },
+      writable: true,
+      configurable: true,
+    });
   });
 });
 
@@ -153,7 +166,7 @@ describe('ErrorBoundary - UI Structure', () => {
   });
 
   it('should display error message in monospace font', () => {
-    const { container } = render(
+    render(
       <ErrorBoundary>
         <ThrowError shouldThrow={true} />
       </ErrorBoundary>

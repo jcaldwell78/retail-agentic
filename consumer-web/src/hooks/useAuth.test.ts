@@ -15,13 +15,23 @@ vi.mock('@/lib/api', () => ({
 
 const mockUser: User = {
   id: '1',
+  tenantId: 'tenant-1',
   email: 'test@example.com',
   firstName: 'Test',
   lastName: 'User',
+  role: 'CUSTOMER',
+  status: 'ACTIVE',
+  addresses: [],
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-01T00:00:00Z',
 };
 
 const mockAuthResponse: AuthResponse = {
   userId: '1',
+  email: 'test@example.com',
+  firstName: 'Test',
+  lastName: 'User',
+  role: 'CUSTOMER',
   token: 'test-token',
 };
 

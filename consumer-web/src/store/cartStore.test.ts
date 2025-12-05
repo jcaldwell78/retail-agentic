@@ -5,38 +5,41 @@ import type { Cart, CartItem } from '@/lib/api';
 
 const mockCart: Cart = {
   id: '1',
+  tenantId: 'tenant-1',
   userId: 'user-1',
   items: [
     {
-      id: 'item-1',
       productId: 'product-1',
       productName: 'Test Product 1',
+      productImage: '/test1.jpg',
       quantity: 2,
       price: 10.99,
-      imageUrl: '/test1.jpg',
+      subtotal: 21.98,
     },
     {
-      id: 'item-2',
       productId: 'product-2',
       productName: 'Test Product 2',
+      productImage: '/test2.jpg',
       quantity: 1,
       price: 20.99,
-      imageUrl: '/test2.jpg',
+      subtotal: 20.99,
     },
   ],
-  totalItems: 3,
   subtotal: 42.97,
+  tax: 0,
+  total: 42.97,
+  expiresAt: '2024-01-02T00:00:00Z',
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',
 };
 
 const mockItem: CartItem = {
-  id: 'item-3',
   productId: 'product-3',
   productName: 'New Product',
+  productImage: '/new.jpg',
   quantity: 1,
   price: 15.99,
-  imageUrl: '/new.jpg',
+  subtotal: 15.99,
 };
 
 describe('useCartStore', () => {
@@ -129,12 +132,12 @@ describe('useCartStore - addItem', () => {
     const { result } = renderHook(() => useCartStore());
 
     const existingItem: CartItem = {
-      id: 'item-new',
       productId: 'product-1',
       productName: 'Test Product 1',
+      productImage: '/test1.jpg',
       quantity: 1,
       price: 10.99,
-      imageUrl: '/test1.jpg',
+      subtotal: 10.99,
     };
 
     act(() => {

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, renderHook } from '@testing-library/react';
-import { ReactNode } from 'react';
+import { render, screen } from '@testing-library/react';
 import { AuthProvider, useAuthContext } from './AuthProvider';
 import type { User } from '@/lib/api';
 
@@ -13,9 +12,15 @@ vi.mock('@/hooks/useAuth', () => ({
 
 const mockUser: User = {
   id: '1',
+  tenantId: 'tenant-1',
   email: 'test@example.com',
   firstName: 'Test',
   lastName: 'User',
+  role: 'CUSTOMER',
+  status: 'ACTIVE',
+  addresses: [],
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-01T00:00:00Z',
 };
 
 const mockAuthValue = {

@@ -27,11 +27,13 @@ describe('ProfilePage', () => {
   beforeEach(() => {
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: mockUser,
+      token: 'test-token',
       login: vi.fn(),
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: true,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -66,11 +68,13 @@ describe('ProfilePage', () => {
   it('should show "Not provided" when phone is missing', () => {
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: { ...mockUser, phone: undefined },
+      token: 'test-token',
       login: vi.fn(),
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: true,
-      isLoading: false,
+      loading: false,
     });
 
     renderWithRouter(<ProfilePage />);
@@ -206,11 +210,13 @@ describe('ProfilePage - Address Book', () => {
   beforeEach(() => {
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: mockUser,
+      token: 'test-token',
       login: vi.fn(),
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: true,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -254,11 +260,13 @@ describe('ProfilePage - Security', () => {
   beforeEach(() => {
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: mockUser,
+      token: 'test-token',
       login: vi.fn(),
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: true,
-      isLoading: false,
+      loading: false,
     });
   });
 
@@ -284,11 +292,13 @@ describe('ProfilePage - No User', () => {
   it('should handle null user gracefully', () => {
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: null,
+      token: null,
       login: vi.fn(),
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: false,
-      isLoading: false,
+      loading: false,
     });
 
     renderWithRouter(<ProfilePage />);
@@ -306,11 +316,13 @@ describe('ProfilePage - Accessibility', () => {
   beforeEach(() => {
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: mockUser,
+      token: 'test-token',
       login: vi.fn(),
       logout: vi.fn(),
       register: vi.fn(),
+      updateUser: vi.fn(),
       isAuthenticated: true,
-      isLoading: false,
+      loading: false,
     });
   });
 

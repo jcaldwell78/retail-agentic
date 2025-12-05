@@ -203,7 +203,7 @@ describe('MiniCart - Accessibility', () => {
 
 describe('MiniCart - Layout', () => {
   it('should position cart on right side', () => {
-    const { container } = renderWithRouter(<MiniCart isOpen={true} onClose={vi.fn()} />);
+    renderWithRouter(<MiniCart isOpen={true} onClose={vi.fn()} />);
     const cart = screen.getByTestId('mini-cart');
     expect(cart).toHaveClass('fixed');
     expect(cart).toHaveClass('right-0');
