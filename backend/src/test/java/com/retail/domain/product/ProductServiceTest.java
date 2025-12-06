@@ -1,7 +1,6 @@
 package com.retail.domain.product;
 
-import com.retail.TestRedisConfiguration;
-import com.retail.TestElasticsearchConfiguration;
+import com.retail.BaseTestConfiguration;
 import com.retail.domain.tenant.Tenant;
 import com.retail.infrastructure.persistence.ProductRepository;
 import com.retail.infrastructure.persistence.TenantRepository;
@@ -25,7 +24,7 @@ import java.time.Instant;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-@Import({TestRedisConfiguration.class, TestElasticsearchConfiguration.class})
+@Import(BaseTestConfiguration.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductServiceTest {
 
