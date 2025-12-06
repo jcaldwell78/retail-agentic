@@ -164,6 +164,11 @@ public class AuthController {
                         return createNewUser(request, tenantId);
                     })
                     .switchIfEmpty(Mono.defer(() -> createNewUser(request, tenantId)))
+                    .onErrorResume(IllegalArgumentException.class, error -> {
+                        logger.warn("Registration validation error for: {} - {}", request.getEmail(), error.getMessage());
+                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(new AuthResponse(error.getMessage(), null)));
+                    })
                     .onErrorResume(error -> {
                         logger.error("Registration error for: {}", request.getEmail(), error);
                         return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

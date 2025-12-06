@@ -136,7 +136,6 @@ class ProductControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @org.junit.jupiter.api.Disabled("Tenant context issue causes 500 instead of 404")
     void testGetProductByIdNotFound() {
         webTestClient.get()
                 .uri("/api/v1/products/non-existent-id")
@@ -196,7 +195,6 @@ class ProductControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @org.junit.jupiter.api.Disabled("Tenant context issue causes 500 instead of 404")
     void testUpdateProductNotFound() {
         Product product = createProduct(
                 "non-existent-id",
@@ -260,7 +258,6 @@ class ProductControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @org.junit.jupiter.api.Disabled("Localhost tenant resolution overrides tenant headers")
     void testTenantIsolation() {
         // Try to access product with different tenant ID
         String otherTenantId = "other-tenant-002";
@@ -274,7 +271,6 @@ class ProductControllerIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @org.junit.jupiter.api.Disabled("Localhost tenant resolution bypasses missing tenant header check")
     void testRequestWithoutTenantHeader() {
         // Request without tenant header should fail
         webTestClient.get()

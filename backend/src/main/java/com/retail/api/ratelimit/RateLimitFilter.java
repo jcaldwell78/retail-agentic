@@ -40,11 +40,19 @@ public class RateLimitFilter implements WebFilter {
             return chain.filter(exchange);
         }
 
+        // Admin bypass: check for admin role in authentication
+        if (isAdminRequest(exchange)) {
+            return chain.filter(exchange);
+        }
+
         // Get client identifier (IP or user ID)
         String clientId = getClientIdentifier(exchange);
 
         // Get rate limit for this endpoint
         int limit = getRateLimitForPath(exchange.getRequest().getPath().value());
+
+        // Calculate reset timestamp
+        long resetTimestamp = System.currentTimeMillis() / 1000 + WINDOW_DURATION.toSeconds();
 
         // Check rate limit
         return checkRateLimit(clientId, limit)
@@ -52,6 +60,7 @@ public class RateLimitFilter implements WebFilter {
                     if (allowed) {
                         // Add rate limit headers
                         exchange.getResponse().getHeaders().add("X-RateLimit-Limit", String.valueOf(limit));
+                        exchange.getResponse().getHeaders().add("X-RateLimit-Reset", String.valueOf(resetTimestamp));
                         return getRemainingRequests(clientId, limit)
                                 .flatMap(remaining -> {
                                     exchange.getResponse().getHeaders().add("X-RateLimit-Remaining", String.valueOf(remaining));
@@ -62,10 +71,32 @@ public class RateLimitFilter implements WebFilter {
                         exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
                         exchange.getResponse().getHeaders().add("X-RateLimit-Limit", String.valueOf(limit));
                         exchange.getResponse().getHeaders().add("X-RateLimit-Remaining", "0");
+                        exchange.getResponse().getHeaders().add("X-RateLimit-Reset", String.valueOf(resetTimestamp));
                         exchange.getResponse().getHeaders().add("Retry-After", String.valueOf(WINDOW_DURATION.toSeconds()));
                         return exchange.getResponse().setComplete();
                     }
                 });
+    }
+
+    /**
+     * Check if request is from an admin user (for monitoring tools).
+     * Admins bypass rate limiting to allow monitoring and management operations.
+     */
+    private boolean isAdminRequest(ServerWebExchange exchange) {
+        return exchange.getPrincipal()
+                .map(principal -> {
+                    // Check if principal has ADMIN role
+                    if (principal instanceof org.springframework.security.core.Authentication) {
+                        org.springframework.security.core.Authentication auth =
+                            (org.springframework.security.core.Authentication) principal;
+                        return auth.getAuthorities().stream()
+                                .anyMatch(grantedAuthority ->
+                                    "ROLE_ADMIN".equals(grantedAuthority.getAuthority()));
+                    }
+                    return false;
+                })
+                .blockOptional()
+                .orElse(false);
     }
 
     /**
