@@ -5,13 +5,15 @@ import org.springframework.context.annotation.Import;
 
 /**
  * Base test configuration that imports all necessary test configurations.
- * This ensures that mock beans for Redis and Elasticsearch are available in all integration tests.
+ * This ensures that mock beans for Redis, Elasticsearch, and MongoDB (via Testcontainers)
+ * are available in all integration tests.
  *
  * Usage: Add @Import(BaseTestConfiguration.class) to your test class,
  * or use @ContextConfiguration(classes = BaseTestConfiguration.class)
  */
 @TestConfiguration
 @Import({
+    TestContainersConfiguration.class,
     TestRedisConfiguration.class,
     TestElasticsearchConfiguration.class,
     TestTenantConfiguration.class,
