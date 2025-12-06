@@ -5,6 +5,7 @@ import com.retail.domain.auth.OAuth2Service;
 import com.retail.domain.user.User;
 import com.retail.domain.user.UserService;
 import com.retail.security.JwtService;
+import com.retail.security.TokenBlacklistService;
 import com.retail.security.tenant.TenantContext;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -32,17 +34,20 @@ public class AuthController {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final OAuth2Service oauth2Service;
+    private final TokenBlacklistService tokenBlacklistService;
 
     public AuthController(
         UserService userService,
         JwtService jwtService,
         PasswordEncoder passwordEncoder,
-        OAuth2Service oauth2Service
+        OAuth2Service oauth2Service,
+        TokenBlacklistService tokenBlacklistService
     ) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.oauth2Service = oauth2Service;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     /**
@@ -109,10 +114,33 @@ public class AuthController {
 
     /**
      * User logout.
+     * Extracts JWT token from Authorization header and adds it to the blacklist.
+     * Blacklisted tokens will be rejected by the authentication filter.
      */
     @PostMapping("/logout")
-    public Mono<ResponseEntity<Map<String, String>>> logout() {
-        // TODO: Invalidate JWT token (add to blacklist)
+    public Mono<ResponseEntity<Map<String, String>>> logout(ServerHttpRequest request) {
+        String authHeader = request.getHeaders().getFirst("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+
+            return tokenBlacklistService.blacklistToken(token)
+                .map(success -> {
+                    if (success) {
+                        logger.info("Token successfully blacklisted on logout");
+                        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+                    } else {
+                        logger.warn("Failed to blacklist token on logout");
+                        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+                    }
+                })
+                .onErrorResume(e -> {
+                    logger.error("Error blacklisting token on logout", e);
+                    return Mono.just(ResponseEntity.ok(Map.of("message", "Logged out successfully")));
+                });
+        }
+
+        // No token provided, just return success
         return Mono.just(ResponseEntity.ok(Map.of("message", "Logged out successfully")));
     }
 

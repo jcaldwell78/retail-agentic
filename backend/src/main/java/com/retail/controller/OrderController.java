@@ -4,6 +4,7 @@ import com.retail.domain.order.Order;
 import com.retail.domain.order.OrderService;
 import com.retail.domain.order.OrderStatus;
 import com.retail.domain.order.PaymentStatus;
+import com.retail.domain.user.User;
 import com.retail.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -70,6 +72,13 @@ public class OrderController {
             .switchIfEmpty(Mono.error(
                 new ResourceNotFoundException("Order with number '" + orderNumber + "' not found")
             ));
+    }
+
+    @GetMapping("/my-orders")
+    @Operation(summary = "Get my orders", description = "Retrieve orders for the currently authenticated user")
+    public Flux<Order> getMyOrders(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return orderService.findByCustomerEmail(user.getEmail());
     }
 
     @GetMapping("/customer/{email}")

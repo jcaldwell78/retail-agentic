@@ -7,14 +7,17 @@ import com.retail.domain.user.UserRole;
 import com.retail.domain.user.UserService;
 import com.retail.domain.user.UserStatus;
 import com.retail.security.JwtService;
+import com.retail.security.TokenBlacklistService;
 import com.retail.security.tenant.TenantContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -39,11 +42,14 @@ class AuthControllerTest {
     @Mock
     private OAuth2Service oauth2Service;
 
+    @Mock
+    private TokenBlacklistService tokenBlacklistService;
+
     private AuthController authController;
 
     @BeforeEach
     void setUp() {
-        authController = new AuthController(userService, jwtService, passwordEncoder, oauth2Service);
+        authController = new AuthController(userService, jwtService, passwordEncoder, oauth2Service, tokenBlacklistService);
         // Tenant context will be set via .contextWrite() in tests
     }
 
@@ -311,6 +317,95 @@ class AuthControllerTest {
 
         verify(userService).findByEmail("shared@example.com");
         verify(userService).register(any(User.class), eq("password123"));
+    }
+
+    @Test
+    void logout_withValidToken_shouldBlacklistToken() {
+        // Arrange
+        String token = "valid.jwt.token";
+        ServerHttpRequest request = mock(ServerHttpRequest.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        when(request.getHeaders()).thenReturn(headers);
+        when(tokenBlacklistService.blacklistToken(token)).thenReturn(Mono.just(true));
+
+        // Act & Assert
+        StepVerifier.create(authController.logout(request))
+            .expectNextMatches(response ->
+                response.getStatusCode() == HttpStatus.OK &&
+                response.getBody() != null &&
+                response.getBody().get("message").equals("Logged out successfully")
+            )
+            .verifyComplete();
+
+        verify(tokenBlacklistService).blacklistToken(token);
+    }
+
+    @Test
+    void logout_withoutToken_shouldReturnSuccess() {
+        // Arrange
+        ServerHttpRequest request = mock(ServerHttpRequest.class);
+        HttpHeaders headers = new HttpHeaders();
+
+        when(request.getHeaders()).thenReturn(headers);
+
+        // Act & Assert
+        StepVerifier.create(authController.logout(request))
+            .expectNextMatches(response ->
+                response.getStatusCode() == HttpStatus.OK &&
+                response.getBody() != null &&
+                response.getBody().get("message").equals("Logged out successfully")
+            )
+            .verifyComplete();
+
+        verify(tokenBlacklistService, never()).blacklistToken(anyString());
+    }
+
+    @Test
+    void logout_blacklistFailure_shouldStillReturnSuccess() {
+        // Arrange
+        String token = "valid.jwt.token";
+        ServerHttpRequest request = mock(ServerHttpRequest.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        when(request.getHeaders()).thenReturn(headers);
+        when(tokenBlacklistService.blacklistToken(token)).thenReturn(Mono.just(false));
+
+        // Act & Assert
+        StepVerifier.create(authController.logout(request))
+            .expectNextMatches(response ->
+                response.getStatusCode() == HttpStatus.OK &&
+                response.getBody() != null &&
+                response.getBody().get("message").equals("Logged out successfully")
+            )
+            .verifyComplete();
+
+        verify(tokenBlacklistService).blacklistToken(token);
+    }
+
+    @Test
+    void logout_blacklistError_shouldStillReturnSuccess() {
+        // Arrange
+        String token = "valid.jwt.token";
+        ServerHttpRequest request = mock(ServerHttpRequest.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        when(request.getHeaders()).thenReturn(headers);
+        when(tokenBlacklistService.blacklistToken(token)).thenReturn(Mono.error(new RuntimeException("Redis error")));
+
+        // Act & Assert
+        StepVerifier.create(authController.logout(request))
+            .expectNextMatches(response ->
+                response.getStatusCode() == HttpStatus.OK &&
+                response.getBody() != null &&
+                response.getBody().get("message").equals("Logged out successfully")
+            )
+            .verifyComplete();
+
+        verify(tokenBlacklistService).blacklistToken(token);
     }
 
     private User createMockUser(String email, String firstName, String lastName) {

@@ -32,8 +32,10 @@ You are tasked with implementing roadmap tasks for approximately 2 hours of work
    - Backend and frontend can be done in parallel conceptually
    - Prefer tasks with clear dependencies already met
 
-6. **Completion Criteria**:
-   - Task is only "done" when:
+6. **Session Completion Criteria**:
+   - **CRITICAL**: Continue working for approximately 2 hours OR until all selected tasks are complete
+   - Do NOT stop after completing just a few tasks - keep working for the full 2-hour duration
+   - Each individual task is only "done" when:
      - Code is written
      - Tests are written and passing
      - Build succeeds
@@ -41,11 +43,13 @@ You are tasked with implementing roadmap tasks for approximately 2 hours of work
    - Update ROADMAP.md to mark completed tasks with [x]
 
 7. **Work Approach**:
-   - Create a TodoWrite list at the start with selected tasks
-   - Work systematically through each task
+   - Create a TodoWrite list at the start with 15-20 tasks (approximately 2 hours of work)
+   - Work systematically through each task, marking as complete when done
+   - After completing each task, immediately move to the next one
+   - Continue until approximately 2 hours have passed or all tasks are complete
    - Test frequently during development
-   - Run full test suite before marking complete
-   - If stuck on a task for >15 minutes, document the blocker and move on
+   - Run full test suite periodically
+   - If stuck on a task for >15 minutes, document the blocker and move on to the next task
 
 8. **Focus Areas** (in order of priority):
    - Payment integration (PayPal gateway, processing, refunds, webhooks)
