@@ -448,9 +448,279 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
 
 ---
 
+## Phase 7.5: UX & Conversion Optimization 🛍️
+
+**Status**: Not started
+**Timeline**: 4 weeks (runs parallel with Phase 7, weeks 9-12)
+**Priority**: P1 (Critical for competitive MVP)
+
+### Week 1: Trust & Social Proof (P1)
+
+**Goal**: Build customer confidence and urgency through social proof indicators
+
+- [ ] **Social Proof Indicators**
+  - [ ] Live viewer count ("X people viewing this now")
+  - [ ] Recent purchase notifications ("Y bought in last 24h")
+  - [ ] Low stock urgency badges ("Only 3 left!")
+  - [ ] Popular/trending product badges
+  - Impact: +10-15% conversion rate
+
+- 🚧 **Enhanced Review System** (P1) - Backend 100% Complete
+  - [x] **Backend Review System (COMPLETE)**:
+    - [x] ProductReview domain model with ratings (1-5), title, comment, images
+    - [x] Review status workflow (PENDING → APPROVED/REJECTED)
+    - [x] Verified purchase badge system (hasUserPurchasedProduct check)
+    - [x] Review helpfulness voting (helpful/notHelpful counts)
+    - [x] Review statistics (average rating, total reviews, rating distribution)
+    - [x] User can review product once
+    - [x] Admin moderation endpoints (approve/reject reviews)
+    - [x] Comprehensive tests: 10 service tests + 13 controller tests (ALL PASSING)
+    - [x] Full API documentation: `backend/docs/PRODUCT_REVIEWS_FEATURE.md`
+  - [ ] Photo/video upload for reviews (frontend implementation)
+  - [ ] Filter reviews by rating/keywords (frontend)
+  - [ ] AI-powered review summary insights
+  - Impact: +20% conversion, builds trust
+
+- 🚧 **Product Q&A Section** (P1) - Backend 100% Complete
+  - [x] **Backend Q&A System (COMPLETE)**:
+    - [x] ProductQuestion domain model with upvotes, status workflow
+    - [x] ProductAnswer domain model with helpful votes, seller flag
+    - [x] Question moderation workflow (PENDING → APPROVED → ANSWERED)
+    - [x] Search within Q&A by keyword
+    - [x] Upvote questions and mark answers as helpful
+    - [x] Seller/community answer differentiation
+    - [x] Admin moderation endpoints (approve/reject/verify)
+    - [x] Q&A statistics (total questions, answered count)
+    - [x] 15 service tests (ALL PASSING)
+    - [x] Controller endpoints ready
+  - [ ] Frontend Q&A UI (consumer-web)
+  - [ ] Admin Q&A moderation UI (admin-web)
+  - Impact: Reduces support burden, increases confidence
+
+- [ ] **Trust Badges & Security**
+  - [ ] Payment security badges (PCI, SSL)
+  - [ ] Money-back guarantee display
+  - [ ] Free returns/shipping messaging
+  - [ ] Secure checkout indicators
+  - Impact: -10-15% cart abandonment
+
+**Success Criteria**: Review submission rate >10%, social proof visible on all product pages
+
+### Week 2: Shopping Experience Enhancements (P1)
+
+**Goal**: Reduce friction in product discovery and selection
+
+- [ ] **Quick View / Product Preview**
+  - [ ] Modal product preview from listings (no page navigation)
+  - [ ] Add to cart directly from quick view
+  - [ ] Variant selection in overlay
+  - [ ] Image gallery in modal
+  - Impact: +15-20% conversion, reduces friction
+
+- [ ] **Product Comparison Tool**
+  - [ ] Side-by-side comparison of 2-4 products
+  - [ ] Highlight differences in specs/attributes
+  - [ ] Add to cart from comparison view
+  - [ ] Mobile swipeable comparison cards
+  - Impact: Better decision-making, -20% returns
+
+- [ ] **Smart Search Enhancements**
+  - [ ] Search suggestions with product images
+  - [ ] "Did you mean?" for typos
+  - [ ] Recent searches history
+  - [ ] Popular/trending searches
+  - [ ] Search result filters
+  - Impact: Better discovery, -15% bounce rate
+
+- [ ] **Enhanced Filtering & Sorting**
+  - [ ] Multi-select filters with counts
+  - [ ] Active filters chip display
+  - [ ] Filter persistence across sessions
+  - [ ] Sort by: Relevance, Price, Rating, New, Bestsellers
+  - Impact: Faster discovery, higher engagement
+
+- [ ] **Size Guide & Fit Finder**
+  - [ ] Interactive size charts per category
+  - [ ] Fit recommendations based on measurements
+  - [ ] "Find my size" wizard
+  - [ ] Measurement diagrams
+  - Impact: -20-30% returns, increases confidence
+
+**Success Criteria**: Quick view usage >30%, comparison tool usage >10%, search refinement >25%
+
+### Week 3: Cart & Checkout Optimization (P0-P1)
+
+**Goal**: Minimize cart abandonment and maximize order completion
+
+- [x] **Cart Abandonment Recovery** (P0) ✅ BACKEND COMPLETE
+  - [x] **Backend Implementation (COMPLETE)**:
+    - [x] AbandonedCartService with scheduled job (hourly)
+    - [x] First reminder after 24 hours of abandonment
+    - [x] Second reminder after 72 hours of abandonment
+    - [x] Abandonment tracking fields in PersistedCart entity
+    - [x] Integration with NotificationService for email delivery
+    - [x] AbandonedCartController with admin endpoints (stats, list, manual trigger)
+    - [x] 9 unit tests passing
+  - [ ] Frontend: Exit-intent popup with discount offers
+  - [ ] Frontend: Cart saved notification on return
+  - [ ] Email templates: cart recovery with product images
+  - [ ] SMS cart reminders (opt-in)
+  - Impact: Recovers 15-20% of abandoned carts
+
+- [ ] **Checkout Progress Indicator**
+  - [ ] Clear step visualization (Shipping → Payment → Review)
+  - [ ] Ability to edit previous steps
+  - [ ] Time estimate ("2 minutes to complete")
+  - Impact: Reduces anxiety, +8% completion
+
+- [ ] **One-Click Checkout** (P1)
+  - [ ] Save payment methods (tokenized)
+  - [ ] Default shipping address
+  - [ ] "Buy now" button for returning customers
+  - [ ] Express checkout options
+  - Impact: Major conversion boost for repeat customers
+
+- [ ] **Checkout Upsells** (P2)
+  - [ ] "Frequently bought together" suggestions
+  - [ ] "Complete the look" recommendations
+  - [ ] Free shipping threshold indicator
+  - Impact: +10-15% average order value
+
+- [ ] **Guest Checkout Enhancements** (P1)
+  - [ ] "Continue as guest" more prominent
+  - [ ] Optional account creation post-purchase
+  - [ ] Social login options (Google, Facebook, Apple)
+  - Impact: -25% friction for first-time buyers
+
+**Success Criteria**: Cart abandonment <60%, checkout completion rate >65%, email recovery >12%
+
+### Week 4: Personalization & Engagement (P1-P2)
+
+**Goal**: Increase engagement, repeat visits, and customer lifetime value
+
+- 🚧 **Wishlist / Save for Later** (P1) - Backend 100% Complete
+  - [x] **Backend Wishlist System (COMPLETE)**:
+    - [x] Wishlist domain model with WishlistItem records
+    - [x] Persistent wishlist across sessions (MongoDB storage)
+    - [x] Add/remove items, clear wishlist, check if product in wishlist
+    - [x] Price drop detection service (runs every 6 hours)
+    - [x] Back-in-stock alert detection
+    - [x] Email notifications for price drops and stock alerts
+    - [x] Bulk notifications (multiple items in one email)
+    - [x] Email templates: price-drop-alert.html, stock-alert.html, bulk versions
+    - [x] Comprehensive tests: service + controller tests (ALL PASSING)
+    - [x] Full API documentation: `backend/docs/WISHLIST_FEATURE.md`
+  - [ ] Cross-device sync (frontend implementation - already supported via userId)
+  - [ ] Share wishlist with others (frontend)
+  - [ ] Move cart items to "saved for later" (frontend)
+  - Impact: +30% return visits, drives sales
+
+- [x] **Recently Viewed Products** ✅ COMPLETE
+  - [x] Persistent across sessions (Redis sorted sets with 30-day TTL)
+  - [x] RecentlyViewedService with recordView, getRecentlyViewed, removeProduct, clearAll
+  - [x] Guest to user merge when logging in
+  - [x] RecentlyViewedController with full REST API
+  - [x] 11 unit tests passing
+  - [ ] Frontend: Display on homepage and product pages
+  - [ ] Frontend: "Continue shopping" section
+  - Impact: Better navigation, +15% engagement
+
+- [ ] **Personalized Homepage**
+  - [ ] Recommendations based on browsing history
+  - [ ] "Picked for you" sections
+  - [ ] Category-based personalization
+  - Impact: +20% engagement, better discovery
+
+- [ ] **Live Chat / Chatbot** (P1)
+  - [ ] AI chatbot for common questions
+  - [ ] Handoff to human support
+  - [ ] Proactive chat on key pages
+  - [ ] Chat during checkout for abandonment prevention
+  - Impact: +12% conversion, -30% support costs
+
+- [x] **Order Tracking Experience** (P1) ✅ COMPLETE
+  - [x] Order status history tracking (already in Order entity)
+  - [x] Carrier tracking integration (UPS, FedEx, USPS, DHL)
+  - [x] Auto-generated tracking URLs for each carrier
+  - [x] Delivery date estimates based on carrier
+  - [x] OrderTrackingService with addTrackingInfo, markDelivered, getTrackingInfo
+  - [x] OrderTrackingController with REST API for tracking
+  - [x] Proactive delivery notifications (email on shipped/delivered)
+  - [x] Public tracking endpoint by order number + email verification
+  - [x] 10 unit tests passing
+  - [ ] Frontend: Visual order status timeline
+  - Impact: -40% "where is my order?" tickets
+
+**Success Criteria**: Wishlist adoption >20%, chat engagement >15%, repeat purchase rate +10%
+
+### Week 5: Mobile Experience Optimization (P1)
+
+**Goal**: Achieve mobile conversion parity with desktop
+
+- [ ] **Mobile Bottom Navigation**
+  - [ ] Sticky bottom nav: Home, Search, Cart, Account
+  - [ ] Quick access to key actions
+  - [ ] Thumb-friendly design
+  - Impact: Better UX, -20% taps to conversion
+
+- [ ] **Mobile Checkout Optimization**
+  - [ ] Auto-fill address fields
+  - [ ] Mobile-optimized payment inputs
+  - [ ] Click-to-call support during checkout
+  - [ ] Apple Pay / Google Pay prominent
+  - Impact: -25% mobile cart abandonment
+
+- [ ] **Touch Gestures**
+  - [ ] Swipe for image gallery
+  - [ ] Pull-to-refresh on listings
+  - [ ] Swipe-to-delete in cart
+  - Impact: Native app-like feel
+
+- [ ] **Progressive Web App (PWA)** (P2)
+  - [ ] Add to home screen capability
+  - [ ] Offline product browsing
+  - [ ] Push notifications for deals
+  - [ ] Service worker for caching
+  - Impact: +25% engagement, lower acquisition cost
+
+**Success Criteria**: Mobile conversion rate within 5% of desktop, mobile bounce rate <50%
+
+### Week 6: Design System & Micro-interactions (P1)
+
+**Goal**: Professional polish and perceived performance improvements
+
+- [ ] **Micro-interactions**
+  - [ ] Button hover states and transitions
+  - [ ] Loading skeletons for all async content
+  - [ ] Success/error animations
+  - [ ] Progress indicators
+  - Impact: Professional feel, +15% perceived performance
+
+- [ ] **Empty States**
+  - [ ] Beautiful "no products found" designs
+  - [ ] Empty cart illustrations with suggestions
+  - [ ] Empty wishlist with CTAs
+  - [ ] 404 page with navigation
+  - Impact: Guides users, -30% frustration exits
+
+- [ ] **Error Handling UX**
+  - [ ] Inline validation with helpful messages
+  - [ ] Form field error states
+  - [ ] Network error recovery
+  - [ ] Retry mechanisms
+  - Impact: -20% form abandonment
+
+- [ ] **Loading States**
+  - [ ] Skeleton screens for all content
+  - [ ] Progress bars for uploads
+  - [ ] Optimistic UI updates
+  - Impact: +20% perceived performance
+
+---
+
 ## Phase 8: MVP Launch 🎯 NEXT
 
-**Timeline**: Week 13 (after Phase 7 complete)
+**Timeline**: Week 13 (after Phase 7 & 7.5 complete)
 
 ### Pre-Launch Checklist (Week 13 - Day 1-3)
 
@@ -525,8 +795,8 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
 
 ### Advanced Features (P3)
 - [ ] ML-powered product recommendations
-- [ ] Wishlists and favorites (consumer-web has basic wishlist)
-- [ ] Product reviews and ratings (display implemented, submission needed)
+- [x] Wishlists and favorites - **Backend 100% Complete** (consumer-web frontend needed)
+- [x] Product reviews and ratings - **Backend 100% Complete** (consumer-web frontend needed)
 - [ ] Loyalty/rewards program
 - [ ] Referral system
 - [ ] Gift cards

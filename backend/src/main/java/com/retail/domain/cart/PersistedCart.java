@@ -42,6 +42,12 @@ public class PersistedCart {
     private boolean converted = false;
     private String orderId; // Reference to order if converted
 
+    // Abandonment tracking
+    private boolean abandonmentNotified = false;
+    private Instant abandonmentNotifiedAt;
+    private boolean secondReminderSent = false;
+    private Instant secondReminderSentAt;
+
     // Constructors
     public PersistedCart() {
     }
@@ -153,5 +159,48 @@ public class PersistedCart {
         this.cart = cart;
         this.updatedAt = cart.getUpdatedAt();
         this.lastSyncedAt = Instant.now();
+    }
+
+    // Abandonment tracking getters and setters
+    public boolean isAbandonmentNotified() {
+        return abandonmentNotified;
+    }
+
+    public void setAbandonmentNotified(boolean abandonmentNotified) {
+        this.abandonmentNotified = abandonmentNotified;
+    }
+
+    public Instant getAbandonmentNotifiedAt() {
+        return abandonmentNotifiedAt;
+    }
+
+    public void setAbandonmentNotifiedAt(Instant abandonmentNotifiedAt) {
+        this.abandonmentNotifiedAt = abandonmentNotifiedAt;
+    }
+
+    public boolean isSecondReminderSent() {
+        return secondReminderSent;
+    }
+
+    public void setSecondReminderSent(boolean secondReminderSent) {
+        this.secondReminderSent = secondReminderSent;
+    }
+
+    public Instant getSecondReminderSentAt() {
+        return secondReminderSentAt;
+    }
+
+    public void setSecondReminderSentAt(Instant secondReminderSentAt) {
+        this.secondReminderSentAt = secondReminderSentAt;
+    }
+
+    /**
+     * Reset abandonment tracking when cart is updated.
+     */
+    public void resetAbandonmentTracking() {
+        this.abandonmentNotified = false;
+        this.abandonmentNotifiedAt = null;
+        this.secondReminderSent = false;
+        this.secondReminderSentAt = null;
     }
 }

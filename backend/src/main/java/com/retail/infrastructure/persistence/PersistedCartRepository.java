@@ -53,4 +53,30 @@ public interface PersistedCartRepository extends ReactiveMongoRepository<Persist
      * Count unconverted carts for a tenant
      */
     Mono<Long> countByTenantIdAndConvertedFalse(String tenantId);
+
+    /**
+     * Find abandoned carts that haven't been notified yet.
+     * Used for first abandonment reminder.
+     */
+    @Query("{ 'tenantId': ?0, 'converted': false, 'updatedAt': { $lt: ?1 }, 'abandonmentNotified': { $ne: true }, 'userId': { $ne: null } }")
+    Flux<PersistedCart> findAbandonedCartsNotNotified(String tenantId, Instant updatedBefore);
+
+    /**
+     * Find abandoned carts that received first reminder but not second.
+     * Used for second abandonment reminder.
+     */
+    @Query("{ 'tenantId': ?0, 'converted': false, 'updatedAt': { $lt: ?1 }, 'abandonmentNotified': true, 'secondReminderSent': { $ne: true }, 'userId': { $ne: null } }")
+    Flux<PersistedCart> findAbandonedCartsForSecondReminder(String tenantId, Instant updatedBefore);
+
+    /**
+     * Find all abandoned carts globally (for scheduled job across all tenants).
+     */
+    @Query("{ 'converted': false, 'updatedAt': { $lt: ?0 }, 'abandonmentNotified': { $ne: true }, 'userId': { $ne: null } }")
+    Flux<PersistedCart> findAllAbandonedCartsNotNotified(Instant updatedBefore);
+
+    /**
+     * Find all abandoned carts for second reminder globally (for scheduled job).
+     */
+    @Query("{ 'converted': false, 'updatedAt': { $lt: ?0 }, 'abandonmentNotified': true, 'secondReminderSent': { $ne: true }, 'userId': { $ne: null } }")
+    Flux<PersistedCart> findAllAbandonedCartsForSecondReminder(Instant updatedBefore);
 }

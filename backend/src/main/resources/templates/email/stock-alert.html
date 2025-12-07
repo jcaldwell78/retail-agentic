@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back in Stock Alert</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            background: #ffffff;
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+        }
+        .product-card {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .product-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .stock-badge {
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin: 15px 0;
+        }
+        .sale-badge {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        .cta-button:hover {
+            background: #e04455;
+        }
+        .urgency-message {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #f5576c;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✨ It's Back in Stock!</h1>
+        <p>Your wishlist item is available again</p>
+    </div>
+
+    <div class="content">
+        <p>Hi there,</p>
+        <p>Good news! An item you've been waiting for is back in stock:</p>
+
+        <div class="product-card">
+            {{#if imageUrl}}
+            <img src="{{imageUrl}}" alt="{{productName}}" class="product-image">
+            {{/if}}
+
+            <div class="product-name">{{productName}}</div>
+
+            <div class="stock-badge">✓ In Stock</div>
+
+            <div class="price">
+                ${{currentPrice}}
+                {{#if onSale}}
+                <span class="sale-badge">{{salePercentage}}% OFF</span>
+                {{/if}}
+            </div>
+
+            <div class="urgency-message">
+                <strong>⚡ Act fast!</strong> This item was previously out of stock and may sell out again quickly.
+            </div>
+
+            <a href="{{productUrl}}" class="cta-button">Add to Cart →</a>
+        </div>
+
+        <p>Don't miss your chance to get this item!</p>
+    </div>
+
+    <div class="footer">
+        <p>You're receiving this email because you enabled stock alerts on your wishlist.</p>
+        <p><a href="{{unsubscribeUrl}}">Manage notification preferences</a></p>
+    </div>
+</body>
+</html>

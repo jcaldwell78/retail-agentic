@@ -29,5 +29,9 @@ public enum NotificationType {
     // Payment notifications
     PAYMENT_RECEIVED,
     PAYMENT_FAILED,
-    REFUND_PROCESSED
+    REFUND_PROCESSED,
+
+    // Wishlist notifications
+    PRICE_DROP,
+    STOCK_ALERT
 }
