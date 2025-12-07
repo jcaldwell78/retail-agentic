@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { OrderTrackingTimeline } from '@/components/OrderTrackingTimeline';
 
 interface OrderItem {
   id: string;
@@ -33,6 +34,7 @@ interface Order {
 export default function OrderHistoryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
   // Mock order data
   const [orders] = useState<Order[]>([
@@ -303,8 +305,19 @@ export default function OrderHistoryPage() {
                       View Details
                     </Button>
                     {order.trackingNumber && (
-                      <Button variant="outline" size="sm">
-                        Track Package
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setExpandedOrderId(
+                            expandedOrderId === order.id ? null : order.id
+                          )
+                        }
+                        data-testid={`track-package-button-${order.id}`}
+                      >
+                        {expandedOrderId === order.id
+                          ? 'Hide Tracking'
+                          : 'Track Package'}
                       </Button>
                     )}
                     {order.status === 'delivered' && (
@@ -326,6 +339,13 @@ export default function OrderHistoryPage() {
                       Download Invoice
                     </Button>
                   </div>
+
+                  {/* Order Tracking Timeline - Expanded */}
+                  {expandedOrderId === order.id && (
+                    <div className="mt-6 pt-6 border-t" data-testid={`tracking-timeline-${order.id}`}>
+                      <OrderTrackingTimeline orderId={order.id} />
+                    </div>
+                  )}
                 </div>
               </Card>
             ))}

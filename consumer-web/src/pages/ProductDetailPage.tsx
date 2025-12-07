@@ -3,6 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Share2, Facebook, Twitter, Mail, Link as LinkIcon } from 'lucide-react';
+import { useRecordProductView } from '@/hooks/useRecentlyViewed';
+import { RecentlyViewedProducts } from '@/components/RecentlyViewedProducts';
+import { ProductQA } from '@/components/ProductQA';
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +18,9 @@ export default function ProductDetailPage() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 5, title: '', comment: '' });
+
+  // Record this product view for "Recently Viewed" functionality
+  useRecordProductView(id);
 
   // Mock product data
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -629,6 +635,15 @@ export default function ProductDetailPage() {
                 ))}
               </div>
             </Card>
+
+            {/* Product Q&A Section */}
+            {id && (
+              <ProductQA
+                productId={id}
+                productName={product.name}
+                className="mt-6"
+              />
+            )}
           </div>
         </div>
 
@@ -655,6 +670,13 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Recently Viewed Products */}
+      <RecentlyViewedProducts
+        limit={6}
+        title="Recently Viewed"
+        className="bg-white border-t"
+      />
     </main>
   );
 }
