@@ -3,11 +3,9 @@ spring:
     name: retail-backend-test
 
   # MongoDB configuration for tests
-  # Uses embedded MongoDB provided by de.flapdoodle.embed.mongo
+  # Now using Testcontainers instead of embedded MongoDB
   data:
     mongodb:
-      # Embedded MongoDB will auto-configure on a random port
-      # No manual configuration needed - flapdoodle handles it automatically
       database: test-retail-db
 
   # R2DBC configuration for tests (H2 in-memory database)
@@ -28,17 +26,15 @@ spring:
       - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
       - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration
 
-# Embedded MongoDB configuration
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 6.0.9
-
 # API configuration for tests
 api:
   rate-limit:
     enabled: false  # Disable rate limiting in tests
+
+# App configuration for tests
+app:
+  tenant:
+    strategy: header  # Use header-based tenant resolution in tests instead of subdomain
 
 # JWT configuration for tests
 jwt:

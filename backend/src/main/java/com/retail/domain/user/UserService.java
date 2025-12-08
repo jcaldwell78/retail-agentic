@@ -32,6 +32,14 @@ public class UserService {
      * Register a new user for current tenant
      */
     public Mono<User> register(User user, String rawPassword) {
+        // Validate password strength
+        PasswordValidator.ValidationResult validation = PasswordValidator.validate(rawPassword);
+        if (!validation.isValid()) {
+            return Mono.error(new IllegalArgumentException(
+                "Password does not meet requirements: " + validation.getErrorMessage()
+            ));
+        }
+
         return TenantContext.getTenantId()
             .flatMap(tenantId -> {
                 // Check if email already exists
@@ -104,6 +112,60 @@ public class UserService {
     public Flux<User> findByRole(UserRole role, Pageable pageable) {
         return TenantContext.getTenantId()
             .flatMapMany(tenantId -> userRepository.findByTenantIdAndRole(tenantId, role, pageable));
+    }
+
+    /**
+     * Update user role for current tenant.
+     * Prevents privilege escalation by ensuring the current user has higher privileges.
+     *
+     * @param userId User ID to update
+     * @param newRole New role to assign
+     * @param currentUserRole Role of the user making the change
+     * @return Updated user
+     */
+    public Mono<User> updateUserRole(String userId, UserRole newRole, UserRole currentUserRole) {
+        // Prevent privilege escalation - only higher roles can assign roles
+        if (!canAssignRole(currentUserRole, newRole)) {
+            return Mono.error(new SecurityException(
+                "Insufficient privileges to assign role: " + newRole
+            ));
+        }
+
+        return TenantContext.getTenantId()
+            .flatMap(tenantId ->
+                userRepository.findByIdAndTenantId(userId, tenantId)
+                    .flatMap(user -> {
+                        // Prevent downgrading or modifying users with higher privileges
+                        if (!canAssignRole(currentUserRole, user.getRole())) {
+                            return Mono.error(new SecurityException(
+                                "Cannot modify user with role: " + user.getRole()
+                            ));
+                        }
+
+                        user.setRole(newRole);
+                        user.setUpdatedAt(Instant.now());
+                        return userRepository.save(user);
+                    })
+                    .switchIfEmpty(Mono.error(
+                        new IllegalArgumentException("User not found: " + userId)
+                    ))
+            );
+    }
+
+    /**
+     * Check if a user role can assign another role.
+     * STORE_OWNER can assign any role.
+     * ADMIN can assign STAFF and CUSTOMER.
+     * Others cannot assign roles.
+     */
+    private boolean canAssignRole(UserRole assignerRole, UserRole targetRole) {
+        if (assignerRole == UserRole.STORE_OWNER) {
+            return true; // Store owner can assign any role
+        }
+        if (assignerRole == UserRole.ADMIN) {
+            return targetRole == UserRole.CUSTOMER || targetRole == UserRole.STAFF;
+        }
+        return false; // STAFF and CUSTOMER cannot assign roles
     }
 
     /**

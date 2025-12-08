@@ -267,6 +267,18 @@ public class OrderService {
     }
 
     /**
+     * Check if a user has purchased a specific product.
+     * Used for verified purchase badges in reviews.
+     *
+     * TODO: Implement actual purchase verification once User model is fully integrated with orders
+     */
+    public Mono<Boolean> hasUserPurchasedProduct(String userId, String productId) {
+        // Placeholder implementation - always return false for now
+        // In future: query orders for this user and check if they purchased this product
+        return Mono.just(false);
+    }
+
+    /**
      * Generate unique order number
      */
     private String generateOrderNumber() {

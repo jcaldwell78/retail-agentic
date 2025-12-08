@@ -26,9 +26,11 @@ import java.util.Map;
 public class JwtAuthenticationFilter implements WebFilter {
 
     private final JwtService jwtService;
+    private final TokenBlacklistService tokenBlacklistService;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    public JwtAuthenticationFilter(JwtService jwtService, TokenBlacklistService tokenBlacklistService) {
         this.jwtService = jwtService;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @Override
@@ -50,42 +52,81 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         String token = authHeader.substring(7);
 
-        try {
-            // Validate token
-            if (!jwtService.validateToken(token)) {
-                return chain.filter(exchange);
-            }
+        // Check if token is blacklisted (e.g., after logout)
+        return tokenBlacklistService.isBlacklisted(token)
+            .defaultIfEmpty(false)
+            .flatMap(isBlacklisted -> {
+                if (isBlacklisted) {
+                    // Token is blacklisted, reject it
+                    return chain.filter(exchange);
+                }
 
-            // Extract claims
-            String username = jwtService.extractUsername(token);
-            String userId = jwtService.extractUserId(token);
-            String tenantId = jwtService.extractTenantId(token);
-            String role = jwtService.extractRole(token);
+                try {
+                    // Validate token
+                    if (!jwtService.validateToken(token)) {
+                        return chain.filter(exchange);
+                    }
 
-            // Create authentication with role
-            List<SimpleGrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority("ROLE_" + role)
-            );
+                    // Extract claims
+                    String username = jwtService.extractUsername(token);
+                    String userId = jwtService.extractUserId(token);
+                    String tenantId = jwtService.extractTenantId(token);
+                    String role = jwtService.extractRole(token);
 
-            UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(username, null, authorities);
-            authentication.setDetails(Map.of(
-                "userId", userId,
-                "tenantId", tenantId,
-                "role", role
-            ));
+                    // Create authentication with role
+                    List<SimpleGrantedAuthority> authorities = Collections.singletonList(
+                        new SimpleGrantedAuthority("ROLE_" + role)
+                    );
 
-            // Set security context and tenant context
-            SecurityContext securityContext = new SecurityContextImpl(authentication);
+                    UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    authentication.setDetails(Map.of(
+                        "userId", userId,
+                        "tenantId", tenantId,
+                        "role", role
+                    ));
 
-            return chain.filter(exchange)
-                .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)))
-                .contextWrite(TenantContext.withTenantId(tenantId));
+                    // Set security context and tenant context
+                    SecurityContext securityContext = new SecurityContextImpl(authentication);
 
-        } catch (Exception e) {
-            // Invalid token - continue without authentication
-            return chain.filter(exchange);
-        }
+                    return chain.filter(exchange)
+                        .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)))
+                        .contextWrite(TenantContext.withTenantId(tenantId));
+
+                } catch (Exception e) {
+                    // Invalid token - continue without authentication
+                    return chain.filter(exchange);
+                }
+            })
+            .onErrorResume(e -> {
+                // Error checking blacklist - fail safe by allowing the request through
+                // (It will still need to pass token validation)
+                try {
+                    if (!jwtService.validateToken(token)) {
+                        return chain.filter(exchange);
+                    }
+                    String username = jwtService.extractUsername(token);
+                    String userId = jwtService.extractUserId(token);
+                    String tenantId = jwtService.extractTenantId(token);
+                    String role = jwtService.extractRole(token);
+                    List<SimpleGrantedAuthority> authorities = Collections.singletonList(
+                        new SimpleGrantedAuthority("ROLE_" + role)
+                    );
+                    UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    authentication.setDetails(Map.of(
+                        "userId", userId,
+                        "tenantId", tenantId,
+                        "role", role
+                    ));
+                    SecurityContext securityContext = new SecurityContextImpl(authentication);
+                    return chain.filter(exchange)
+                        .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(securityContext)))
+                        .contextWrite(TenantContext.withTenantId(tenantId));
+                } catch (Exception ex) {
+                    return chain.filter(exchange);
+                }
+            });
     }
 
     private boolean isPublicEndpoint(String path) {

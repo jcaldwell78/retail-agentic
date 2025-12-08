@@ -63,6 +63,10 @@ public class Order {
     private List<StatusHistoryEntry> statusHistory = new ArrayList<>();
 
     private String trackingNumber;
+    private String carrier; // e.g., "UPS", "FedEx", "USPS"
+    private String trackingUrl; // Direct link to carrier tracking page
+    private Instant estimatedDeliveryDate;
+    private Instant actualDeliveryDate;
 
     private Instant createdAt;
     private Instant updatedAt;
@@ -158,6 +162,38 @@ public class Order {
 
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
+    }
+
+    public String getCarrier() {
+        return carrier;
+    }
+
+    public void setCarrier(String carrier) {
+        this.carrier = carrier;
+    }
+
+    public String getTrackingUrl() {
+        return trackingUrl;
+    }
+
+    public void setTrackingUrl(String trackingUrl) {
+        this.trackingUrl = trackingUrl;
+    }
+
+    public Instant getEstimatedDeliveryDate() {
+        return estimatedDeliveryDate;
+    }
+
+    public void setEstimatedDeliveryDate(Instant estimatedDeliveryDate) {
+        this.estimatedDeliveryDate = estimatedDeliveryDate;
+    }
+
+    public Instant getActualDeliveryDate() {
+        return actualDeliveryDate;
+    }
+
+    public void setActualDeliveryDate(Instant actualDeliveryDate) {
+        this.actualDeliveryDate = actualDeliveryDate;
     }
 
     public Instant getCreatedAt() {

@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.repository.support.ReactiveMongoReposito
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
-import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import java.io.Serializable;
 
@@ -24,7 +23,7 @@ public class TenantAwareRepositoryFactoryBean<T extends Repository<S, ID>, S, ID
     }
 
     @Override
-    protected RepositoryFactorySupport getFactoryInstance(ReactiveMongoOperations operations) {
+    protected ReactiveMongoRepositoryFactory getFactoryInstance(ReactiveMongoOperations operations) {
         return new TenantAwareRepositoryFactory(operations);
     }
 

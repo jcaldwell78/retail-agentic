@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.retail.domain.notification.NotificationPreferences;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -56,6 +57,9 @@ public class User {
     // OAuth2 fields
     private String oauth2Provider; // "GOOGLE", "FACEBOOK", or null for local auth
     private String oauth2ProviderId; // Provider's user ID
+
+    // Notification preferences
+    private NotificationPreferences notificationPreferences;
 
     private Instant createdAt;
     private Instant updatedAt;
@@ -215,6 +219,18 @@ public class User {
 
     public void setOauth2ProviderId(String oauth2ProviderId) {
         this.oauth2ProviderId = oauth2ProviderId;
+        this.updatedAt = Instant.now();
+    }
+
+    public NotificationPreferences getNotificationPreferences() {
+        if (notificationPreferences == null) {
+            notificationPreferences = NotificationPreferences.defaultPreferences();
+        }
+        return notificationPreferences;
+    }
+
+    public void setNotificationPreferences(NotificationPreferences notificationPreferences) {
+        this.notificationPreferences = notificationPreferences;
         this.updatedAt = Instant.now();
     }
 

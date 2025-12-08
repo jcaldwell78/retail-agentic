@@ -131,6 +131,21 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
+/**
+ * OAuth2 login request
+ */
+export interface OAuth2LoginRequest {
+  provider: 'GOOGLE' | 'FACEBOOK';
+  accessToken: string;
+}
+
+/**
+ * OAuth2 login response
+ */
+export interface OAuth2LoginResponse {
+  token: string;
+}
+
 export interface ApiError {
   error: string;
   message: string;

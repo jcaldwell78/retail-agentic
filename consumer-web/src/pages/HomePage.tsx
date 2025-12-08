@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { RecentlyViewedProducts } from '@/components/RecentlyViewedProducts';
 
 export default function HomePage() {
   return (
@@ -166,6 +167,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Recently Viewed Products */}
+      <RecentlyViewedProducts
+        limit={6}
+        title="Continue Shopping"
+        className="bg-gray-50"
+      />
 
       {/* Benefits Section */}
       <section className="py-16 bg-white">

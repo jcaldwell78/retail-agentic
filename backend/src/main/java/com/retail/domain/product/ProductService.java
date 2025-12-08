@@ -76,7 +76,14 @@ public class ProductService {
     public Mono<Product> create(Product product) {
         return TenantContext.getTenantId()
             .flatMap(tenantId -> {
+                // Auto-populate tenant ID
                 product.setTenantId(tenantId);
+
+                // Set default status if not provided
+                if (product.getStatus() == null) {
+                    product.setStatus(Product.ProductStatus.ACTIVE);
+                }
+
                 product.setCreatedAt(Instant.now());
                 product.setUpdatedAt(Instant.now());
 

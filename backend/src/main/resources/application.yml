@@ -49,6 +49,23 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+  # Netty server configuration for DDoS protection
+  netty:
+    connection-timeout: 20s  # Connection establishment timeout
+    idle-timeout: 60s        # Close idle connections after 60 seconds
+    # Maximum number of concurrent connections (prevents connection exhaustion attacks)
+    max-connections: 1000
+    # Maximum number of connections per client IP
+    max-connections-per-ip: 100
+  # Request size limits to prevent large payload attacks
+  max-http-request-header-size: 16KB  # Maximum size of HTTP request headers
+  servlet:
+    max-request-size: 10MB              # Maximum total request size
+    max-file-size: 10MB                 # Maximum file upload size
+  # Connection queue size (pending connections)
+  tomcat:
+    max-connections: 1000
+    accept-count: 100  # Connection queue size
 
 # Actuator Configuration
 management:

@@ -26,13 +26,13 @@ public class TestTenantConfiguration {
     @PostConstruct
     public void init() {
         // Check if test tenant already exists
-        Tenant existingTenant = tenantRepository.findBySubdomain("test-tenant").block();
+        Tenant existingTenant = tenantRepository.findBySubdomain("test-tenant-001").block();
 
         if (existingTenant == null) {
             // Create test tenant
             Tenant testTenant = new Tenant();
             testTenant.setId("test-tenant-001");
-            testTenant.setSubdomain("test-tenant");
+            testTenant.setSubdomain("test-tenant-001");  // Match the ID for header-based resolution
             testTenant.setName("Test Tenant Store");
             testTenant.setDescription("Test tenant for integration tests");
             testTenant.setContactEmail("test@example.com");

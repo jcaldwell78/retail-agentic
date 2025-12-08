@@ -1,6 +1,16 @@
 import { useState, useCallback, useEffect } from 'react';
 import { usersApi } from '@/lib/api';
-import type { User, AuthRequest, RegisterRequest, AuthResponse } from '@/lib/api';
+import type { User, AuthRequest, RegisterRequest, AuthResponse, OAuth2LoginRequest } from '@/lib/api';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  sub: string;
+  userId: string;
+  email: string;
+  role: string;
+  tenantId: string;
+  exp: number;
+}
 
 /**
  * Authentication state
@@ -120,6 +130,45 @@ export function useAuth() {
   }, [login]);
 
   /**
+   * OAuth2 login (Google, Facebook)
+   */
+  const oauth2Login = useCallback(async (request: OAuth2LoginRequest) => {
+    setState((prev) => ({ ...prev, loading: true }));
+
+    try {
+      const response = await usersApi.oauth2Login(request);
+      const token = response.token;
+
+      // Decode JWT to get user info
+      const decoded = jwtDecode<JwtPayload>(token);
+
+      // Save token
+      localStorage.setItem('auth_token', token);
+
+      // Fetch full user data
+      const user = await usersApi.getById(decoded.userId);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      setState({
+        user,
+        token,
+        loading: false,
+        isAuthenticated: true,
+      });
+
+      return user;
+    } catch (error) {
+      setState({
+        user: null,
+        token: null,
+        loading: false,
+        isAuthenticated: false,
+      });
+      throw error;
+    }
+  }, []);
+
+  /**
    * Logout user
    */
   const logout = useCallback(() => {
@@ -145,6 +194,7 @@ export function useAuth() {
     ...state,
     login,
     register,
+    oauth2Login,
     logout,
     updateUser,
   };

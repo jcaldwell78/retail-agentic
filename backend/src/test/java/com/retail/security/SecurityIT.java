@@ -1,6 +1,6 @@
 package com.retail.security;
 
-import com.retail.BaseIntegrationTest;
+import com.retail.BaseIT;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DisplayName("Security Integration Tests")
-class SecurityIT extends BaseIntegrationTest {
+class SecurityIT extends BaseIT {
 
     @LocalServerPort
     private int port;
