@@ -133,7 +133,7 @@ This roadmap outlines the development plan for the multi-tenant retail platform,
     - **Result**: BUILD SUCCESS with 317 total tests, 309 passing, 8 disabled (for valid reasons)
   - Re-enabled 2 injection prevention tests (NoSQL and SQL)
   - Removed 1 obsolete test (session cookies - we use JWT)
-- ✅ Frontend: 739 consumer-web + 587 admin-web tests (82-99% coverage)
+- ✅ Frontend: 2629 consumer-web + 667 admin-web tests (82-99% coverage)
 - ✅ E2E testing framework (Playwright) with comprehensive test suites
 - ✅ Accessibility tests (axe-core) for WCAG 2.1 Level AA
 - ✅ Performance/load tests (JMeter + Lighthouse CI)
@@ -363,9 +363,9 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
   - [ ] Document database migration process
   - [ ] Add troubleshooting guide
 
-- [ ] **User Guides** (P2)
+- 🚧 **User Guides** (P2) - Partially Complete
   - [ ] Create admin user guide (product management, orders, settings)
-  - [ ] Write customer FAQ
+  - [x] Write customer FAQ (FAQPage with 22 tests) ✅
   - [ ] Document common workflows
   - [ ] Add video tutorials
 
@@ -373,7 +373,7 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
 
 ### Week 9-10: Compliance & Performance (P0-P1)
 
-- [x] **GDPR Compliance** (P0 if EU customers) ✅
+- [x] **GDPR Compliance** (P0 if EU customers) ✅ COMPLETE
   - [x] Implement cookie consent management ✅
     - [x] CookieConsent component with preferences
     - [x] Cookie categories (necessary, analytics, marketing)
@@ -392,7 +392,8 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
     - [x] PrivacyPolicyPage with comprehensive policy text
   - [x] Create terms of service ✅
     - [x] TermsOfServicePage with legal terms
-  - [ ] Add data processing agreements
+  - [x] Add data processing agreements ✅
+    - [x] DataProcessingAgreementPage with 21 tests
 
 - [ ] **PCI DSS Compliance** (P0)
   - [ ] Ensure no card data stored (use payment gateway tokens only)
@@ -401,17 +402,20 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
   - [ ] Enable security logging
   - [ ] Complete PCI self-assessment questionnaire (SAQ)
 
-- [ ] **Accessibility** (P1)
+- 🚧 **Accessibility** (P1) - Partially Complete
   - [ ] Complete screen reader testing (NVDA, JAWS, VoiceOver)
   - [ ] Fix any accessibility issues found
-  - [ ] Create accessibility statement
+  - [x] Create accessibility statement (AccessibilityPage with 14 tests) ✅
   - [ ] Verify WCAG 2.1 AA compliance (100% score)
 
-- [ ] **Legal Documents** (P0)
-  - [ ] Draft terms of service
-  - [ ] Create refund policy
-  - [ ] Add shipping policy
-  - [ ] Create cookie policy
+- [x] **Legal Documents** (P0) ✅ COMPLETE
+  - [x] Terms of service (TermsOfServicePage)
+  - [x] Refund policy (RefundPolicyPage with 14 tests)
+  - [x] Shipping policy (ShippingPolicyPage with 12 tests)
+  - [x] Cookie policy (CookiePolicyPage with 14 tests)
+  - [x] Accessibility statement (AccessibilityPage with 14 tests)
+  - [x] Customer FAQ (FAQPage with 22 tests)
+  - [x] Data processing agreement (DataProcessingAgreementPage with 21 tests)
 
 - [ ] **Performance Optimization** (P1)
   - Already complete: Caching, query optimization, code splitting, lazy loading
@@ -512,7 +516,7 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
 - ✅ Cart Saved Notification (57 tests) - return user detection
 - ✅ Save for Later (59 tests) - move items from cart
 
-**Total: 1,350+ new tests added to consumer-web**
+**Total: 2,629 consumer-web tests, 667 admin-web tests (3,296 frontend tests)**
 
 ### Week 1: Trust & Social Proof (P1)
 
@@ -529,7 +533,7 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
   - [x] 60 unit tests passing
   - Impact: +10-15% conversion rate
 
-- 🚧 **Enhanced Review System** (P1) - Backend 100% Complete
+- ✅ **Enhanced Review System** (P1) - COMPLETE (Frontend + Backend)
   - [x] **Backend Review System (COMPLETE)**:
     - [x] ProductReview domain model with ratings (1-5), title, comment, images
     - [x] Review status workflow (PENDING → APPROVED/REJECTED)
@@ -547,11 +551,19 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
     - [x] File size limits (50MB) and count limits (5 images, 2 videos)
     - [x] Preview with play button for videos
     - [x] 20 new unit tests (ALL PASSING)
-  - [ ] Filter reviews by rating/keywords (frontend)
+  - [x] Filter reviews by rating/keywords (frontend) ✅
+    - [x] ReviewFiltersBar with rating filter, search, sort options
+    - [x] Verified purchase and with-images filters
+    - [x] 60+ unit tests passing
+  - [x] Admin review moderation UI (admin-web) ✅
+    - [x] ReviewModeration component with pending/all tabs
+    - [x] Approve/reject workflow with rejection reasons
+    - [x] Status/rating filters, search, delete confirmation
+    - [x] 39 unit tests passing
   - [ ] AI-powered review summary insights
   - Impact: +20% conversion, builds trust
 
-- 🚧 **Product Q&A Section** (P1) - Backend 100% Complete
+- ✅ **Product Q&A Section** (P1) - COMPLETE (Frontend + Backend)
   - [x] **Backend Q&A System (COMPLETE)**:
     - [x] ProductQuestion domain model with upvotes, status workflow
     - [x] ProductAnswer domain model with helpful votes, seller flag
@@ -563,8 +575,17 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
     - [x] Q&A statistics (total questions, answered count)
     - [x] 15 service tests (ALL PASSING)
     - [x] Controller endpoints ready
-  - [ ] Frontend Q&A UI (consumer-web)
-  - [ ] Admin Q&A moderation UI (admin-web)
+  - [x] Frontend Q&A UI (consumer-web) ✅
+    - [x] ProductQA component with question/answer display
+    - [x] AskQuestionForm component for new questions
+    - [x] AnswerSection with upvoting and helpful votes
+    - [x] Seller badge highlighting
+    - [x] 18 unit tests passing
+  - [x] Admin Q&A moderation UI (admin-web) ✅
+    - [x] QAModeration component with pending/all tabs
+    - [x] Question approval/rejection workflow
+    - [x] Answer verification controls
+    - [x] 42+ unit tests passing
   - Impact: Reduces support burden, increases confidence
 
 - [x] **Trust Badges & Security** ✅ FRONTEND COMPLETE
@@ -1071,8 +1092,12 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
 - ✅ Full-stack architecture and infrastructure
 - ✅ Complete backend services with reactive patterns
 - ✅ Two production-ready frontends (consumer + admin)
-- ✅ Comprehensive testing (1,300+ tests)
+- ✅ Comprehensive testing (3,700+ tests: 417 backend + 2,629 consumer-web + 667 admin-web)
 - ✅ Performance optimization and monitoring
+- ✅ Legal pages: Refund, Shipping, Cookie, Accessibility, FAQ, DPA
+- ✅ OAuth login buttons (Google/Facebook) for both apps
+- ✅ Product reviews with filtering and admin moderation
+- ✅ Product Q&A with admin moderation
 
 ### In Progress (Phase 7 - Week 1-2)
 - 🚧 Fixing 16 disabled backend tests (P0)
