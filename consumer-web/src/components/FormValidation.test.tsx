@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderHook, act } from '@testing-library/react';
@@ -52,7 +52,7 @@ const renderForm = (
           key={config.name}
           name={config.name}
           label={config.label}
-          type={config.type}
+          type={config.type === 'textarea' ? 'text' : config.type}
         />
       ))}
       <SubmitButton>Submit</SubmitButton>
@@ -395,7 +395,7 @@ describe('SubmitButton', () => {
   });
 
   it('should show loading text when submitting', async () => {
-    const onSubmit = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 100)));
+    const onSubmit = vi.fn((): Promise<void> => new Promise((resolve) => setTimeout(resolve, 100)));
     render(
       <FormProvider fieldConfigs={[]} onSubmit={onSubmit}>
         <SubmitButton loadingText="Loading...">Submit</SubmitButton>

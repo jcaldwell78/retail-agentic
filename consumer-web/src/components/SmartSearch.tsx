@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -118,7 +118,7 @@ export function SearchProvider({
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results] = useState<SearchResult[]>([]);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -698,6 +698,7 @@ export function VoiceSearchButton({ className, onResult }: VoiceSearchButtonProp
   const startListening = useCallback(() => {
     if (!isSupported) return;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
     const recognition = new SpeechRecognition();
 
@@ -709,6 +710,7 @@ export function VoiceSearchButton({ className, onResult }: VoiceSearchButtonProp
     recognition.onend = () => setIsListening(false);
     recognition.onerror = () => setIsListening(false);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setQuery(transcript);

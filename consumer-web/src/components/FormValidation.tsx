@@ -206,7 +206,7 @@ export function FormProvider({
         if (error) {
           return { ...prev, [name]: error };
         }
-        const { [name]: _, ...rest } = prev;
+        const { [name]: _, ...rest } = prev; // eslint-disable-line @typescript-eslint/no-unused-vars
         return rest;
       });
       return error;
@@ -719,7 +719,7 @@ export function useFormValidation<T extends Record<string, string>>(
         if (error) {
           return { ...prev, [name]: error };
         }
-        const { [name]: _, ...rest } = prev;
+        const { [name]: _, ...rest } = prev; // eslint-disable-line @typescript-eslint/no-unused-vars
         return rest as Partial<Record<keyof T, string>>;
       });
       return error;

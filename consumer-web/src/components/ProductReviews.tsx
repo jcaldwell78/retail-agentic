@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Camera, Video, X, Upload, Image as ImageIcon, Play } from 'lucide-react';
+import { Camera, Video, X, Image as ImageIcon, Play } from 'lucide-react';
 
 // Types
 export interface ReviewAuthor {
@@ -117,7 +117,7 @@ export function ProductReviewsProvider({
   onSubmitReview,
 }: ProductReviewsProviderProps) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
-  const [stats, setStats] = useState<ReviewStats | null>(initialStats || null);
+  const [stats] = useState<ReviewStats | null>(initialStats || null);
   const [filters, setFiltersState] = useState<ReviewFilters>(defaultFilters);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -341,8 +341,8 @@ export function ReviewMediaUpload({
   const imageCount = media.filter((m) => m.type === 'image').length;
   const videoCount = media.filter((m) => m.type === 'video').length;
 
-  const canAddImages = imageCount < maxImages;
-  const canAddVideos = videoCount < maxVideos;
+  // Image count validated in validateFile
+  // Video count validated in validateFile
 
   const validateFile = (file: File): { valid: boolean; error?: string } => {
     const isImage = ACCEPTED_IMAGE_TYPES.includes(file.type);

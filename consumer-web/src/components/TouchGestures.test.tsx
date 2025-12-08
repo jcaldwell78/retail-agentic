@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   useSwipe,
   usePinch,
   useLongPress,
-  usePullToRefresh,
   SwipeableContainer,
   SwipeToDelete,
   PullToRefresh,
@@ -14,7 +13,7 @@ import {
   SwipeableCarousel,
 } from './TouchGestures';
 
-// Helper to create touch events
+/* Helper to create touch events - commented out as unused
 function createTouchEvent(type: string, touches: { clientX: number; clientY: number }[]) {
   const touchList = touches.map((touch, i) => ({
     identifier: i,
@@ -30,6 +29,7 @@ function createTouchEvent(type: string, touches: { clientX: number; clientY: num
     changedTouches: touchList as unknown as Touch[],
   });
 }
+*/
 
 // Test component for useSwipe hook
 function SwipeTestComponent({

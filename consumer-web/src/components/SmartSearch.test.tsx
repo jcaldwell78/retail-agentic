@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -16,7 +16,7 @@ import {
   SearchBar,
   SmartSearch,
   SearchSuggestion,
-  SearchFilter,
+
 } from './SmartSearch';
 
 // Test consumer components
@@ -300,7 +300,7 @@ describe('useSearchHistory', () => {
     );
 
     // Simulate adding to history via search
-    const search = useSearch;
+    // const search = useSearch;
     // Instead, we'll verify by adding multiple items
     mockLocalStorage.getItem.mockReturnValueOnce(JSON.stringify(['a', 'b']));
 
@@ -1068,6 +1068,7 @@ describe('VoiceSearchButton', () => {
   });
 
   it('should render when speech recognition is supported', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).webkitSpeechRecognition = vi.fn();
 
     render(
@@ -1078,10 +1079,12 @@ describe('VoiceSearchButton', () => {
 
     expect(screen.getByTestId('voice-search')).toBeInTheDocument();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (window as any).webkitSpeechRecognition;
   });
 
   it('should have aria-label', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).webkitSpeechRecognition = vi.fn();
 
     render(
@@ -1092,6 +1095,7 @@ describe('VoiceSearchButton', () => {
 
     expect(screen.getByTestId('voice-search')).toHaveAttribute('aria-label', 'Voice search');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (window as any).webkitSpeechRecognition;
   });
 });

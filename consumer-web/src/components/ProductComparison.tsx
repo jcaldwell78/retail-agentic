@@ -2,7 +2,6 @@ import { useState, useCallback, createContext, useContext, ReactNode } from 'rea
 import { Link } from 'react-router-dom';
 import {
   X,
-  Plus,
   Scale,
   Check,
   Minus,

@@ -16,7 +16,6 @@ import {
   Product,
   Category,
   Banner,
-  PersonalizationData,
 } from './PersonalizedHomepage';
 
 // Test consumer component

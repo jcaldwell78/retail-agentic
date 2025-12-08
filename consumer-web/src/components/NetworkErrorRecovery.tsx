@@ -726,7 +726,7 @@ export function useNetworkAwareFetch<T>(
 
   const { execute, isRetrying, retryCount, reset } = useRetry(fetchFn, retryConfig);
 
-  const fetch = useCallback(async () => {
+  const doFetch = useCallback(async (): Promise<T> => {
     setIsLoading(true);
     setError(null);
 
@@ -743,12 +743,12 @@ export function useNetworkAwareFetch<T>(
     }
   }, [execute]);
 
-  const refetch = useCallback(() => {
+  const refetch = useCallback((): Promise<T> => {
     reset();
-    return fetch();
-  }, [reset, fetch]);
+    return doFetch();
+  }, [reset, doFetch]);
 
-  return { data, error, isLoading, isRetrying, retryCount, fetch, refetch, isOnline };
+  return { data, error, isLoading, isRetrying, retryCount, fetch: doFetch, refetch, isOnline };
 }
 
 // Container component

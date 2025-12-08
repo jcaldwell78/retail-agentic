@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   PWAProvider,
@@ -14,7 +14,6 @@ import {
 
 // Mock navigator.serviceWorker
 const mockServiceWorkerRegister = vi.fn();
-const mockServiceWorkerReady = vi.fn();
 
 // Mock window functions
 const mockPrompt = vi.fn();

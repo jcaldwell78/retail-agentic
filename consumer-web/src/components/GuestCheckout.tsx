@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -81,7 +81,6 @@ export function GuestCheckoutProvider({
   children,
   onContinueAsGuest,
   onGoToLogin,
-  onComplete,
   savedAddresses,
   isLoading = false,
 }: GuestCheckoutProviderProps) {

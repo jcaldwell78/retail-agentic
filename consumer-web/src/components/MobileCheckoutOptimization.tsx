@@ -1,11 +1,10 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useCallback,
   useEffect,
   ReactNode,
-  FormEvent,
 } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -87,7 +86,8 @@ function usePaymentMethodAvailability(): {
 
   useEffect(() => {
     // Check Apple Pay availability
-    if (window.ApplePaySession && ApplePaySession.canMakePayments) {
+    const ApplePaySessionGlobal = (window as unknown as { ApplePaySession?: { canMakePayments?: () => boolean } }).ApplePaySession;
+    if (ApplePaySessionGlobal && ApplePaySessionGlobal.canMakePayments) {
       setApplePayAvailable(true);
     }
 
@@ -103,7 +103,7 @@ function usePaymentMethodAvailability(): {
 // Provider
 interface MobileCheckoutProviderProps {
   children: ReactNode;
-  supportContact?: SupportContact;
+  supportContact?: SupportContact | null;
   onAddressAutofill?: (data: AddressAutofillData) => void;
   onPaymentMethodSelect?: (methodId: string) => void;
   customPaymentMethods?: PaymentMethod[];

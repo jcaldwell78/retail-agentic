@@ -9,7 +9,6 @@ import {
   CreditCard,
   MapPin,
   Bell,
-  Users,
   Star,
   MessageSquare,
   Inbox,

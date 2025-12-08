@@ -26,7 +26,7 @@ describe('FacebookLoginButton', () => {
   }) => void) | null = null;
 
   const setupFacebookMock = () => {
-    mockFBLogin = vi.fn().mockImplementation((callback, _params) => {
+    mockFBLogin = vi.fn().mockImplementation((callback) => {
       capturedLoginCallback = callback;
     });
 

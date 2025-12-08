@@ -15,7 +15,6 @@ import {
   MediaGallery,
   Review,
   ReviewStats,
-  ReviewFilters,
   UploadedMedia,
   ReviewMedia,
 } from './ProductReviews';
@@ -770,7 +769,7 @@ describe('ReviewMediaUpload', () => {
     vi.clearAllMocks();
   });
 
-  const createMockFile = (name: string, type: string, size: number = 1024): File => {
+  const createMockFile = (name: string, type: string): File => {
     const blob = new Blob([''], { type });
     return new File([blob], name, { type });
   };

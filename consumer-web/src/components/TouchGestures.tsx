@@ -1,4 +1,4 @@
-import React, {
+import {
   useRef,
   useCallback,
   useEffect,
@@ -216,7 +216,7 @@ export function usePinch<T extends HTMLElement>(options: UsePinchOptions = {}) {
   );
 
   const handleTouchEnd = useCallback(
-    (e: globalThis.TouchEvent) => {
+    () => {
       if (initialDistance.current !== null) {
         onPinchEnd?.({ scale: currentScale.current, center: { x: 0, y: 0 } });
         initialDistance.current = null;
@@ -617,7 +617,7 @@ export function PinchableImage({
 }: PinchableImageProps) {
   const [scale, setScale] = useState(1);
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
+  // const containerRef = useRef<HTMLDivElement>(null);
 
   const { ref } = usePinch<HTMLDivElement>({
     onPinch: (data) => {
@@ -689,7 +689,7 @@ export function LongPressMenu({ children, items, className }: LongPressMenuProps
   const [isOpen, setIsOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
-  const { ref, isPressed } = useLongPress<HTMLDivElement>({
+  const { ref, } = useLongPress<HTMLDivElement>({
     onLongPress: (data) => {
       setMenuPosition(data.position);
       setIsOpen(true);

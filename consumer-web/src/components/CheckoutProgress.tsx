@@ -4,7 +4,6 @@ import {
   Truck,
   CreditCard,
   CheckCircle,
-  Circle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

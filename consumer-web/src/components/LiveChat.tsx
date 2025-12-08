@@ -15,12 +15,7 @@ import {
   Maximize2,
   User,
   Bot,
-  Phone,
   HelpCircle,
-  ChevronDown,
-  Loader2,
-  CheckCircle,
-  AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -245,7 +240,8 @@ export function ChatProvider({
   const {
     botName = 'ShopBot',
     welcomeMessage,
-    offlineMessage = 'Our team is currently offline. Please leave a message and we\'ll get back to you soon.',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    offlineMessage: _offlineMessage = 'Our team is currently offline. Please leave a message and we\'ll get back to you soon.',
     proactiveDelay = 30000,
     proactiveEnabled = false,
     proactivePages = ['/checkout', '/cart'],
@@ -976,8 +972,6 @@ export function LiveChat({
   proactiveMessage,
   proactiveDelay,
   proactivePages,
-  onSendMessage,
-  onRequestHumanAgent,
   className,
 }: LiveChatProps) {
   const position = config?.position || 'bottom-right';
@@ -997,15 +991,5 @@ export function LiveChat({
   );
 }
 
-// ============================================================================
-// Export all components
-// ============================================================================
-
-export {
-  ChatContext,
-  type ChatContextValue,
-  type ChatConfig,
-  type ChatMessage,
-  type ChatAgent,
-  type ChatStatus,
-};
+// Default export
+export default LiveChat;

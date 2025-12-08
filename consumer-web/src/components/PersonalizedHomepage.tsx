@@ -85,7 +85,7 @@ export interface PersonalizedHomepageProviderProps {
 }
 
 const RECENTLY_VIEWED_KEY = 'recently_viewed_products';
-const MAX_RECENTLY_VIEWED = 20;
+
 
 export function PersonalizedHomepageProvider({
   children,

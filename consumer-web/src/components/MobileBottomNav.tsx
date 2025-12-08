@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Home,
-  Search,
   ShoppingCart,
   Heart,
   User,
-  Menu,
   Grid,
   Package,
   Settings,

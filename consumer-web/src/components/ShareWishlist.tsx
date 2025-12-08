@@ -5,7 +5,6 @@ import {
   Mail,
   Copy,
   Check,
-  X,
   Facebook,
   Twitter,
   MessageCircle,

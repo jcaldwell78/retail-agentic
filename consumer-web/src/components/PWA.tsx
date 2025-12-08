@@ -1,4 +1,4 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
@@ -285,11 +285,12 @@ export function PWAProvider({
 }
 
 // Utility function for push notification key conversion
-function urlBase64ToUint8Array(base64String: string): Uint8Array {
+function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
+  const buffer = new ArrayBuffer(rawData.length);
+  const outputArray = new Uint8Array(buffer);
   for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
@@ -615,7 +616,7 @@ export function AddToHomeScreenBanner({
   className,
   onDismiss,
 }: AddToHomeScreenBannerProps) {
-  const { canInstall, isSupported } = usePWA();
+  const { canInstall, } = usePWA();
   const [isDismissed, setIsDismissed] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isInStandaloneMode, setIsInStandaloneMode] = useState(false);
@@ -708,8 +709,7 @@ export function PWASettingsPanel({ className }: PWASettingsPanelProps) {
     canInstall,
     hasUpdate,
     isOffline,
-    isNotificationSubscribed,
-  } = usePWA();
+    } = usePWA();
 
   return (
     <Card className={className} data-testid="pwa-settings-panel">

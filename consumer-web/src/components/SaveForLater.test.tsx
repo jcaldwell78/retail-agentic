@@ -46,13 +46,13 @@ const mockCartItem = {
   variant: 'Black',
 };
 
-const mockCartItem2 = {
-  id: 'cart-2',
-  productId: 'prod-2',
-  name: 'Phone Case',
-  price: 19.99,
-  quantity: 2,
-};
+// const mockCartItem2 = {
+//   id: 'cart-2',
+//   productId: 'prod-2',
+//   name: 'Phone Case',
+//   price: 19.99,
+//   quantity: 2,
+// };
 
 const mockSavedItem = {
   id: 'saved-prod-1-123',

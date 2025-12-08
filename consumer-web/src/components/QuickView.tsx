@@ -1,10 +1,9 @@
-import React, { useState, useCallback, createContext, useContext, ReactNode } from 'react';
+import { useState, useCallback, createContext, useContext, ReactNode } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import {
-  X,
   ChevronLeft,
   ChevronRight,
   ShoppingCart,
@@ -711,7 +710,7 @@ interface ProductCardWithQuickViewProps {
   onAddToCart?: (product: QuickViewProduct) => void;
 }
 
-export function ProductCardWithQuickView({ product, onAddToCart }: ProductCardWithQuickViewProps) {
+export function ProductCardWithQuickView({ product, }: ProductCardWithQuickViewProps) {
   const { openQuickView } = useQuickView();
 
   const formatPrice = (price: number) => {

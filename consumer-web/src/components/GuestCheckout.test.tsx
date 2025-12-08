@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -11,7 +11,6 @@ import {
   CreateAccountPrompt,
   GuestOrderSummary,
   GuestCheckout,
-  GuestInfo,
   ShippingAddress,
 } from './GuestCheckout';
 
@@ -28,7 +27,6 @@ function TestGuestCheckoutConsumer() {
     setStep,
     validateEmail,
     validatePhone,
-    validateForm,
     setError,
     clearErrors,
     continueAsGuest,
