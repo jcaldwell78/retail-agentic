@@ -6,6 +6,8 @@ import type {
   AuthResponse,
   ChangePasswordRequest,
   Address,
+  OAuth2LoginRequest,
+  OAuth2LoginResponse,
 } from './types';
 
 const BASE_PATH = '/api/v1/users';
@@ -87,5 +89,12 @@ export const usersApi = {
    */
   emailExists: async (email: string): Promise<boolean> => {
     return api.get<boolean>(`${BASE_PATH}/email/${email}/exists`);
+  },
+
+  /**
+   * OAuth2 login (Google, Facebook)
+   */
+  oauth2Login: async (data: OAuth2LoginRequest): Promise<OAuth2LoginResponse> => {
+    return api.post<OAuth2LoginResponse>('/api/v1/auth/oauth2/login', data);
   },
 };

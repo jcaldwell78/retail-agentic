@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import type { User, AuthRequest, RegisterRequest } from '@/lib/api';
+import type { User, AuthRequest, RegisterRequest, OAuth2LoginRequest } from '@/lib/api';
 
 interface AuthContextType {
   user: User | null;
@@ -9,6 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (credentials: AuthRequest) => Promise<User>;
   register: (data: RegisterRequest) => Promise<User>;
+  oauth2Login: (request: OAuth2LoginRequest) => Promise<User>;
   logout: () => void;
   updateUser: (user: User) => void;
 }

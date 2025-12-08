@@ -11,5 +11,8 @@ public enum UserStatus {
     SUSPENDED,
 
     /** Account is permanently inactive */
-    INACTIVE
+    INACTIVE,
+
+    /** Account has been deleted per GDPR request */
+    DELETED
 }

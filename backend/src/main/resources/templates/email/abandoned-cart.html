@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Order</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .cart-items {
+            margin: 25px 0;
+        }
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .item-image-placeholder {
+            width: 100px;
+            height: 100px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+        .item-quantity {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        .cart-summary {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .summary-row.total {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+            margin-top: 10px;
+            margin-bottom: 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #4f46e5;
+            color: white;
+            padding: 16px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .cta-button:hover {
+            background: #4338ca;
+        }
+        .urgency-badge {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+        .benefits {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .benefits h3 {
+            margin: 0 0 15px 0;
+            color: #166534;
+            font-size: 16px;
+        }
+        .benefits ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .benefits li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: #166534;
+        }
+        .benefits li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .help-section {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        .help-section p {
+            margin: 0 0 10px 0;
+            color: #666;
+        }
+        .help-link {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+        .footer a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        .discount-banner {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1a1a1a;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .discount-code {
+            display: inline-block;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        {{#if discountCode}}
+        <div class="discount-banner">
+            Complete your order and save! Use code: <span class="discount-code">{{discountCode}}</span>
+        </div>
+        {{/if}}
+
+        <div class="header">
+            <h1>You Left Something Behind!</h1>
+            <p>Your cart is waiting for you</p>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Hi {{customerName}},</p>
+            <p>We noticed you didn't complete your purchase. Don't worry - we've saved your cart for you!</p>
+
+            <div class="cart-items">
+                {{#each items}}
+                <div class="cart-item">
+                    {{#if imageUrl}}
+                    <img src="{{imageUrl}}" alt="{{productName}}" class="item-image">
+                    {{else}}
+                    <div class="item-image-placeholder">No Image</div>
+                    {{/if}}
+                    <div class="item-details">
+                        <div class="item-name">{{productName}}</div>
+                        <div class="item-quantity">Quantity: {{quantity}}</div>
+                        <div class="item-price">${{subtotal}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal ({{itemCount}} items)</span>
+                    <span>${{subtotal}}</span>
+                </div>
+                {{#if discount}}
+                <div class="summary-row">
+                    <span>Discount</span>
+                    <span style="color: #16a34a;">-${{discount}}</span>
+                </div>
+                {{/if}}
+                <div class="summary-row">
+                    <span>Estimated Shipping</span>
+                    <span>{{#if freeShipping}}FREE{{else}}${{shipping}}{{/if}}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Estimated Total</span>
+                    <span>${{estimatedTotal}}</span>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <a href="{{cartUrl}}" class="cta-button">Complete My Order</a>
+                {{#if expiresIn}}
+                <div class="urgency-badge">⏰ Items reserved for {{expiresIn}}</div>
+                {{/if}}
+            </div>
+
+            <div class="benefits">
+                <h3>Why shop with us?</h3>
+                <ul>
+                    <li>Free shipping on orders over $50</li>
+                    <li>Easy 30-day returns</li>
+                    <li>Secure payment processing</li>
+                    <li>24/7 customer support</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <p>Need help? Have questions about your order?</p>
+            <a href="{{supportUrl}}" class="help-link">Contact our support team</a>
+        </div>
+
+        <div class="footer">
+            <p>You're receiving this email because you started a purchase at {{storeName}}.</p>
+            <p><a href="{{unsubscribeUrl}}">Unsubscribe</a> | <a href="{{preferencesUrl}}">Email preferences</a></p>
+            <p>© {{currentYear}} {{storeName}}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -40,6 +40,12 @@ export const config = {
     stripePublicKey: import.meta.env.VITE_STRIPE_PUBLIC_KEY,
   },
 
+  // OAuth2
+  oauth2: {
+    googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
+    facebookAppId: import.meta.env.VITE_FACEBOOK_APP_ID || '',
+  },
+
   // Development helpers
   isDevelopment: import.meta.env.DEV,
   isProduction: import.meta.env.PROD,
