@@ -34,6 +34,7 @@ public class TracingConfiguration {
      * @return WebFilter for trace enrichment
      */
     @Bean
+    @ConditionalOnBean(Tracer.class)
     public WebFilter traceEnrichmentFilter(Tracer tracer) {
         return (exchange, chain) -> {
             return Mono.deferContextual(contextView -> {
@@ -57,17 +58,6 @@ public class TracingConfiguration {
         };
     }
 
-    /**
-     * Custom observation convention for more detailed span naming.
-     * This can be expanded to provide domain-specific span names.
-     *
-     * @param registry the observation registry
-     * @return customized observation registry
-     */
-    @Bean
-    public ObservationRegistry customObservationRegistry(ObservationRegistry registry) {
-        // You can add custom observation filters or conventions here
-        // For now, we'll use the default registry
-        return registry;
-    }
+    // Removed customObservationRegistry bean to avoid circular dependency.
+    // The default ObservationRegistry from Spring Boot auto-configuration is sufficient.
 }

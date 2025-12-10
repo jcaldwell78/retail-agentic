@@ -55,8 +55,8 @@ public class PaymentProcessingService {
         // Determine gateway based on payment method
         PaymentGateway gateway = getGatewayForMethod(paymentMethod);
 
-        // Create payment request
-        PaymentRequest request = new PaymentRequest();
+        // Create gateway payment request
+        com.retail.domain.payment.gateway.PaymentRequest request = new com.retail.domain.payment.gateway.PaymentRequest();
         request.setOrderId(orderId);
         request.setAmount(amount);
         request.setCurrency(currency);
@@ -82,7 +82,7 @@ public class PaymentProcessingService {
      */
     private Mono<PaymentTransaction> authorizePaymentWithRetry(
         PaymentGateway gateway,
-        PaymentRequest request,
+        com.retail.domain.payment.gateway.PaymentRequest request,
         PaymentTransaction transaction
     ) {
         return gateway.authorizePayment(request)
@@ -227,7 +227,7 @@ public class PaymentProcessingService {
 
                 PaymentGateway gateway = getGatewayForName(transaction.getGateway());
 
-                PaymentRequest request = new PaymentRequest();
+                com.retail.domain.payment.gateway.PaymentRequest request = new com.retail.domain.payment.gateway.PaymentRequest();
                 request.setOrderId(transaction.getOrderId());
                 request.setAmount(transaction.getAmount());
                 request.setCurrency(transaction.getCurrency());

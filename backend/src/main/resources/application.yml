@@ -5,7 +5,7 @@ spring:
   # MongoDB Configuration
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/retaildb}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://admin:admin123@localhost:27017/retaildb?authSource=admin}
       auto-index-creation: true
       # Connection pool configuration for reactive MongoDB
       # Uses MongoDB Java Driver connection pool
@@ -41,7 +41,7 @@ spring:
 
   # Elasticsearch Configuration
   elasticsearch:
-    uris: ${SPRING_ELASTICSEARCH_URIS:http://localhost:9200}
+    uris: ${SPRING_ELASTICSEARCH_URIS:localhost:9200}
 
 # Server Configuration
 server:
@@ -121,7 +121,7 @@ management:
       enabled: true
       mode: full
   tracing:
-    enabled: true
+    enabled: ${TRACING_ENABLED:false}  # Disabled by default for local dev, enable in production
     sampling:
       probability: 1.0  # Sample 100% of requests in dev/test, reduce in production
   zipkin:
@@ -136,6 +136,37 @@ app:
   tenant:
     # Strategy: subdomain or path
     strategy: ${TENANT_STRATEGY:subdomain}
+
+# Payment Provider Configuration
+# Configure these via environment variables - no default keys for security
+payment:
+  # PayPal Configuration (Sandbox by default)
+  paypal:
+    client-id: ${PAYPAL_CLIENT_ID:}
+    client-secret: ${PAYPAL_CLIENT_SECRET:}
+    sandbox: ${PAYPAL_SANDBOX:true}
+    return-url: ${PAYPAL_RETURN_URL:http://localhost:3000/checkout/success}
+    cancel-url: ${PAYPAL_CANCEL_URL:http://localhost:3000/checkout/cancel}
+
+  # Stripe Configuration
+  stripe:
+    # Configure via environment variables (STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY)
+    secret-key: ${STRIPE_SECRET_KEY:}
+    publishable-key: ${STRIPE_PUBLISHABLE_KEY:}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+
+  # Apple Pay Configuration
+  apple-pay:
+    merchant-id: ${APPLE_PAY_MERCHANT_ID:merchant.com.retail.platform}
+    merchant-name: ${APPLE_PAY_MERCHANT_NAME:Retail Platform}
+    country-code: ${APPLE_PAY_COUNTRY_CODE:US}
+    supported-networks: ${APPLE_PAY_NETWORKS:visa,mastercard,amex,discover}
+
+  # Google Pay Configuration
+  google-pay:
+    merchant-id: ${GOOGLE_PAY_MERCHANT_ID:BCR2DN6T2K7G5ELA}
+    merchant-name: ${GOOGLE_PAY_MERCHANT_NAME:Retail Platform}
+    environment: ${GOOGLE_PAY_ENVIRONMENT:TEST}
 
 # Logging Configuration
 logging:

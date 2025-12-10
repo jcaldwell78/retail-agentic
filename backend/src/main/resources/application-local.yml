@@ -1,0 +1,84 @@
+# Local Development Profile - Simplified configuration for local development
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  # MongoDB Configuration with authentication
+  data:
+    mongodb:
+      uri: mongodb://admin:admin123@localhost:27017/retaildb?authSource=admin
+      auto-index-creation: true
+      # Smaller pool for local dev
+      max-connection-pool-size: 20
+      min-connection-pool-size: 5
+
+    # Redis Configuration
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 2
+
+  # R2DBC PostgreSQL Configuration
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/retaildb
+    username: postgres
+    password: postgres
+    pool:
+      initial-size: 5
+      max-size: 10
+
+  # Elasticsearch Configuration
+  elasticsearch:
+    uris: localhost:9200
+
+# Server Configuration
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Actuator Configuration - Simplified for local dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  # Disable tracing for local development
+  tracing:
+    enabled: false
+
+# Application Configuration
+app:
+  tenant:
+    strategy: subdomain
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.retail: DEBUG
+    org.springframework.web: INFO
+    org.springframework.data.mongodb: INFO
+    org.springframework.boot.autoconfigure: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# OpenAPI/Swagger Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
