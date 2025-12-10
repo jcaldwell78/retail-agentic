@@ -342,7 +342,11 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
     - [x] All v1 endpoints documented
     - [x] Multi-tenant support documentation
     - [x] Rate limiting documentation
-  - [ ] Add code examples for common use cases
+  - [x] Add code examples for common use cases ✅
+    - [x] Comprehensive API_CODE_EXAMPLES.md
+    - [x] cURL, JavaScript, and Python examples
+    - [x] Authentication, Products, Cart, Orders, Wishlist, Reviews, Q&A, GDPR
+    - [x] Error handling and rate limiting patterns
 
 - [x] **Architecture Documentation** (P1) ✅
   - [x] Create architecture diagrams (C4 model) ✅
@@ -356,16 +360,29 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
   - [x] Document database schema
   - [x] Create sequence diagrams for critical flows
 
-- [ ] **Deployment Guides** (P0)
-  - [ ] Write deployment runbook
-  - [ ] Document rollback procedures
-  - [ ] Create environment setup guide
-  - [ ] Document database migration process
-  - [ ] Add troubleshooting guide
+- [x] **Deployment Guides** (P0) ✅
+  - [x] Write deployment runbook (docs/DEPLOYMENT.md) ✅
+    - [x] Pre-deployment checklist
+    - [x] Build artifact procedures
+    - [x] Staging and production deployment steps
+    - [x] Blue-green and rolling deployment options
+    - [x] Post-deployment verification
+  - [x] Document rollback procedures ✅
+    - [x] Kubernetes rollback commands
+    - [x] Blue-green rollback
+    - [x] Database rollback scripts
+    - [x] Rollback triggers
+  - [x] Create environment setup guide ✅
+  - [x] Document database migration process ✅
+  - [x] Add troubleshooting guide ✅
+    - [x] Common issues (CrashLoopBackOff, high error rate, DB connections, latency, SSL)
+    - [x] Emergency contacts
 
 - 🚧 **User Guides** (P2) - Partially Complete
   - [ ] Create admin user guide (product management, orders, settings)
   - [x] Write customer FAQ (FAQPage with 22 tests) ✅
+  - [x] Contact page with form validation (ContactPage with 20 tests) ✅
+  - [x] Footer component with legal page links (16 tests) ✅
   - [ ] Document common workflows
   - [ ] Add video tutorials
 
@@ -1092,12 +1109,18 @@ This is the primary focus for Phase 2 development. Estimated timeline: 12 weeks.
 - ✅ Full-stack architecture and infrastructure
 - ✅ Complete backend services with reactive patterns
 - ✅ Two production-ready frontends (consumer + admin)
-- ✅ Comprehensive testing (3,700+ tests: 417 backend + 2,629 consumer-web + 667 admin-web)
+- ✅ Comprehensive testing (3,773 tests: 417 backend + 2,689 consumer-web + 667 admin-web)
 - ✅ Performance optimization and monitoring
-- ✅ Legal pages: Refund, Shipping, Cookie, Accessibility, FAQ, DPA
+- ✅ Legal pages: Refund, Shipping, Cookie, Accessibility, FAQ, DPA, Contact
 - ✅ OAuth login buttons (Google/Facebook) for both apps
 - ✅ Product reviews with filtering and admin moderation
 - ✅ Product Q&A with admin moderation
+- ✅ Footer component with legal page links
+- ✅ API code examples documentation (backend/docs/API_CODE_EXAMPLES.md)
+- ✅ Deployment runbook (docs/DEPLOYMENT.md)
+- ✅ Tenant-assignable theme system with 5 preset themes and custom parameters
+- ✅ Payment component UI (PayPal, Apple Pay, Google Pay buttons)
+- ✅ RadioGroup and Alert UI components for consumer-web
 
 ### In Progress (Phase 7 - Week 1-2)
 - 🚧 Fixing 16 disabled backend tests (P0)
