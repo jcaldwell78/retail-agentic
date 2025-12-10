@@ -2,50 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+ * Tenant Theme System - CSS Custom Properties
+ *
+ * These variables are dynamically overwritten by the ThemeProvider
+ * based on tenant configuration. Default values below match "Luxury Minimal".
+ * ============================================================================ */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* --- Core Colors --- */
+    --background: 0 0% 99%;
+    --foreground: 0 0% 9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --popover-foreground: 0 0% 9%;
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 43 30% 90%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 43 54% 59%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --warning: 43 96% 56%;
+    --warning-foreground: 0 0% 9%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 43 54% 59%;
+
+    /* --- Spacing & Layout --- */
+    --radius: 0.25rem;
+
+    /* --- Typography --- */
+    --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+    --font-body: "Outfit", "DM Sans", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+    /* --- Hero Section --- */
+    --hero-gradient-start: 0 0% 10%;
+    --hero-gradient-end: 0 0% 15%;
+    --hero-gradient-angle: 180deg;
+    --hero-text: 0 0% 98%;
+
+    /* --- Animation --- */
+    --animation-speed: 1.2;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 0 0% 5%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 43 20% 15%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 43 54% 59%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 60% 40%;
+    --success-foreground: 0 0% 98%;
+    --warning: 43 80% 45%;
+    --warning-foreground: 0 0% 9%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 43 54% 59%;
   }
 }
 
@@ -53,8 +85,117 @@
   * {
     @apply border-border;
   }
+
+  html {
+    /* Use custom font families from theme */
+    font-family: var(--font-body);
+  }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Headings use display font */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+
+  /* Code elements use mono font */
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
+  }
+}
+
+/* ============================================================================
+ * Theme-Aware Utility Classes
+ * ============================================================================ */
+
+@layer utilities {
+  /* Hero gradient background */
+  .bg-hero-gradient {
+    background: linear-gradient(
+      var(--hero-gradient-angle),
+      hsl(var(--hero-gradient-start)),
+      hsl(var(--hero-gradient-end))
+    );
+    color: hsl(var(--hero-text));
+  }
+
+  /* Theme-aware animations with speed multiplier */
+  .animate-theme-fade-in {
+    animation: theme-fade-in calc(0.3s * var(--animation-speed)) ease-out;
+  }
+
+  .animate-theme-slide-up {
+    animation: theme-slide-up calc(0.4s * var(--animation-speed)) ease-out;
+  }
+
+  .animate-theme-scale-in {
+    animation: theme-scale-in calc(0.2s * var(--animation-speed)) ease-out;
+  }
+
+  /* Staggered animation delays */
+  .stagger-1 { animation-delay: calc(0.1s * var(--animation-speed)); }
+  .stagger-2 { animation-delay: calc(0.2s * var(--animation-speed)); }
+  .stagger-3 { animation-delay: calc(0.3s * var(--animation-speed)); }
+  .stagger-4 { animation-delay: calc(0.4s * var(--animation-speed)); }
+  .stagger-5 { animation-delay: calc(0.5s * var(--animation-speed)); }
+
+  /* Success color utilities */
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+  .text-success {
+    color: hsl(var(--success));
+  }
+  .border-success {
+    border-color: hsl(var(--success));
+  }
+
+  /* Warning color utilities */
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+  .border-warning {
+    border-color: hsl(var(--warning));
+  }
+}
+
+/* ============================================================================
+ * Theme Animations
+ * ============================================================================ */
+
+@keyframes theme-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes theme-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes theme-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

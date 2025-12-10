@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Settings, Store, Palette, Mail, Truck, DollarSign, Shield } from 'lucide-react';
+import { Settings, Store, Palette, Mail, Truck, DollarSign, Shield, ChevronRight } from 'lucide-react';
 
 export interface StoreSettings {
   general: {
@@ -234,38 +235,59 @@ export default function StoreSettingsPage() {
           <Card className="p-6" data-testid="branding-settings">
             <h2 className="text-xl font-semibold mb-6">Branding</h2>
             <div className="space-y-4 max-w-2xl">
-              <div>
-                <label className="block text-sm font-medium mb-2">Primary Color</label>
-                <div className="flex gap-3">
-                  <input
-                    type="color"
-                    value={settings.branding.primaryColor}
-                    onChange={(e) => updateBrandingSettings('primaryColor', e.target.value)}
-                    className="h-10 w-20 rounded border"
-                    data-testid="primary-color"
-                  />
-                  <Input
-                    value={settings.branding.primaryColor}
-                    onChange={(e) => updateBrandingSettings('primaryColor', e.target.value)}
-                    placeholder="#3B82F6"
-                  />
+              {/* Theme Editor Link */}
+              <Link
+                to="/settings/theme"
+                className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg hover:from-blue-100 hover:to-purple-100 transition-colors"
+                data-testid="theme-editor-link"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                    <Palette className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Store Theme</h3>
+                    <p className="text-sm text-gray-600">Customize colors, typography, and visual style</p>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Secondary Color</label>
-                <div className="flex gap-3">
-                  <input
-                    type="color"
-                    value={settings.branding.secondaryColor}
-                    onChange={(e) => updateBrandingSettings('secondaryColor', e.target.value)}
-                    className="h-10 w-20 rounded border"
-                    data-testid="secondary-color"
-                  />
-                  <Input
-                    value={settings.branding.secondaryColor}
-                    onChange={(e) => updateBrandingSettings('secondaryColor', e.target.value)}
-                    placeholder="#10B981"
-                  />
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </Link>
+
+              <div className="border-t pt-4 mt-4">
+                <h3 className="font-medium mb-4">Quick Color Settings</h3>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Primary Color</label>
+                  <div className="flex gap-3">
+                    <input
+                      type="color"
+                      value={settings.branding.primaryColor}
+                      onChange={(e) => updateBrandingSettings('primaryColor', e.target.value)}
+                      className="h-10 w-20 rounded border"
+                      data-testid="primary-color"
+                    />
+                    <Input
+                      value={settings.branding.primaryColor}
+                      onChange={(e) => updateBrandingSettings('primaryColor', e.target.value)}
+                      placeholder="#3B82F6"
+                    />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-medium mb-2">Secondary Color</label>
+                  <div className="flex gap-3">
+                    <input
+                      type="color"
+                      value={settings.branding.secondaryColor}
+                      onChange={(e) => updateBrandingSettings('secondaryColor', e.target.value)}
+                      className="h-10 w-20 rounded border"
+                      data-testid="secondary-color"
+                    />
+                    <Input
+                      value={settings.branding.secondaryColor}
+                      onChange={(e) => updateBrandingSettings('secondaryColor', e.target.value)}
+                      placeholder="#10B981"
+                    />
+                  </div>
                 </div>
               </div>
               <div>

@@ -18,6 +18,8 @@ const OrderDetailPage = lazy(() => import('@/pages/OrderDetailPage'));
 const CustomersPage = lazy(() => import('@/pages/CustomersPage'));
 const CustomerDetailPage = lazy(() => import('@/pages/CustomerDetailPage'));
 const InventoryPage = lazy(() => import('@/pages/InventoryPage'));
+const StoreSettingsPage = lazy(() => import('@/pages/StoreSettingsPage'));
+const ThemeSettingsPage = lazy(() => import('@/pages/ThemeSettingsPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 // Loading fallback component
@@ -78,6 +80,8 @@ function AppContent() {
             <Route path="/customers" element={<CustomersPage />} />
             <Route path="/customers/:id" element={<CustomerDetailPage />} />
             <Route path="/inventory" element={<InventoryPage />} />
+            <Route path="/settings" element={<StoreSettingsPage />} />
+            <Route path="/settings/theme" element={<ThemeSettingsPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
